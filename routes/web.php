@@ -5,6 +5,12 @@ use App\Models\Employee;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+/** Ruta para LOGIN (Formulario de entrada)*/
+Route::get('/login', function() {
+    return view('logins.loginv2');
+})->name('login');
+
+/** Direccion de ruta para ir a la Pagina principal (index.html) */
 Route::get('/', function () {
     return view('welcome');
 });
@@ -24,8 +30,18 @@ Route::middleware('auth')->group(function () {
  */
 Route::get('/prueba', [EmployeeController::class, 'index'])->name('employees.index');
 
-/** Ruta para dirigirnos a*/
+/** Ruta para dirigirnos a REGISTRAR UN EMPLEADO (Formulario de registro)*/
 Route::post('/registrar-nuevo-empleado', [EmployeeController::class, 'store'])->name('employees.store');
+
+/** Ruta para RECUPERAR CONTRASEÑA */
+Route::get('/recover-password', function() {
+    return view('auth.recuperarpassv3');
+});
+
+/** Ruta para  REGISTRO (Formulario de registro)*/
+Route::get('/register', function() {
+    return view('auth.register');
+});
 
 require __DIR__ . '/auth.php';
 ?>

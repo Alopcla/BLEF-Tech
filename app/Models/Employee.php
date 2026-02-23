@@ -28,8 +28,9 @@ class Employee extends Model
 
     /**
      * Summary of hidden: Propiedad de Visibilidad (Salida de datos).
-     * Se controla que columnas se muestran cuando conviertes el modelo a JSON
+     * Se controla que columnas NO se muestran cuando conviertes el modelo a JSON
      * o en un Array (uso de APIS).
+     * En este caso, no se mostraran dichas columnas.
      * @var array
      */
     protected $hidden = [

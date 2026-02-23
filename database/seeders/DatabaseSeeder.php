@@ -24,8 +24,13 @@ class DatabaseSeeder extends Seeder
 
          /** De esta forma llamamos a los archivos externos y podemos introducir todos los Seeders aqui. */
         $this->call([
+            // Seeders de Empleados y Telefonos de empleados.
             EmployeeSeeder::class,
-            EmployeeTelephoneSeeder::class
+            EmployeeTelephoneSeeder::class,
+            // Seeder de Animales.
+            AnimalSeeder::class
         ]);
+
+
     }
 }

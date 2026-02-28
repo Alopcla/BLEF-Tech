@@ -6,7 +6,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /** Ruta para LOGIN (Formulario de entrada)*/
-Route::get('/login', function() {
+Route::get('/login', function () {
     return view('logins.loginv2');
 })->name('login');
 
@@ -34,14 +34,21 @@ Route::get('/prueba', [EmployeeController::class, 'index'])->name('employees.ind
 Route::post('/registrar-nuevo-empleado', [EmployeeController::class, 'store'])->name('employees.store');
 
 /** Ruta para RECUPERAR CONTRASEÑA */
-Route::get('/recover-password', function() {
+Route::get('/recover-password', function () {
     return view('auth.recuperarpassv3');
 });
 
 /** Ruta para  REGISTRO (Formulario de registro)*/
-Route::get('/register', function() {
+Route::get('/register', function () {
     return view('auth.register');
 });
 
 require __DIR__ . '/auth.php';
-?>
+//Ruta del formulario de pago de entradas
+use App\Http\Controllers\PaymentController;
+
+// Cuando el usuario entra a /pago (GET), mostramos el formulario
+Route::get('/pago', [PaymentController::class, 'showForm'])->name('payment.show');
+
+// Cuando el usuario pulsa el botón "Pagar" (POST), procesamos los datos
+Route::post('/pago', [PaymentController::class, 'processPayment'])->name('payment.process');

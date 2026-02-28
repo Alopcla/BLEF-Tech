@@ -1,0 +1,94 @@
+@font-face {
+    font-family: 'Park zoo';
+    src: url('Parkzoo-Regular.woff2') format('woff2'),
+        url('Parkzoo-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+}
+
+header img {
+    width: 60px;
+    height: 60px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+body {
+    background-image: url("../recursos/fondo3.jpg");
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.payment-box {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    color: #D9C8A1;
+    max-width: 800px;
+    width: 100%;
+}
+
+.payment-box h2,
+.payment-box h5 {
+    font-family: 'Park zoo';
+    color: #D9C8A1;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-control,
+.form-select {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.form-label {
+    font-family: 'Park zoo';
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.btn-pagar {
+    font-family: 'Park zoo';
+    font-size: 22px;
+    padding: 12px;
+    background-color: #D9C8A1;
+    color: #3A6B35;
+    border: none;
+    border-radius: 40px;
+    transition: 0.4s ease;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.btn-pagar:hover {
+    background-color: #3A6B35;
+    color: #D9C8A1;
+    transform: scale(1.05);
+}
+
+.border-bottom {
+    border-color: #D9C8A1 !important;
+}
+
+.custom-alert {
+    border-radius: 15px;
+    font-family: 'Poppins', sans-serif;
+}

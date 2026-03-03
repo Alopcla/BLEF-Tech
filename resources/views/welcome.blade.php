@@ -65,7 +65,7 @@
             <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
         </div>
     </footer>
-    <div id="seccion-animales" style="min-height: 500px; padding: 50px;">
+    <div id="seccion-animales" style="display: none; min-height: 500px; padding: 50px;">
     </div>
 </body>
 

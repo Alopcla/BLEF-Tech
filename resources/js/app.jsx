@@ -3,11 +3,23 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import TarjetaAnimal from './Components/TarjetaAnimal';
 
-// 1. Buscamos el contenedor que pusimos en welcome.blade.php
 const container = document.getElementById('seccion-animales');
 
-// 2. Si el contenedor existe, renderizamos el componente de React
 if (container) {
     const root = createRoot(container);
-    root.render(<TarjetaAnimal />);
+
+    // Función para renderizar el componente
+    const renderAnimales = () => {
+        container.style.display = 'block'; // Mostramos el div que estaba oculto
+        root.render(<TarjetaAnimal />);
+    };
+
+    // Buscamos el enlace del menú en el HTML y le asignamos el evento
+    const linkAnimales = document.querySelector('a[href="#seccion-animales"]');
+    if (linkAnimales) {
+        linkAnimales.addEventListener('click', (e) => {
+            e.preventDefault(); // Evitamos que la página salte
+            renderAnimales();
+        });
+    }
 }

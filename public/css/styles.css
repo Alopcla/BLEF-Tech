@@ -3,8 +3,8 @@
 
 @font-face {
     font-family: 'Park zoo';
-    src: url('Parkzoo-Regular.woff2') format('woff2'),
-        url('Parkzoo-Regular.woff') format('woff');
+    src: url('../fonts/Parkzoo-Regular.woff2') format('woff2'),
+        url('../fonts/Parkzoo-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -201,4 +201,3 @@ footer{
         vertical-align: middle;
     }
 }
-

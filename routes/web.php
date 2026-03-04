@@ -3,7 +3,9 @@
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ExperienciaController;
 use Illuminate\Support\Facades\Route;
+
 
 /** Ruta para la Página principal */
 Route::get('/', function () {
@@ -34,5 +36,8 @@ Route::post('/registrar-nuevo-empleado', [EmployeeController::class, 'store'])->
 /** Rutas de Pago */
 Route::get('/pago', [PaymentController::class, 'showForm'])->name('payment.show');
 Route::post('/pago', [PaymentController::class, 'processPayment'])->name('payment.process');
+
+/** Rutas de la vista Experiencias */
+Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
 
 require __DIR__ . '/auth.php';

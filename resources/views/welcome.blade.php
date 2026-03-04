@@ -41,7 +41,7 @@
                 <div class="navegacion-flex">
                     <a href="#">Inicio</a>
                     <a href="#">Tickets</a>
-                    <a href="#">Experiencias</a>
+                    <a href="{{ route('VistaExperiencias') }}">Experiencias</a>
                     <a href="#seccion-animales">Animales</a>
                     <a href="#">Tienda</a>
                     <a href="#">Contacto</a>

@@ -40,4 +40,5 @@ Route::post('/pago', [PaymentController::class, 'processPayment'])->name('paymen
 /** Rutas de la vista Experiencias */
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
 
+/** Ruta para el Login */
 require __DIR__ . '/auth.php';

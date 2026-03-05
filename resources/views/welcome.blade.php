@@ -39,7 +39,7 @@
             <nav id="nav">
                 <button class="cerrar-menu" id="cerrar"><i class="bi bi-x-lg"></i></button>
                 <div class="navegacion-flex">
-                    <a href="#">Inicio</a>
+                    <a href="/">Inicio</a>
                     <a href="#">Tickets</a>
                     <a href="{{ route('VistaExperiencias') }}">Experiencias</a>
                     <a href="#seccion-animales">Animales</a>

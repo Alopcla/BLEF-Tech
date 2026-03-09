@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script src="main.js" defer></script>
+    
     <!-- Obligatorio estas dos lineas de codigo para trabajar con React.
     Si en otra pagina no habria componentes de React, no es necesario añadir dichas lineas. -->
     @viteReactRefresh

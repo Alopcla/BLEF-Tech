@@ -29,11 +29,11 @@ class EmployeeTelephoneSeeder extends Seeder
         foreach ($employees as $employee) {
         // Creamos 3 teléfonos para cada empleado para asegurar que el incremento funcione
         for ($i = 0; $i < 3; $i++) {
-            $telephone = new \App\Models\EmployeeTelephone();
+            $telephone = new EmployeeTelephone();
             $telephone->employee_id = $employee->id;
-            $telephone->number = fake()->phoneNumber();
+            $telephone->telephone = fake()->phoneNumber();
             // Forzamos el cálculo aquí mismo si el evento falla
-            $ultimo = \App\Models\EmployeeTelephone::where('employee_id', $employee->id)->max('order');
+            $ultimo = EmployeeTelephone::where('employee_id', $employee->id)->max('order');
             $telephone->order = ($ultimo ?? 0) + 1;
             $telephone->save();
         }

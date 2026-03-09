@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('ecosistemas', function (Blueprint $table) {
+        Schema::create('ecosystems', function (Blueprint $table) {
             $table->id();
-            $table->string('clima');
+            $table->string('climate');
             $table->string('region');
             $table->timestamps();
         });
@@ -18,6 +18,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('ecosistemas');
+        Schema::dropIfExists('ecosystems');
     }
 };

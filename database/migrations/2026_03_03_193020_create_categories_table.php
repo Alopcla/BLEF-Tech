@@ -8,14 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('zonas', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('tipo');
-            $table->string('dimensiones');
-            $table->text('descripcion')->nullable();
-            $table->foreignId('ecosistema_id')
+            $table->text('description');
+            $table->foreignId('employee_id')
                   ->nullable()
-                  ->constrained('ecosistemas')
+                  ->constrained('employees')
                   ->onDelete('set null');
             $table->timestamps();
         });
@@ -23,6 +21,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('zonas');
+        Schema::dropIfExists('categories');
     }
 };

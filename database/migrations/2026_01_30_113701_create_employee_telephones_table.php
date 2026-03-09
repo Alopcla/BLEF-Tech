@@ -24,7 +24,7 @@ return new class extends Migration
              * si dicho numero seria el primero en introducirse
              * Ejemplo: El numero 094532189 si fuera Integer seria 94532189.
              */
-            $table->string('number');
+            $table->string('telephone');
             $table->integer('order');
             /** Candado de seguridad. Evita que se repita el orden para el mismo empleado.
              * Esto nos servira para el Modelo de Telephone.php con una funcion,

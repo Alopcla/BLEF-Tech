@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employee>
  *
- * EmployeeFactory es una clase en la cual definiremos como se deben generar los datos
+ * EmpleadoFactory es una clase en la cual definiremos como se deben generar los datos
  * de prueba para un modelo especifico. Su principal cometido es crear instancias de modelos
  * con datos ficticios pero realistas, siguiente una estructura predefinida.
  */
 class EmployeeFactory extends Factory
 {
     /**
-     * Summary of model: Modelo Employee asociado a la Factory 'EmployeeFactory'.
+     * Summary of model: Modelo Empleado asociado a la Factory 'EmpleadoFactory'.
      * @var
      */
     protected $model = Employee::class;
@@ -37,7 +37,7 @@ class EmployeeFactory extends Factory
         return [
             /** Las almohadillas '#' indican numeros aleatorios y la interrogacion '?'
              * indica una letra.*/
-            'DNI' => $this->faker->unique()->bothify('########?'),
+            'dni' => $this->faker->unique()->bothify('########?'),
             'name' => $this->faker->firstName(),
             'surname' => $this->faker->lastName(),
             'birth_date' => $this->faker->dateTimeBetween('-60 years', '-18 years')->format('Y-m-d'),

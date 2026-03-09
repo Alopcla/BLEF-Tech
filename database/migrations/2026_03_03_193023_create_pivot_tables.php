@@ -25,39 +25,39 @@ return new class extends Migration
         // MANTIENE — Empleado mantiene Zona
         // ----------------------------------
         Schema::create('mantiene', function (Blueprint $table) {
-            $table->foreignId('zona_id')
-                  ->constrained('zonas')
+            $table->foreignId('zone_id')
+                  ->constrained('zones')
                   ->onDelete('cascade');
             $table->foreignId('employee_id')
                   ->constrained('employees')
                   ->onDelete('cascade');
-            $table->primary(['zona_id', 'employee_id']);
+            $table->primary(['zone_id', 'employee_id']);
         });
 
         // ----------------------------------
         // GESTIONA — Empleado gestiona Servicio
         // ----------------------------------
         Schema::create('gestiona', function (Blueprint $table) {
-            $table->foreignId('servicio_id')
-                  ->constrained('servicios')
+            $table->foreignId('service_id')
+                  ->constrained('services')
                   ->onDelete('cascade');
             $table->foreignId('employee_id')
                   ->constrained('employees')
                   ->onDelete('cascade');
-            $table->primary(['servicio_id', 'employee_id']);
+            $table->primary(['service_id', 'employee_id']);
         });
 
         // ----------------------------------
         // UBICADO EN — Servicio ubicado en Zona
         // ----------------------------------
         Schema::create('ubicado_en', function (Blueprint $table) {
-            $table->foreignId('zona_id')
-                  ->constrained('zonas')
+            $table->foreignId('zone_id')
+                  ->constrained('zones')
                   ->onDelete('cascade');
-            $table->foreignId('servicio_id')
-                  ->constrained('servicios')
+            $table->foreignId('service_id')
+                  ->constrained('services')
                   ->onDelete('cascade');
-            $table->primary(['zona_id', 'servicio_id']);
+            $table->primary(['zone_id', 'service_id']);
         });
 
         // ----------------------------------
@@ -67,10 +67,10 @@ return new class extends Migration
             $table->foreignId('employee_id')
                   ->constrained('employees')
                   ->onDelete('cascade');
-            $table->foreignId('producto_id')
-                  ->constrained('productos')
+            $table->foreignId('product_id')
+                  ->constrained('products')
                   ->onDelete('cascade');
-            $table->primary(['employee_id', 'producto_id']);
+            $table->primary(['employee_id', 'product_id']);
         });
 
         // ----------------------------------
@@ -80,24 +80,24 @@ return new class extends Migration
             $table->foreignId('employee_id')
                   ->constrained('employees')
                   ->onDelete('cascade');
-            $table->foreignId('entrada_id')
-                  ->constrained('entradas')
+            $table->foreignId('ticket_id')
+                  ->constrained('tickets')
                   ->onDelete('cascade');
-            $table->primary(['employee_id', 'entrada_id']);
+            $table->primary(['employee_id', 'ticket_id']);
         });
 
         // ----------------------------------
         // COMPRA — Cliente compra Entrada
         // ----------------------------------
         Schema::create('compra', function (Blueprint $table) {
-            $table->string('cliente_dni', 20);
-            $table->foreignId('entrada_id')
-                  ->constrained('entradas')
+            $table->string('customer_dni', 20);
+            $table->foreignId('ticket_id')
+                  ->constrained('tickets')
                   ->onDelete('cascade');
-            $table->primary(['cliente_dni', 'entrada_id']);
-            $table->foreign('cliente_dni')
+            $table->primary(['customer_dni', 'ticket_id']);
+            $table->foreign('customer_dni')
                   ->references('dni')
-                  ->on('clientes')
+                  ->on('customers')
                   ->onDelete('cascade');
         });
     }

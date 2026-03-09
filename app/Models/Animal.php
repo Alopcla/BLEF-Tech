@@ -11,7 +11,7 @@ class Animal extends Model
     use HasFactory;
 
     // Definiremos los campos en los cuales el usuario puede introducir datos.
-    protected $fillable = ['species', 'location', 'curiosity', 'imagen'];
+    protected $fillable = ['species', 'ubication', 'curiosity', 'imagen'];
 
     /**
      * Summary of hidden: Propiedad de Visibilidad (Salida de datos).

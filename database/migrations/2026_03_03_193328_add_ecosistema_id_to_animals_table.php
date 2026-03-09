@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::table('animals', function (Blueprint $table) {
             // Añadimos la FK a ecosistemas después de la columna 'imagen'
-            $table->foreignId('ecosistema_id')
+            $table->foreignId('ecosystem_id')
                   ->nullable()
                   ->after('imagen')
-                  ->constrained('ecosistemas')
+                  ->constrained('ecosystems')
                   ->onDelete('set null');
         });
     }
@@ -21,8 +21,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('animals', function (Blueprint $table) {
-            $table->dropForeign(['ecosistema_id']);
-            $table->dropColumn('ecosistema_id');
+            $table->dropForeign(['ecosystem_id']);
+            $table->dropColumn('ecosystem_id');
         });
     }
 };

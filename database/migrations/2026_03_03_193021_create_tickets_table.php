@@ -8,18 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('servicios', function (Blueprint $table) {
+        Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('tipo');
-            $table->text('descripcion')->nullable();
-            $table->boolean('disponibilidad')->default(true);
+            $table->date('date');
+            $table->decimal('price', 8, 2);
+            $table->string('type'); // Ej: adulto, niño, familia...
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('servicios');
+        Schema::dropIfExists('tickets');
     }
 };

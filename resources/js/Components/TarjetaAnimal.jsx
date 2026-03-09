@@ -1,45 +1,113 @@
 import React, { useState, useEffect } from "react";
 
 export default function TarjetaAnimal() {
-    // Estados para guardar el animal y saber si esta cargando
     const [animal, setAnimal] = useState(null);
     const [cargando, setCargando] = useState(true);
 
-    // Funcion para llamar a la API Manual creada en Laravel
+    // Funcion que utiliza una API para traducir la información
+    const traducirTexto = async (texto) => {
+        if (!texto) return "";
+        try {
+            const res = await fetch(
+                `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texto)}&langpair=en|es`,
+            );
+            const datos = await res.json();
+            return datos.responseData.translatedText;
+        } catch (error) {
+            return texto; // Si falla, devolvemos el original
+        }
+    };
+
     const traerAnimal = async () => {
         setCargando(true);
+        const nombres = [
+            "Lion",
+            "Tiger",
+            "Wolf",
+            "Cheetah",
+            "Elephant",
+            "Eagle",
+            "Goat",
+            "Giraffe",
+        ];
+        const busqueda = nombres[Math.floor(Math.random() * nombres.length)];
 
         try {
-            // Llamamos a la ruta que creamos en api.php (la que creamos mediante el comando)
-            const respuesta = await fetch("http://127.0.0.1:8000/api/animal-aleatorio");
-            const datos = await respuesta.json();
+            const resNinja = await fetch(`https://api.api-ninjas.com/v1/animals?name=${busqueda}`,{headers: {"X-Api-Key": "nb4rKI76iulLVjrHor9PlI19yDMUbtxMfrXjrKLG"}});
 
-            setAnimal(datos);
+            const datosNinja = await resNinja.json();
 
-        } catch (error) {
-            console.error("Error al obtener el animal: ", error);
+            if (datosNinja && datosNinja.length > 0) {
+                const info = datosNinja[0];
+
+                // 1. Lanzamos las 3 traducciones al mismo tiempo para evitar bloqueos
+                // Si una falla, devolvemos el texto original (|| info.name, etc.)
+                const [nombreEs, curiosidadEs, ubicacionEs] = await Promise.all(
+                    [
+                        traducirTexto(info.name).catch(() => info.name),
+                        traducirTexto(
+                            info.characteristics?.slogan ||
+                                "An amazing animal.",
+                        ).catch(() => info.characteristics?.slogan),
+                        traducirTexto(
+                            info.locations?.[0] || "Natural habitat",
+                        ).catch(() => info.locations?.[0]),
+                    ],
+                );
+
+                // 2. PETICIÓN A UNSPLASH
+                const resUnsplash = await fetch(
+                    `https://api.unsplash.com/photos/random?query=${info.name}&client_id=mhX64xEPUCpHPLdj0saioXZ_bGQx2Esuw14IBV2MzUk`,
+                );
+                const datosFoto = await resUnsplash.json();
+                const urlFinal =
+                    datosFoto.urls?.regular ||
+                    "https://via.placeholder.com/450";
+
+                setAnimal({
+                    species: nombreEs || info.name,
+                    curiosity:
+                        curiosidadEs ||
+                        info.characteristics?.slogan ||
+                        "Un animal increíble.",
+                    location:
+                        ubicacionEs || info.locations?.[0] || "Hábitat natural",
+                    imagen: urlFinal,
+                });
+            }
+        } catch (e) {
+            console.error("Error en la carga, usando Plan B local...");
+            // Tu Plan B de Laravel
+            const resLar = await fetch(
+                "http://127.0.0.1:8000/api/animal-aleatorio",
+            );
+            const dataLar = await resLar.json();
+
+            setAnimal({
+                species: dataLar.nombre,
+                curiosity: dataLar.curiosidad,
+                location: dataLar.location || "Zoo Logic",
+                imagen: dataLar.imagen,
+            });
         } finally {
             setCargando(false);
         }
     };
 
-    // Ejecutar la funcion nada mas cargar el componente
     useEffect(() => {
         traerAnimal();
     }, []);
 
-    // Interfaz de carga
     if (cargando)
         return (
-            <div style={{ color: "white", textAlign: "center" }}>
-                Cargando curiosidad...
-            </div>
+            <div style={estilos.contenedorCarga}>Cargando curiosidad...</div>
         );
 
-    // Si no hay animal (error), mostrar mensaje
     if (!animal)
         return (
-            <div style={{ color: "white" }}>
+            <div
+                style={{ color: "white", textAlign: "center", padding: "50px" }}
+            >
                 No se pudo cargar la informacion
             </div>
         );
@@ -55,11 +123,10 @@ export default function TarjetaAnimal() {
 
                 <div style={estilos.info}>
                     <h2 style={estilos.titulo}> {animal.species} </h2>
-                    <p style={estilos.curiosidad}> {animal.curiosity} </p>
+                    <p style={estilos.curiosidad}> "{animal.curiosity}" </p>
                     <hr style={estilos.separador} />
                     <p style={estilos.ubicacion}>
-                        <i className="bi bi-geo-alt-fill"></i>
-                        {animal.location || "Hábitat natural"}
+                        <i className="bi bi-geo-alt-fill"></i> {animal.location}
                     </p>
                     <button onClick={traerAnimal} style={estilos.boton}>
                         ¿Sabías que...? (Ver otro)
@@ -70,36 +137,45 @@ export default function TarjetaAnimal() {
     );
 }
 
-// Estilos integrados
 const estilos = {
     contenedor: {
         padding: "50px 20px",
         display: "flex",
         justifyContent: "center",
-         // Para que se vea el video de fondo
+        background: "transparent",
+    },
+    contenedorCarga: {
+        color: "white",
+        textAlign: "center",
+        padding: "100px",
+        fontSize: "1.2rem",
+        fontStyle: "italic",
     },
     tarjeta: {
-        backgroundColor: "rgba(51, 51, 51, 0.9)", // Gris oscuro con transparencia
+        backgroundColor: "rgba(30, 30, 30, 0.85)",
         borderRadius: "25px",
+        backdropFilter: "blur(10px)",
         maxWidth: "450px",
         overflow: "hidden",
-        boxShadow: "0 15px 35px rgba(0,0,0,0.5)",
-        border: "1px solid #4a4a4a",
+        boxShadow: "0 20px 40px rgba(0,0,0,0.6)",
+        border: "1px solid rgba(255,255,255,0.1)",
     },
     imagen: {
         width: "100%",
-        height: "250px",
+        height: "280px",
         objectFit: "cover",
+        display: "block",
     },
     info: {
         padding: "25px",
         textAlign: "center",
     },
     titulo: {
-        color: "#d4c59f", // Color arena de tu botón de inicio de sesión
+        color: "#d4c59f",
         fontFamily: "Parkzoo-Regular, sans-serif",
         fontSize: "2rem",
         marginBottom: "10px",
+        textTransform: "capitalize",
     },
     curiosidad: {
         color: "#f0f0f0",

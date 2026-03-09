@@ -8,23 +8,23 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('cliente_telefonos', function (Blueprint $table) {
+        Schema::create('customer_telephones', function (Blueprint $table) {
             // PK compuesta: dni del cliente + orden
-            $table->string('cliente_dni', 20);
-            $table->integer('orden');
-            $table->string('telefono', 20)->unique();
+            $table->string('customer_dni', 20);
+            $table->integer('order');
+            $table->string('telephone', 20)->unique();
             $table->timestamps();
 
-            $table->primary(['cliente_dni', 'orden']);
-            $table->foreign('cliente_dni')
+            $table->primary(['customer_dni', 'order']);
+            $table->foreign('customer_dni')
                   ->references('dni')
-                  ->on('clientes')
+                  ->on('customers')
                   ->onDelete('cascade');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('cliente_telefonos');
+        Schema::dropIfExists('customer_telephones');
     }
 };

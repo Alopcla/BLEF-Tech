@@ -8,17 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('clientes', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             // PK es el DNI (string), no un id autoincremental
             $table->string('dni', 20)->primary();
-            $table->string('nombre_usuario')->unique();
-            $table->string('nombre');
-            $table->string('apellidos');
-            $table->string('correo')->unique();
-            $table->string('direccion');
-            $table->foreignId('categoria_id')
+            $table->string('user_name')->unique();
+            $table->string('name');
+            $table->string('surnames');
+            $table->string('email')->unique();
+            $table->string('address');
+            $table->foreignId('categorie_id')
                   ->nullable()
-                  ->constrained('categorias')
+                  ->constrained('categories')
                   ->onDelete('set null');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('clientes');
+        Schema::dropIfExists('customers');
     }
 };

@@ -3,60 +3,81 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Importante para usar la base de datos
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth; // Necesario para identificar al usuario
+use App\Mail\TicketMail;
+use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
-    // Esta función mostrará el formulario
     public function showForm()
     {
+        // Asegúrate de que tu vista esté en resources/views/payment/form.blade.php
         return view('payment.form');
     }
-
-    // Esta función procesará los datos del formulario (tu antigua función registrarCompra)
     public function processPayment(Request $request)
     {
-        // 1. VALIDACIÓN (Sustituye a tus if empty...)
+        // 1. VALIDACIÓN (Añadimos 'email' y 'cantidad')
         $request->validate([
-            'dia'     => 'required',
-            'metod'   => 'required',
-            'tarjeta' => 'required|numeric',
-            'nombre'  => 'required',
-            'cvv'     => 'required|numeric',
+            'email'    => 'required|email',
+            'dia'      => 'required',
+            'metod'    => 'required',
+            'tarjeta'  => 'required|numeric',
+            'nombre'   => 'required',
+            'cvv'      => 'required|numeric',
+            'cantidad' => 'required|integer|min:1|max:10',
         ]);
 
         try {
-            // Usamos una transacción para que si algo falla, no se guarde nada a medias
-            DB::transaction(function () use ($request) {
+            // Creamos un array vacío para guardar los datos que irán al email
+            $ticketsParaEmail = [];
 
-                // DETERMINAR CLIENTE (En Laravel se usa auth()->id())
-                $id_cliente = 1; // De momento lo dejamos en 1 como en tu código
+            DB::transaction(function () use ($request, &$ticketsParaEmail) {
+                $id_usuario = Auth::check() ? Auth::id() : null;
+                $cantidad = $request->input('cantidad');
 
-                // INSERCIÓN EN 'Entrada'
-                DB::table('Entrada')->insert([
-                    'numCliente' => $id_cliente,
-                    'tipo'       => $request->metod,
-                    'DiaVisita'  => $request->dia
-                ]);
-
-                // INSERCIÓN EN 'InfoPago' (Si marcó el checkbox 'save')
-                if ($request->has('save')) {
-                    DB::table('InfoPago')->insert([
-                        'numCliente'      => $id_cliente,
-                        'tipo'            => $request->metod,
-                        'numTarjeta'      => $request->tarjeta,
-                        'mCaducidad'      => $request->mes,
-                        'aCaducidad'      => $request->anio,
-                        'codigoSeguridad' => $request->cvv
+                // 2. BUCLE DE INSERCIÓN
+                for ($i = 0; $i < $cantidad; $i++) {
+                    // insertGetId realiza la inserción y nos devuelve el ID (ej: 45, 46...)
+                    $nuevoId = DB::table('tickets')->insertGetId([
+                        'date'       => now(),
+                        'price'      => 15.00,
+                        'type'       => $request->metod,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                        // 'user_id' => $id_usuario 
                     ]);
+
+                    // Guardamos los datos de este ticket específico en nuestro array
+                    $ticketsParaEmail[] = [
+                        'id'    => $nuevoId,
+                        'date'  => now()->format('d/m/Y H:i'),
+                        'price' => 15.00
+                    ];
+                }
+
+                // 3. GUARDAR INFO DE PAGO (Si el usuario lo pidió)
+                if (Auth::check() && $request->has('save')) {
+                    DB::table('InfoPago')->updateOrInsert(
+                        ['numCliente' => $id_usuario],
+                        [
+                            'tipo'            => $request->metod,
+                            'numTarjeta'      => $request->tarjeta,
+                            'mCaducidad'      => $request->mes,
+                            'aCaducidad'      => $request->anio,
+                            'codigoSeguridad' => $request->cvv
+                        ]
+                    );
                 }
             });
 
-            // Si todo sale bien, volvemos atrás con un mensaje de éxito
-            return back()->with('success', '¡Pago procesado con éxito!');
+            // 4. ENVIAR EL CORREO (Fuera de la transacción para evitar lentitud)
+            // Le pasamos el array $ticketsParaEmail al constructor de TicketMail
+            Mail::to($request->email)->send(new TicketMail($ticketsParaEmail));
+
+            return back()->with('success', '¡Compra realizada con éxito! Se han enviado las entradas a ' . $request->email);
         } catch (\Exception $e) {
-            // Si hay un error (ej. la base de datos no conecta), volvemos con el error
-            return back()->with('error', 'Error al registrar la entrada: ' . $e->getMessage());
+            return back()->with('error', 'Error en el proceso: ' . $e->getMessage());
         }
     }
 }

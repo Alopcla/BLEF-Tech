@@ -14,7 +14,7 @@
 
 <body>
     <header>
-        <img src="{{ asset('recursos/favicon.ico') }}" alt="Zoologic">
+        <a href="/"><img src="{{ asset('recursos/favicon.ico') }}" alt="Zoologic"></a>
     </header>
 
     <div class="payment-box">
@@ -94,14 +94,22 @@
                     </select>
                 </div>
             </div>
-
             <div class="row g-3 mb-4">
                 <div class="col-md-4">
                     <label class="form-label">CVV</label>
                     <input type="text" name="cvv" class="form-control" placeholder="000" pattern="[0-9]{3,4}" required>
                 </div>
+                <div class="col-md-4">
+                    <label class="form-label">Cantidad de entradas</label>
+                    <input type="number" name="cantidad" class="form-control" value="1" min="1" max="10" required>
+                </div>
             </div>
-
+            <div class="row g-3 mb-3">
+                <div class="col-md-12">
+                    <label class="form-label text-white-50">Correo Electrónico para recibir las entradas</label>
+                    <input type="email" name="email" class="form-control" placeholder="usuario@ejemplo.com" required>
+                </div>
+            </div>
             <h5 class="border-bottom pb-2 mb-3">Información de Facturación</h5>
 
             <div class="row g-3 mb-3">
@@ -122,13 +130,14 @@
                 </div>
             </div>
 
-            <div class="form-check mb-4">
+            @auth
+            <div id="guardaInfo" class="form-check mb-4">
                 <input class="form-check-input" type="checkbox" name="save" id="save">
                 <label class="form-check-label text-white-50" for="save" style="font-size: 0.9rem;">
                     Guardar información para la próxima vez
                 </label>
             </div>
-
+            @endauth
             <button type="submit" class="btn-pagar shadow">Realizar Pago</button>
         </form>
     </div>

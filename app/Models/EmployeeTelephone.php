@@ -16,8 +16,7 @@ class EmployeeTelephone extends Model
      */
     protected $fillable = [
         'employee_id',
-        'number',
-        'order'
+        'telephone'
     ];
 
     /**
@@ -46,25 +45,25 @@ class EmployeeTelephone extends Model
          *  Ocurre antes de que los datos se guarden en la base de datos.
          * En este caso ocurrira un autoincremento de la columna 'order'.
         */
-        static::creating(function($telephone) {
+        static::creating(function($telefono) {
             /**
-             * @var mixed: Miramos quien es el dueño de este telefono ($telephone->employee_id)
+             * @var mixed: Miramos quien es el dueño de este telefono ($telefono->employee_id)
              * Y miramos cual es la orden de telefono mas alta.
              */
-            $ultimoOrden = self::where('employee_id', $telephone->employee_id)->max('order');
+            $ultimoOrden = self::where('employee_id', $telefono->employee_id)->max('order');
 
             /** Operador de Coalescencia Nula:
              * Si el resultado de la izquierda es nulo, se asigna el resultado de la derecha.
              * Manera mas resumida en vez de un if/else.
              */
-            $telephone->order = ($ultimoOrden ?? 0) + 1;
+            $telefono->orden = ($ultimoOrden ?? 0) + 1;
 
             /** Si devuelve null, es porque es el primer telefono */
             // if($ultimoOrden === null) {
-                // $telephone->order = 1;
+                // $telefono->order = 1;
             // } else {
                 // Si ya tenia alguna orden, es que ya tenia telefonos. Se le suma un telefono mas.
-                // $telephone->order = $ultimoOrden + 1;
+                // $telefono->order = $ultimoOrden + 1;
             // }
 
         });

@@ -19,6 +19,7 @@ class AnimalController extends Controller
         /* Primero realizamos una consulta a la base de datos,
         *   trayendo, aleatoriamente, un animal.
         */
+
         $animal = Animal::inRandomOrder()->first();
 
         // Se comprueba si la tabla no existe ningun dato.

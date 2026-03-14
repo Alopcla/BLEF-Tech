@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Componentes de Empleados</title>
-    <script src="https://cdn.tailwindcss.com"></script> 
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="p-10 bg-gray-100">
@@ -18,7 +18,7 @@
             <form action="{{ route('employees.store') }}" method="POST" class="flex gap-4">
                 @csrf
                 <div class="flex-1">
-                    <input type="text" name="DNI" placeholder="DNI" class="border p-2 rounded" required>
+                    <input type="text" name="dni" placeholder="DNI" class="border p-2 rounded" required>
                     <input type="text" name="name" placeholder="Nombre del empleado" class="border p-2 rounded"
                         required>
                     <input type="text" name="surname" placeholder="Apellidos del empleado" class="border p-2 rounded"

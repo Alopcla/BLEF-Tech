@@ -17,7 +17,7 @@ class Employee extends Model
      * @var array
      */
     protected $fillable = [
-        'DNI',
+        'dni',
         'name',
         'surname',
         'email',
@@ -54,7 +54,7 @@ class Employee extends Model
      * Establecemos la conexion con la tabla Employee con la tabla EmployeeTelephone,
      * mediante relacion 1:N.
      * Un empleado tiene muchos telefonos, un telefono es tenido solo por un empleado.
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<EmployeeTelephone, Employee>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<EmpleadoTelefono, Empleado>
      */
     public function telephones() {
         return $this->hasMany(EmployeeTelephone::class)->orderBy('order');

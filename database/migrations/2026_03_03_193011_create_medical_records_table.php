@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('historial_medico', function (Blueprint $table) {
+        Schema::create('medical_records', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha');
-            $table->text('diagnostico');
-            $table->text('tratamiento');
+            $table->date('date');
+            $table->text('diagnosis');
+            $table->text('treatment');
             $table->foreignId('animal_id')
                   ->constrained('animals')
                   ->onDelete('cascade');
@@ -25,6 +25,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('historial_medico');
+        Schema::dropIfExists('medical_records');
     }
 };

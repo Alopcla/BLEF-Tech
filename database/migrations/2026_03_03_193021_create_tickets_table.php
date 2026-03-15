@@ -11,13 +11,9 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
 
-            $table->string('customer_dni');
-
             $table->date('date');
             $table->decimal('price', 8, 2);
             $table->string('type')->nullable(); // Ej: adulto, niño, familia...
-
-            $table->foreign('customer_dni')->references('dni')->on('customers')->onDelete('cascade');
 
             $table->timestamps();
         });

@@ -10,7 +10,6 @@ class Ticket extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_dni',
         'date',
         'price'
     ];
@@ -18,9 +17,4 @@ class Ticket extends Model
     protected $casts = [
         'date' => 'date',
     ];
-
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class, 'customer_dni', 'dni');
-    }
 }

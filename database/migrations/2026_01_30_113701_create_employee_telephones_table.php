@@ -17,7 +17,7 @@ return new class extends Migration
              */
             $table->id();
             /** Columna de la clave foranea del id del empleado. */
-            $table->foreignId('employee_id')->constrained()->onDelete('cascade');
+            $table->string('employee_dni');
             /** Columna del numero de telefono. Se declara String debido a que puede
              * incluir un signo + por los prefijos de los telefonos. Si fuera Integer
              * (que seria lo logico), el signo + y el numero 0 no seria posible contabilizarlo
@@ -30,7 +30,8 @@ return new class extends Migration
              * Esto nos servira para el Modelo de Telephone.php con una funcion,
              * la cual servira para autoincrementar el numero de orden para cada empleado.
             */
-            $table->unique(['employee_id', 'order']);
+            $table->foreign('employee_dni')->references('dni')->on('employees')->onDelete('cascade');
+            $table->unique(['employee_dni', 'order']);
             $table->timestamps();
         });
     }

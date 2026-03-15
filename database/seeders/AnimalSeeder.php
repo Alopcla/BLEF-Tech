@@ -2,70 +2,544 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Animal;
 
 class AnimalSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     * Array donde contendra los datos (que queramos) de los animales.
-     */
     public function run(): void
     {
         $animals = [
+            // ==========================================
+            // ZONA 1: SABANA PLANICIE (ID: 1)
+            // ==========================================
             [
-                'species' => 'León (Panthera leo)',
-                'location' => 'África subsahariana (Tanzania, Kenia, Sudáfrica).',
+                'zone_id' => 1,
+                'common_name' => 'León',
+                'species' => 'Panthera leo',
+                'birth_date' => '2015-05-12',
+                'diet' => 'Carnívoro',
                 'curiosity' => 'Su impresionante rugido puede escucharse hasta 9 kilómetros de distancia para marcar territorio.',
-                'imagen' => 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=500'
+                'image' => 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=500'
             ],
             [
-                'species' => 'Elefante asiático (Elephas maximus)',
-                'location' => 'India, Sri Lanka, Bangladés y Sumatra.',
+                'zone_id' => 1,
+                'common_name' => 'Elefante asiático',
+                'species' => 'Elephas maximus',
+                'birth_date' => '2008-11-20',
+                'diet' => 'Herbívoro',
                 'curiosity' => 'Son capaces de sentir emociones profundas y reconocerse en espejos, demostrando autoconciencia.',
-                'imagen' => 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=500'
+                'image' => 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=500'
             ],
             [
-                'species' => 'Cocodrilo (Crocodylidae)',
-                'location' => 'Regiones tropicales y subtropicales de África, América, Asia y Australia.',
-                'curiosity' => '¿Sabías lo que es capaz de su mordida? Su mordida contiene 3.500 kg de presión. Lo que equivale a ¡¡27 veces la fuerza humana!!.',
-                'imagen' => 'https://images.unsplash.com/photo-1595433409683-943ded8e7b1d?q=80&w=1061&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                'zone_id' => 1,
+                'common_name' => 'Jirafa',
+                'species' => 'Giraffa camelopardalis',
+                'birth_date' => '2012-09-30',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Tienen una lengua azul oscuro de 50 cm con la cual pueden comer espinas sin dañarse.',
+                'image' => 'https://images.unsplash.com/photo-1577114995803-d8ce0e2b4aa9?w=500'
             ],
             [
-                'species' => 'Chimpancé (Pan troglodytes)',
-                'location' => 'África central y occidental (Senegal, Uganda y Tanzania).',
-                'curiosity' => 'Son nuestros parientes no humanos más cercanos. ¡Comparten el 98% de nuestro ADN!.',
-                'imagen' => 'https://images.unsplash.com/photo-1742729322173-19b4ed114ac2?q=80&w=386&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                'zone_id' => 1,
+                'common_name' => 'Cebra de llanura',
+                'species' => 'Equus quagga',
+                'birth_date' => '2017-03-15',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Las rayas de cada cebra son únicas, como las huellas dactilares humanas, y les sirven de camuflaje y repelente de insectos.',
+                'image' => 'https://images.unsplash.com/photo-1521111586551-7db13fc4e38c?w=500'
             ],
             [
-                'species' => 'Jirafa (Giraffa camelopardalis)',
-                'location' => 'Sabanas, pastizales y bosques abiertos del África subsahariana.',
-                'curiosity' => 'Tienen una lengua azul oscuro de 50 cm la cual pueden comer espinas sin dañarse.',
-                'imagen' => 'https://images.unsplash.com/photo-1577114995803-d8ce0e2b4aa9?q=80&w=873&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                'zone_id' => 1,
+                'common_name' => 'Guepardo',
+                'species' => 'Acinonyx jubatus',
+                'birth_date' => '2019-08-22',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Es el animal terrestre más rápido del mundo, capaz de alcanzar los 112 km/h en solo tres segundos.',
+                'image' => 'https://images.unsplash.com/photo-1534141695508-251f4961d154?w=500'
             ],
             [
-                'species' => 'Hipopótamo (Hippopotamus amphibius)',
-                'location' => 'Ríos, lagos y pantanos del África subsahariana (Río Nilo)',
-                'curiosity' => 'Segregan un líquido misterioso de color rojo...¿Para qué sirve? Con ello, que es una secreción natural, se protege del sol y de infecciones bacterianas.',
-                'imagen' => 'https://images.unsplash.com/photo-1604454112929-42dedc7c8424?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                'zone_id' => 1,
+                'common_name' => 'Rinoceronte blanco',
+                'species' => 'Ceratotherium simum',
+                'birth_date' => '2011-01-10',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'A pesar de su nombre, no son blancos. El término viene de una mala traducción de la palabra afrikáans "wyd", que significa "ancho".',
+                'image' => 'https://images.unsplash.com/photo-1535940443424-c108153406e2?w=500'
             ],
             [
-                'species' => 'Víbora (Viperinae)',
-                'location' => 'Climas cálidos y templados en África, Eurasia y América.',
-                'curiosity' => 'Su olfato es... ¡LA LENGUA! Usan su lengua bífida para recolectar partículas del aire y llevarlas al Órgano de Jacobson en el paladar, permitiéndoles "oler".',
-                'imagen' => 'https://images.unsplash.com/photo-1605051538177-72c289389de5?q=80&w=802&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                'zone_id' => 1,
+                'common_name' => 'Avestruz',
+                'species' => 'Struthio camelus',
+                'birth_date' => '2020-04-12',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Es el ave más grande y pesada del mundo. No puede volar, pero corre a 70 km/h y sus patadas pueden ser letales.',
+                'image' => 'https://images.unsplash.com/photo-1549471013-3364d7220b75?w=500'
             ],
             [
-                'species' => 'Mono capuchino (Cebus)',
-                'location' => 'Bosques tropicales, subtropicales y sabanas de Centro y Sudámerica.',
-                'curiosity' => 'Utiliza su cola como quinta mano, ayudándose para columpiarse y desplazarse. Y lo mejor de todo es que ellos también se echan sus siestas... ¿No te recuerda a una raza parecida que haga lo mismo?.',
-                'imagen' => 'https://images.unsplash.com/photo-1721329501836-5e7e2d055f64?q=80&w=641&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                'zone_id' => 1,
+                'common_name' => 'Suricata',
+                'species' => 'Suricata suricatta',
+                'birth_date' => '2022-01-05',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Son inmunes al veneno de muchas serpientes y escorpiones mortales de los que se alimentan.',
+                'image' => 'https://images.unsplash.com/photo-1541280910158-c4e14f9a0c1f?w=500'
             ],
+            [
+                'zone_id' => 1,
+                'common_name' => 'Hiena moteada',
+                'species' => 'Crocuta crocuta',
+                'birth_date' => '2018-11-30',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Tienen una de las mandíbulas más fuertes del reino animal, capaces de triturar huesos gruesos con facilidad.',
+                'image' => 'https://images.unsplash.com/photo-1596708304910-a29241b777a8?w=500'
+            ],
+            [
+                'zone_id' => 1,
+                'common_name' => 'Búfalo del Cabo',
+                'species' => 'Syncerus caffer',
+                'birth_date' => '2016-07-22',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Es uno de los animales más temidos de África, conocido por tener una memoria excelente y emboscar a sus atacantes.',
+                'image' => 'https://images.unsplash.com/photo-1523456188358-86d7e002daab?w=500'
+            ],
+            [
+                'zone_id' => 1,
+                'common_name' => 'Ñu azul',
+                'species' => 'Connochaetes taurinus',
+                'birth_date' => '2018-09-12',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Protagonizan una de las migraciones más espectaculares del planeta, moviéndose en manadas de más de un millón de individuos.',
+                'image' => 'https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?w=500'
+            ],
+            [
+                'zone_id' => 1,
+                'common_name' => 'Babuino',
+                'species' => 'Papio cynocephalus',
+                'birth_date' => '2016-03-22',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Tienen una estructura social muy compleja y pueden comunicarse con más de 30 vocalizaciones distintas.',
+                'image' => 'https://images.unsplash.com/photo-1540149025987-16479e0a0a54?w=500'
+            ],
+            [
+                'zone_id' => 1,
+                'common_name' => 'Licaón (Perro salvaje)',
+                'species' => 'Lycaon pictus',
+                'birth_date' => '2020-11-15',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Son los cazadores más letales de África. Su tasa de éxito en la caza es del 80%, superando con creces al león.',
+                'image' => 'https://images.unsplash.com/photo-1580414594220-410a563db58a?w=500'
+            ],
+            [
+                'zone_id' => 1,
+                'common_name' => 'Oryx',
+                'species' => 'Oryx gazella',
+                'birth_date' => '2017-06-30',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Pueden sobrevivir semanas sin beber agua, obteniendo la humedad necesaria de las raíces y melones del desierto.',
+                'image' => 'https://images.unsplash.com/photo-1517332219491-b7553b98c564?w=500'
+            ],
+            [
+                'zone_id' => 1,
+                'common_name' => 'Facóquero',
+                'species' => 'Phacochoerus africanus',
+                'birth_date' => '2019-01-14',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'A pesar de tener colmillos temibles, suelen huir de los depredadores corriendo a 50 km/h con la cola levantada como una antena.',
+                'image' => 'https://images.unsplash.com/photo-1582234372722-50d7ccc30ebd?w=500'
+            ],
+
+            // ==========================================
+            // ZONA 2: SABANA ACUÁTICA (ID: 2)
+            // ==========================================
+            [
+                'zone_id' => 2,
+                'common_name' => 'Cocodrilo',
+                'species' => 'Crocodylidae',
+                'birth_date' => '2010-02-14',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Su mordida contiene 3.500 kg de presión. ¡Equivale a 27 veces la fuerza humana!',
+                'image' => 'https://images.unsplash.com/photo-1595433409683-943ded8e7b1d?w=500'
+            ],
+            [
+                'zone_id' => 2,
+                'common_name' => 'Hipopótamo',
+                'species' => 'Hippopotamus amphibius',
+                'birth_date' => '2014-04-18',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Segregan un líquido rojo que actúa como protector solar natural y antibiótico contra infecciones.',
+                'image' => 'https://images.unsplash.com/photo-1604454112929-42dedc7c8424?w=500'
+            ],
+            [
+                'zone_id' => 2,
+                'common_name' => 'Flamenco común',
+                'species' => 'Phoenicopterus roseus',
+                'birth_date' => '2020-06-05',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Nacen con el plumaje gris. Su característico color rosa proviene de los pigmentos (carotenoides) de los crustáceos que comen.',
+                'image' => 'https://images.unsplash.com/photo-1497206365907-f5e630693df0?w=500'
+            ],
+            [
+                'zone_id' => 2,
+                'common_name' => 'Capibara',
+                'species' => 'Hydrochoerus hydrochaeris',
+                'birth_date' => '2021-09-12',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Es el roedor más grande del mundo y un excelente nadador. Puede aguantar la respiración hasta 5 minutos bajo el agua.',
+                'image' => 'https://images.unsplash.com/photo-1588631168925-fb3912bf28a8?w=500'
+            ],
+            [
+                'zone_id' => 2,
+                'common_name' => 'Pelícano blanco',
+                'species' => 'Pelecanus onocrotalus',
+                'birth_date' => '2019-03-08',
+                'diet' => 'Piscívoro',
+                'curiosity' => 'La bolsa de su pico puede contener hasta 13 litros de agua, más del doble de lo que cabe en su propio estómago.',
+                'image' => 'https://images.unsplash.com/photo-1507661502690-3a5ce39b4662?w=500'
+            ],
+            [
+                'zone_id' => 2,
+                'common_name' => 'Picozapato',
+                'species' => 'Balaeniceps rex',
+                'birth_date' => '2015-08-08',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Su aspecto prehistórico y su mirada fija lo hacen inconfundible. Suelen quedarse completamente inmóviles durante horas para cazar.',
+                'image' => 'https://images.unsplash.com/photo-1615039322238-34850c9c73bf?w=500'
+            ],
+            [
+                'zone_id' => 2,
+                'common_name' => 'Varano del Nilo',
+                'species' => 'Varanus niloticus',
+                'birth_date' => '2021-04-10',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Son reptiles extremadamente inteligentes y ágiles, capaces de trepar árboles, correr rápido y nadar con destreza.',
+                'image' => 'https://images.unsplash.com/photo-1560020786-896dbec8e1fb?w=500'
+            ],
+            [
+                'zone_id' => 2,
+                'common_name' => 'Cobo de agua',
+                'species' => 'Kobus ellipsiprymnus',
+                'birth_date' => '2018-12-05',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Tienen glándulas en la piel que segregan una sustancia aceitosa y maloliente que impermeabiliza su pelaje y repele depredadores.',
+                'image' => 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?w=500'
+            ],
+            [
+                'zone_id' => 2,
+                'common_name' => 'Grulla coronada',
+                'species' => 'Balearica regulorum',
+                'birth_date' => '2022-02-28',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Es famosa por su cresta dorada y sus elaboradas danzas de cortejo, que incluyen saltos y reverencias.',
+                'image' => 'https://images.unsplash.com/photo-1555169062-013468b47731?w=500'
+            ],
+            [
+                'zone_id' => 2,
+                'common_name' => 'Águila pescadora',
+                'species' => 'Pandion haliaetus',
+                'birth_date' => '2019-07-17',
+                'diet' => 'Piscívoro',
+                'curiosity' => 'Sus garras tienen unas escamas ásperas especiales llamadas espículas que les permiten sujetar peces resbaladizos en pleno vuelo.',
+                'image' => 'https://images.unsplash.com/photo-1590494050215-684a0d813727?w=500'
+            ],
+
+            // ==========================================
+            // ZONA 3: JUNGLA AVIARIO Y TREPADORES (ID: 3)
+            // ==========================================
+            [
+                'zone_id' => 3,
+                'common_name' => 'Chimpancé',
+                'species' => 'Pan troglodytes',
+                'birth_date' => '2018-07-05',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Son nuestros parientes no humanos más cercanos. ¡Comparten el 98% de nuestro ADN!',
+                'image' => 'https://images.unsplash.com/photo-1742729322173-19b4ed114ac2?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Mono capuchino',
+                'species' => 'Cebus',
+                'birth_date' => '2019-01-25',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Utiliza su cola como quinta mano para columpiarse. Además, utilizan herramientas de piedra para abrir nueces.',
+                'image' => 'https://images.unsplash.com/photo-1721329501836-5e7e2d055f64?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Tucán toco',
+                'species' => 'Ramphastos toco',
+                'birth_date' => '2021-04-11',
+                'diet' => 'Frugívoro',
+                'curiosity' => 'Su enorme pico no es un arma, es hueco y ligero, y le sirve como un "radiador" para regular la temperatura de su cuerpo.',
+                'image' => 'https://images.unsplash.com/photo-1549480662-8e10080644dd?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Perezoso de tres dedos',
+                'species' => 'Bradypus tridactylus',
+                'birth_date' => '2016-12-02',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Son tan lentos que algas verdes crecen en su pelaje, lo cual les proporciona un camuflaje perfecto en la selva.',
+                'image' => 'https://images.unsplash.com/photo-1520601323386-09e414c5b3ab?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Jaguar',
+                'species' => 'Panthera onca',
+                'birth_date' => '2018-09-14',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'A diferencia de otros felinos, a los jaguares les encanta el agua y son excelentes nadadores que cazan incluso bajo el agua.',
+                'image' => 'https://images.unsplash.com/photo-1542301072-7bc0931d87e1?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Gorila de costa',
+                'species' => 'Gorilla gorilla',
+                'birth_date' => '2013-05-18',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Viven en grupos estructurados y pacíficos liderados por un macho dominante conocido como "espalda plateada".',
+                'image' => 'https://images.unsplash.com/photo-1541604085429-191834169736?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Guacamayo Rojo',
+                'species' => 'Ara macao',
+                'birth_date' => '2015-10-10',
+                'diet' => 'Frugívoro',
+                'curiosity' => 'Son aves monógamas que se emparejan de por vida. En cautiverio pueden llegar a vivir hasta 50 años.',
+                'image' => 'https://images.unsplash.com/photo-1541434389020-f1dbb1626353?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Lémur de cola anillada',
+                'species' => 'Lemur catta',
+                'birth_date' => '2020-02-28',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Solo se encuentran en la isla de Madagascar. Utilizan sus llamativas colas para comunicarse y pelear usando "guerras de olores".',
+                'image' => 'https://images.unsplash.com/photo-1535565551936-e8d1ee7d83dd?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Tigre de Bengala',
+                'species' => 'Panthera tigris tigris',
+                'birth_date' => '2017-08-08',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'El patrón de rayas de cada tigre es único, exactamente igual que las huellas dactilares de un ser humano.',
+                'image' => 'https://images.unsplash.com/photo-1503066211613-c17ebc9daef0?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Orangután de Borneo',
+                'species' => 'Pongo pygmaeus',
+                'birth_date' => '2012-05-14',
+                'diet' => 'Frugívoro',
+                'curiosity' => 'Su nombre en malayo significa "hombre del bosque". Son los animales arborícolas más grandes del mundo.',
+                'image' => 'https://images.unsplash.com/photo-1548674998-c11fbde2ec14?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Pantera Negra',
+                'species' => 'Panthera pardus',
+                'birth_date' => '2016-10-09',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'No es una especie distinta. Es un leopardo o jaguar con melanismo, un exceso de pigmento oscuro. Si la miras al sol, se ven sus manchas.',
+                'image' => 'https://images.unsplash.com/photo-1517649281203-cb8ec944f243?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Guacamayo Azul y Amarillo',
+                'species' => 'Ara ararauna',
+                'birth_date' => '2020-01-20',
+                'diet' => 'Frugívoro',
+                'curiosity' => 'Tienen tanta fuerza en el pico que pueden romper la cáscara de un coco sin ningún esfuerzo.',
+                'image' => 'https://images.unsplash.com/photo-1552054230-07e15f8386f7?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Tapir Amazónico',
+                'species' => 'Tapirus terrestris',
+                'birth_date' => '2017-08-30',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Tienen un hocico alargado en forma de trompa que usan como snorkel cuando se sumergen en los ríos para escapar de los jaguares.',
+                'image' => 'https://images.unsplash.com/photo-1621578144222-19e07fb8d3c1?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Águila Harpía',
+                'species' => 'Harpia harpyja',
+                'birth_date' => '2014-11-11',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Sus garras son más grandes que las de un oso pardo. Pueden levantar presas que igualan su propio peso.',
+                'image' => 'https://images.unsplash.com/photo-1601002242055-3ee8b1b22e4c?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Tití Leoncito',
+                'species' => 'Cebuella pygmaea',
+                'birth_date' => '2023-03-01',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Es el mono más pequeño del mundo. Un adulto cabe perfectamente en la palma de una mano humana.',
+                'image' => 'https://images.unsplash.com/photo-1534062630776-6330ce148281?w=500'
+            ],
+            [
+                'zone_id' => 3,
+                'common_name' => 'Cálao Rinoceronte',
+                'species' => 'Buceros rhinoceros',
+                'birth_date' => '2019-09-09',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Tienen una protuberancia en el pico llamada "casco" que actúa como una caja de resonancia para amplificar sus cantos en la selva.',
+                'image' => 'https://images.unsplash.com/photo-1606132791402-4fc937cc57ea?w=500'
+            ],
+
+            // ==========================================
+            // ZONA 4: JUNGLA REPTILARIO (ID: 4)
+            // ==========================================
+            [
+                'zone_id' => 4,
+                'common_name' => 'Víbora',
+                'species' => 'Viperinae',
+                'birth_date' => '2021-11-11',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Su olfato es... ¡LA LENGUA! Usan su lengua bífida para recolectar partículas y llevarlas al Órgano de Jacobson en el paladar.',
+                'image' => 'https://images.unsplash.com/photo-1605051538177-72c289389de5?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Camaleón pantera',
+                'species' => 'Furcifer pardalis',
+                'birth_date' => '2022-03-08',
+                'diet' => 'Insectívoro',
+                'curiosity' => 'Tienen visión de 360 grados. Sus ojos pueden moverse de forma independiente el uno del otro para cazar y vigilar.',
+                'image' => 'https://images.unsplash.com/photo-1541300613939-71366b37c92e?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Rana dardo venenosa',
+                'species' => 'Dendrobatidae',
+                'birth_date' => '2023-01-20',
+                'diet' => 'Insectívoro',
+                'curiosity' => 'En los zoológicos no son venenosas. Pierden su toxicidad porque su veneno proviene de hormigas específicas que comen en estado salvaje.',
+                'image' => 'https://images.unsplash.com/photo-1579895240409-f1fb525f0a71?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Anaconda verde',
+                'species' => 'Eunectes murinus',
+                'birth_date' => '2015-10-31',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Es la serpiente más pesada del mundo. Pasa la mayor parte de su tiempo sumergida en el agua esperando a sus presas.',
+                'image' => 'https://images.unsplash.com/photo-1563234979-58ec78995a97?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Iguana Verde',
+                'species' => 'Iguana iguana',
+                'birth_date' => '2018-05-19',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Tienen un "tercer ojo" en la parte superior de la cabeza llamado ojo parietal que les ayuda a detectar sombras de depredadores aéreos.',
+                'image' => 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Dragón de Komodo',
+                'species' => 'Varanus komodoensis',
+                'birth_date' => '2014-12-11',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Es el lagarto más grande del planeta. Su saliva contiene bacterias y veneno que debilitan a sus presas progresivamente.',
+                'image' => 'https://images.unsplash.com/photo-1582515082404-e3fb6f0c1dc4?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Boa constrictor',
+                'species' => 'Boa constrictor',
+                'birth_date' => '2017-06-25',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'No son venenosas; matan a sus presas cortando el flujo sanguíneo con su poderoso y letal abrazo.',
+                'image' => 'https://images.unsplash.com/photo-1502450849313-1628178a5e01?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Tortuga Gigante de Aldabra',
+                'species' => 'Aldabrachelys gigantea',
+                'birth_date' => '1950-01-01',
+                'diet' => 'Herbívoro',
+                'curiosity' => 'Pueden vivir más de 150 años. ¡Algunas de las tortugas actuales nacieron antes de que se inventara el teléfono!',
+                'image' => 'https://images.unsplash.com/photo-1521714088998-d7b56a31f79c?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Mamba Negra',
+                'species' => 'Dendroaspis polylepis',
+                'birth_date' => '2018-02-14',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Su nombre no viene del color de sus escamas (que son grises o marrones), sino del interior de su boca, que es negro como la tinta.',
+                'image' => 'https://images.unsplash.com/photo-1533031023223-287711311b51?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Pitón Reticulada',
+                'species' => 'Malayopython reticulatus',
+                'birth_date' => '2011-07-22',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Es la serpiente más larga del mundo, pudiendo superar los 7 metros de longitud. Son excelentes nadadoras.',
+                'image' => 'https://images.unsplash.com/photo-1629858340773-89ea27303038?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Cobra Real',
+                'species' => 'Ophiophagus hannah',
+                'birth_date' => '2016-05-05',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Es la única serpiente del mundo que construye nidos para sus huevos, amontonando hojas secas con su cuerpo.',
+                'image' => 'https://images.unsplash.com/photo-1608828036222-1d7010a30b42?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Gecko Diurno de Madagascar',
+                'species' => 'Phelsuma madagascariensis',
+                'birth_date' => '2022-10-10',
+                'diet' => 'Insectívoro',
+                'curiosity' => 'No tienen párpados. Para limpiar y humedecer sus grandes ojos, ¡los lamen con su larga lengua!',
+                'image' => 'https://images.unsplash.com/photo-1558237937-29d9e4313fa7?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Rana Arborícola Verde',
+                'species' => 'Litoria caerulea',
+                'birth_date' => '2023-01-15',
+                'diet' => 'Insectívoro',
+                'curiosity' => 'Sus dedos segregan un moco pegajoso que funciona como ventosa, permitiéndole caminar por cristales totalmente verticales.',
+                'image' => 'https://images.unsplash.com/photo-1560235790-264624388e6e?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Caimán de Anteojos',
+                'species' => 'Caiman crocodilus',
+                'birth_date' => '2017-12-01',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Se le llama así por una cresta ósea entre sus ojos que parece el puente de unas gafas.',
+                'image' => 'https://images.unsplash.com/photo-1549449341-a1d275727191?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Basilisco Verde',
+                'species' => 'Basiliscus plumifrons',
+                'birth_date' => '2021-08-19',
+                'diet' => 'Omnívoro',
+                'curiosity' => 'Se le conoce popularmente como el "lagarto Jesucristo" por su increíble habilidad de correr sobre la superficie del agua sin hundirse.',
+                'image' => 'https://images.unsplash.com/photo-1506540194848-15467e4529db?w=500'
+            ],
+            [
+                'zone_id' => 4,
+                'common_name' => 'Monstruo de Gila',
+                'species' => 'Heloderma suspectum',
+                'birth_date' => '2015-06-11',
+                'diet' => 'Carnívoro',
+                'curiosity' => 'Es uno de los pocos lagartos venenosos del mundo. Un compuesto de su saliva se usa hoy en día en medicamentos para tratar la diabetes humana.',
+                'image' => 'https://images.unsplash.com/photo-1627578272808-1c469273f324?w=500'
+            ]
         ];
 
-        // Recorremos el array para introducirlo en la base de datos
         foreach ($animals as $animal) {
             Animal::create($animal);
         }

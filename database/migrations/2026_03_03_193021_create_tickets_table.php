@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('type')->nullable(); // Ej: adulto, niño, familia...
 
             $table->timestamps();
+            $table->date('day_used')->nullable();
         });
     }
 

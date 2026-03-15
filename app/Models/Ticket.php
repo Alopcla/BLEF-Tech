@@ -11,10 +11,13 @@ class Ticket extends Model
 
     protected $fillable = [
         'date',
-        'price'
+        'price',
+        'type',
+        'date_used'
     ];
 
     protected $casts = [
         'date' => 'date',
+        'date_used' => 'date'
     ];
 }

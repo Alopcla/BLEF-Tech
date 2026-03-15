@@ -10,10 +10,13 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+
             $table->date('date');
             $table->decimal('price', 8, 2);
-            $table->string('type'); // Ej: adulto, niño, familia...
+            $table->string('type')->nullable(); // Ej: adulto, niño, familia...
+
             $table->timestamps();
+            $table->date('day_used')->nullable();
         });
     }
 

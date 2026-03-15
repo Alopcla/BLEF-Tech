@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Employee;
+use App\Models\Zone;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -43,7 +44,9 @@ class EmployeeFactory extends Factory
             'birth_date' => $this->faker->dateTimeBetween('-60 years', '-18 years')->format('Y-m-d'),
             'email' => $this->faker->unique()->safeEmail(),
             'address' => $this->faker->streetAddress(),
-            'province' => $this->faker->state()
+            'province' => $this->faker->state(),
+            'position' => $this->faker->randomElement(['Cuidador', 'Médico', 'Mantenimiento', 'Guía']),
+            'zone_id' => Zone::inRandomOrder()->value('id'),
         ];
     }
 }

@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Forzamos el registro del evento desde el Provider del TFG
         EmployeeTelephone::creating(function ($telephone) {
-            $ultimoOrden = EmployeeTelephone::where('employee_id', $telephone->employee_id)->max('order');
+            $ultimoOrden = EmployeeTelephone::where('employee_dni', $telephone->employee_dni)->max('order');
             $telephone->order = ($ultimoOrden ?? 0) + 1;
         });
     }

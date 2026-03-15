@@ -3,32 +3,25 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TicketMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    // 1. DECLARAMOS LA VARIABLE PÚBLICA
-    // Al ser pública, Laravel la hace disponible automáticamente en la vista de Blade.
+    // Esta variable contendrá el array con 'id', 'date', 'day_used' y 'price'
     public $tickets;
 
-    /**
-     * 2. MODIFICAMOS EL CONSTRUCTOR
-     * Aquí es donde recibiremos el array de tickets desde el Controlador.
-     */
     public function __construct($tickets)
     {
         $this->tickets = $tickets;
     }
 
-    /**
-     * 3. MODIFICAMOS EL ASUNTO (Opcional pero recomendado)
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -36,22 +29,22 @@ class TicketMail extends Mailable
         );
     }
 
-    /**
-     * 4. DEFINIMOS LA VISTA CORRECTA
-     * Cambiamos 'view.name' por la ruta de tu archivo blade.
-     */
     public function content(): Content
     {
         return new Content(
-            view: 'emails.tickets', // Esto buscará en resources/views/emails/tickets.blade.php
+            view: 'emails.tickets', // Esta es la vista que verá el usuario en el cuerpo del email
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     */
     public function attachments(): array
     {
-        return [];
+        // Generamos el PDF usando la misma vista (o podrías crear una específica para el PDF)
+        // Pasamos el array de tickets para que DomPDF tenga acceso a 'day_used'
+        $pdf = Pdf::loadView('emails.tickets', ['tickets' => $this->tickets]);
+
+        return [
+            Attachment::fromData(fn() => $pdf->output(), 'Entradas_ZooPark.pdf')
+                ->withMime('application/pdf'),
+        ];
     }
 }

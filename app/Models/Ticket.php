@@ -11,7 +11,6 @@ class Ticket extends Model
 
     protected $fillable = [
         'customer_dni',
-        'employee_dni',
         'date',
         'price'
     ];
@@ -23,10 +22,5 @@ class Ticket extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_dni', 'dni');
-    }
-
-    public function employee()
-    {
-        return $this->belongsTo(Employee::class, 'employee_dni', 'dni');
     }
 }

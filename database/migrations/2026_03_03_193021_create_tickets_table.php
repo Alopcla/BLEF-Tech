@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
 
             $table->string('customer_dni');
-            $table->string('employee_dni');
 
             $table->date('date');
             $table->decimal('price', 8, 2);

@@ -9,9 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ecosystems', function (Blueprint $table) {
+            // Campo 'id' del ecosistema
             $table->id();
+            // Campo 'nombre' del ecosistema
+            $table->string('name');
+            // Campo 'clima'. Ejemplo: Arido, Subtropical...
             $table->string('climate');
+            // Campo 'region'. Ejemplo: Africa, Sudafrica...
             $table->string('region');
+            
             $table->timestamps();
         });
     }

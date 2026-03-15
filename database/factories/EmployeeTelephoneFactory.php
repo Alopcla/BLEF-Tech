@@ -26,9 +26,9 @@ class EmployeeTelephoneFactory extends Factory
     {
         return [
             /** Aqui le decimos que utilice el Factory de Employee para rellenar el ID */
-            'employee_id' => Employee::factory(),
+            'employee_dni' => Employee::factory(),
             /** Le asignamos el numero de telefono (unico) con 9 digitos aleatorios */
-            'telephone' => $this->faker->unique()->numerify('#########'),
+            'telephone' => $this->faker->unique()->numerify('+34#########'),
             /*'orden' => function (array $attributes) {
                 return \App\Models\EmpleadoTelefono::where('empleado_id', $attributes['empleado_id'])
                     ->max('orden') + 1;

@@ -13,4 +13,8 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+// Ruta para obtener un animal aleatorio
 Route::get('/animal-aleatorio', [AnimalController::class, 'getRandomAnimal']);
+
+// Ruta para obtener todos los animales con su ecosistema y zona
+Route::get('/animales', [AnimalController::class, 'index']);

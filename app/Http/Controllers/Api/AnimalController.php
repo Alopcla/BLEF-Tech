@@ -9,12 +9,27 @@ use App\Models\Animal;
 class AnimalController extends Controller
 {
     /**
+     * Obtiene TODOS los animales con sus zonas y ecosistemas.
+    */
+    public function index()
+    {
+        // Traemos todos los animales e incluimos su zona, y el ecosistema de esa zona
+        $animals = Animal::with('zone.ecosystem')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $animals
+        ]);
+    }
+
+    /**
      * Obtiene un animal aleatorio de la base de datos local.
      */
     public function getRandomAnimal()
     {
-        // Consulta un registro aleatorio en la tabla local de animales
-        $animal = Animal::inRandomOrder()->first();
+        // Añadimos también las relaciones aquí por si quieres mostrar
+        // de qué ecosistema es este animal aleatorio.
+        $animal = Animal::with('zone.ecosystem')->inRandomOrder()->first();
 
         if (!$animal) {
             return response()->json([
@@ -23,6 +38,10 @@ class AnimalController extends Controller
             ], 404);
         }
 
-        return response()->json($animal);
+        // Lo devolvemos en el mismo formato estructurado
+        return response()->json([
+            'status' => 'success',
+            'data' => $animal
+        ]);
     }
 }

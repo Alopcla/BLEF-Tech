@@ -13,9 +13,10 @@ class Experience extends Model
         'zone_id',
         'name',
         'description',
-        'duration',
+        'duration_min',
         'price',
-        'max_capacity'
+        'max_capacity',
+        'ability'
     ];
 
     // Relación N:1 -> Una experiencia pertenece a una zona

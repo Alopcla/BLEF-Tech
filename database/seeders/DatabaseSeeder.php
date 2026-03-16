@@ -21,8 +21,7 @@ class DatabaseSeeder extends Seeder
             // 1. PRIMERO LA ESTRUCTURA ESTÁTICA
             EcosystemSeeder::class,
             ZoneSeeder::class,
-            AnimalSeeder::class,
-
+            
             // 2. LUEGO LOS DATOS FALSOS QUE DEPENDEN DE ESA ESTRUCTURA
             EmployeeSeeder::class,
             EmployeeTelephoneSeeder::class,

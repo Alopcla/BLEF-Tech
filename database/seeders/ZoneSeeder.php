@@ -13,7 +13,11 @@ class ZoneSeeder extends Seeder
      */
     public function run(): void
     {
-        // Zonas de la Sabana (ecosystem_id = 1)
+        // ==========================================
+        // ECOSISTEMA 1: SABANA
+        // ==========================================
+
+        // ZONA ID: 1
         Zone::create([
             'ecosystem_id' => 1,
             'type' => 'Terrestre',
@@ -21,6 +25,7 @@ class ZoneSeeder extends Seeder
             'description' => 'Gran planicie para felinos y herbívoros'
         ]);
 
+        // ZONA ID: 2
         Zone::create([
             'ecosystem_id' => 1,
             'type' => 'Acuático',
@@ -28,7 +33,11 @@ class ZoneSeeder extends Seeder
             'description' => 'Charca principal para hipopótamos y cocodrilos'
         ]);
 
-        // Zonas de la Jungla (ecosystem_id = 2)
+        // ==========================================
+        // ECOSISTEMA 2: JUNGLA
+        // ==========================================
+
+        // ZONA ID: 3
         Zone::create([
             'ecosystem_id' => 2,
             'type' => 'Aviario',
@@ -36,11 +45,20 @@ class ZoneSeeder extends Seeder
             'description' => 'Cúpula cerrada para aves exóticas'
         ]);
 
+        // ZONA ID: 4
         Zone::create([
             'ecosystem_id' => 2,
             'type' => 'Reptilario',
             'dimensions_m2' => 1500,
             'description' => 'Terrarios climatizados'
+        ]);
+
+        // ZONA ID: 5 (¡LA NUEVA!)
+        Zone::create([
+            'ecosystem_id' => 2,
+            'type' => 'Trepadores y Terrestres',
+            'dimensions_m2' => 4500,
+            'description' => 'Zona de densa vegetación para primates y grandes felinos selváticos'
         ]);
     }
 }

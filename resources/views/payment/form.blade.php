@@ -129,12 +129,17 @@
             </div>
             @endauth
 
-            <button type="submit" class="btn-pagar shadow" id="btnSubmit">Realizar Pago</button>
+
+            <button type="submit" class="btn-pagar shadow" id="btnSubmit">Realizar Pago con Tarjeta</button>
+
+            <div class="text-center my-3 text-white-50">— O pagar con —</div>
+            <div id="paypal-button-container"></div>
+        </form>
         </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <!--Bloque de control de aforos, textos de ayuda-->
     <script>
         const form = document.getElementById('purchaseForm');
         const inputFecha = document.querySelector('input[name="dia"]');
@@ -211,6 +216,49 @@
         inputFecha.addEventListener('change', revisarCupo);
         document.addEventListener('DOMContentLoaded', revisarCupo);
     </script>
+    <!--Bloque Paypal-->
+    <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency=EUR"></script>
+
+    <script>
+        paypal.Buttons({
+            style: {
+                layout: 'vertical',
+                color: 'gold',
+                shape: 'rect',
+                label: 'paypal'
+            },
+
+            // Se ejecuta al hacer clic en el botón de PayPal
+            createOrder: function(data, actions) {
+                // Obtenemos la cantidad de entradas del input de tu formulario
+                const cantidad = document.querySelector('input[name="cantidad"]').value;
+                const precioUnitario = 15.00; // Define aquí el precio de la entrada
+                const total = (cantidad * precioUnitario).toFixed(2);
+
+                return actions.order.create({
+                    purchase_units: [{
+                        description: "Entradas para Park Zoo - Cantidad: " + cantidad,
+                        amount: {
+                            value: total
+                        }
+                    }]
+                });
+            },
+
+            // Se ejecuta cuando el pago es aprobado por PayPal
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Redirigimos a la ruta de Laravel que activa el mensaje de sesión
+                    window.location.href = "/paypal/success";
+                });
+            },
+
+            onCancel: function(data) {
+                alert('Pago cancelado.');
+            }
+        }).render('#paypal-button-container');
+    </script>
 </body>
+
 
 </html>

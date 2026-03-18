@@ -43,5 +43,9 @@ Route::get('/check-availability', [App\Http\Controllers\PaymentController::class
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
 Route::get('/experiencias/{slug}', [ExperienciaController::class, 'MostrarInfo'])->name('experienciasInfo');
 
+/**Ruta para la tienda */
+Route::get('/tienda', function () {return view('tienda');})->name('tienda');
+
 /** Ruta para el Login */
 require __DIR__ . '/auth.php';
+

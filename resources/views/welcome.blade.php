@@ -44,7 +44,7 @@
                     <a href="{{route('payment.show')}}">Tickets</a>
                     <a href="{{ route('VistaExperiencias') }}">Experiencias</a>
                     <a href="#seccion-animales">Animales</a>
-                    <a href="#">Tienda</a>
+                    <a href="{{ route('tienda') }}">Tienda</a>
                     <a href="#">Contacto</a>
                     <!-- En cuanto a la redireccion a otra pagina, seria otra funcion distinta.
                     Dicha funcion es... url()

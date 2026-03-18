@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="{{ asset('style-loginv2.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
     <!-- Google Sign-In SDK no descomentar hasta configurar OAuth -->
     <!-- <script src="https://accounts.google.com/gsi/client" defer></script> -->
 </head>
@@ -19,6 +19,9 @@
         <div class="row h-100">
             <div class="col-md-5 izq-column">
                 <div class="form-container">
+                    <a href="{{ url('/') }}" class="volver-index">
+                        <i class="bi bi-arrow-left-circle"></i> Volver al inicio
+                    </a>
                     <img src="{{ asset('LOGO.PNG') }}" class="logo" alt="Logo BLR Zoo">
                     <h3>Iniciar Sesión</h3>
                     <p class="description">
@@ -120,6 +123,7 @@
                         <a href="{{ route('register') }}">¿No tienes cuenta? Crear una</a>
                     </div>
                 </div>
+
             </div>
 
             <div class="col-md-7 der-column d-none d-md-flex p-0">

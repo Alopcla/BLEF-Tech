@@ -6,7 +6,7 @@ export default defineConfig({
     plugins: [
         laravel({
             // Asegúrate de que aquí ponga .jsx si ya renombraste el archivo
-            input: ['resources/css/app.css', 'resources/js/app.jsx'],
+            input: ['resources/css/app.css', 'resources/js/app.jsx', 'resources/js/tienda.jsx'],
             refresh: true,
         }),
         react(),

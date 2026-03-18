@@ -41,6 +41,7 @@ Route::get('/check-availability', [App\Http\Controllers\PaymentController::class
 
 /** Rutas de la vista Experiencias */
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
+Route::get('/experiencias/{slug}', [ExperienciaController::class, 'MostrarInfo'])->name('experienciasInfo');
 
 /** Ruta para el Login */
 require __DIR__ . '/auth.php';

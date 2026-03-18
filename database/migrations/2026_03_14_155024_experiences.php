@@ -18,15 +18,21 @@ return new class extends Migration
             $table->foreignId('zone_id')->constrained('zones')->onDelete('cascade');
             // Campo 'nombre', siendo el nombre de la experiencia
             $table->string('name');
+            // Campo 'slug', una versión amigable del nombre para URLs (ej: "nado-con-delfines")
+            $table->string('slug')->unique();
             // Campo ''descripcion', breve descripcion de la experiencia del zoo
             $table->string('description')->nullable();
+            // Información EXTENSA para la página de detalle
+            $table->text('details')->nullable();
             // Campo 'duracion', siendo en minutos lo que dura la experiencia
             $table->integer('duration_min');
             // Campo 'precio', conteniendo el precio numeros decimalos. Ejemplo: 10,20 euros
             $table->decimal('price');
             // Campo 'capacidad', numero de personas puede ocupar dicha experiencia
             $table->integer('ability');
-
+            // Campo 'Imagen', contiene la imagen de la experiencia
+            $table->string('image')->nullable(); // Permite null si no hay imagen
+            
             $table->timestamps();
         });
     }

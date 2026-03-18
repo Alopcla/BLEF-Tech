@@ -12,11 +12,14 @@ class Experience extends Model
     protected $fillable = [
         'zone_id',
         'name',
+        'slug',
         'description',
+        'details',
         'duration_min',
         'price',
         'max_capacity',
-        'ability'
+        'ability',
+        'image'
     ];
 
     // Relación N:1 -> Una experiencia pertenece a una zona

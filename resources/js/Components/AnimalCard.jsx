@@ -36,7 +36,8 @@ const AnimalCard = ({ animal }) => {
                     src={imageUrl}
                     alt={animal.common_name}
                     onError={(e) => { e.target.onerror = null; e.target.src = imagenPorDefecto; }}
-                    className="w-full h-full object-cover"
+                    /* AQUÍ ESTÁ LA MAGIA: Añadimos object-center */
+                    className="w-full h-full object-cover object-[50%_25%] transition-transform duration-700 hover:scale-110"
                 />
 
                 {/* Fecha */}

@@ -17,10 +17,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script src="main.js" defer></script>
+
     <!-- Obligatorio estas dos lineas de codigo para trabajar con React.
     Si en otra pagina no habria componentes de React, no es necesario añadir dichas lineas. -->
     @viteReactRefresh
-    @vite(['resources/js/app.jsx'])
+    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
 </head>
 
 <body>
@@ -40,10 +41,10 @@
                 <button class="cerrar-menu" id="cerrar"><i class="bi bi-x-lg"></i></button>
                 <div class="navegacion-flex">
                     <a href="/">Inicio</a>
-                    <a href="#">Tickets</a>
+                    <a href="{{route('payment.show')}}">Tickets</a>
                     <a href="{{ route('VistaExperiencias') }}">Experiencias</a>
                     <a href="#seccion-animales">Animales</a>
-                    <a href="#">Tienda</a>
+                    <a href="{{ route('tienda') }}">Tienda</a>
                     <a href="#">Contacto</a>
                     <!-- En cuanto a la redireccion a otra pagina, seria otra funcion distinta.
                     Dicha funcion es... url()
@@ -56,6 +57,10 @@
             </nav>
         </div>
     </header>
+    
+    <!-- FUNCIONALIDAD ANIMALES -->
+    <div id="seccion-animales" style="display: none; min-height: 500px; padding: 50px;">
+    </div>
 
     <footer>
         <div class="redes-sociales">
@@ -65,8 +70,7 @@
             <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
         </div>
     </footer>
-    <div id="seccion-animales" style="display: none; min-height: 500px; padding: 50px;">
-    </div>
+
 </body>
 
 </html>

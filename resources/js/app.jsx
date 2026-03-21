@@ -1,7 +1,8 @@
 import './bootstrap';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import TarjetaAnimal from './Components/TarjetaAnimal';
+// 1. IMPORTANTE: Importamos la Galería (el Padre) en lugar de la Tarjeta suelta
+import AnimalGallery from './Components/AnimalGallery';
 
 const container = document.getElementById('seccion-animales');
 
@@ -11,7 +12,8 @@ if (container) {
     // Función para renderizar el componente
     const renderAnimales = () => {
         container.style.display = 'block'; // Mostramos el div que estaba oculto
-        root.render(<TarjetaAnimal />);
+        // 2. IMPORTANTE: Renderizamos el componente Padre
+        root.render(<AnimalGallery />);
     };
 
     // Buscamos el enlace del menú en el HTML y le asignamos el evento

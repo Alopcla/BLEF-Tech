@@ -36,9 +36,16 @@ Route::post('/registrar-nuevo-empleado', [EmployeeController::class, 'store'])->
 /** Rutas de Pago */
 Route::get('/pago', [PaymentController::class, 'showForm'])->name('payment.show');
 Route::post('/pago', [PaymentController::class, 'processPayment'])->name('payment.process');
+//Validar cantidad disponioble de entradas en tiempo real
+Route::get('/check-availability', [App\Http\Controllers\PaymentController::class, 'checkAvailability'])->name('check.availability');
 
 /** Rutas de la vista Experiencias */
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
+Route::get('/experiencias/{slug}', [ExperienciaController::class, 'MostrarInfo'])->name('experienciasInfo');
+
+/**Ruta para la tienda */
+Route::get('/tienda', function () {return view('tienda');})->name('tienda');
 
 /** Ruta para el Login */
 require __DIR__ . '/auth.php';
+

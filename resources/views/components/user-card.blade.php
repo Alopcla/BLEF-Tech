@@ -2,7 +2,7 @@
     <div class="flex justify-between items-start">
         <div>
             <h2 class="text-xl font-bold">{{ $employee->name }} {{ $employee->surname }}</h2>
-            <p class="text-xs text-gray-800 uppercase tracking-wider">DNI: {{ $employee->DNI }}</p>
+            <p class="text-xs text-gray-800 uppercase tracking-wider">DNI: {{ $employee->dni }}</p>
         </div>
     </div>
 

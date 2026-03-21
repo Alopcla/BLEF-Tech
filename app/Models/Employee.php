@@ -10,6 +10,17 @@ class Employee extends Model
 {
     /** Siempre se introduce dentro de la clase del modelo. */
     use HasFactory;
+
+    /**
+     * Variables para que Laravel, a la hora de realizar una consulta,
+     * se ayude con estas variables para buscar los campos que realmente son claves primarias.
+     * Sin dichas variables, por defecto Laravel asume que la clave primaria de una tabla es id(), es decir, numerico y
+     * autoincremental
+     */
+    protected $primaryKey = 'dni';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     /**
      * Summary of fillable: Propiedad de asignacion masiva (Seguridad). Mediante $fillable,
      * le decimos a Laravel que los campos que esten asignados dentro del array,
@@ -17,13 +28,15 @@ class Employee extends Model
      * @var array
      */
     protected $fillable = [
-        'DNI',
+        'dni',
+        'zone_id',
         'name',
         'surname',
         'email',
         'birth_date',
         'address',
-        'province'
+        'province',
+        'position'
     ];
 
     /**
@@ -54,9 +67,9 @@ class Employee extends Model
      * Establecemos la conexion con la tabla Employee con la tabla EmployeeTelephone,
      * mediante relacion 1:N.
      * Un empleado tiene muchos telefonos, un telefono es tenido solo por un empleado.
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<EmployeeTelephone, Employee>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<EmpleadoTelefono, Empleado>
      */
     public function telephones() {
-        return $this->hasMany(EmployeeTelephone::class)->orderBy('order');
+        return $this->hasMany(EmployeeTelephone::class, 'employee_dni', 'dni')->orderBy('order');
     }
 }

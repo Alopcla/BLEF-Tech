@@ -5,118 +5,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Experiencias - Zoológico</title>
-
-    <!-- Tailwind CDN (modo principiante) -->
+    
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'parkzoo': ['Park zoo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        body {
-            padding-bottom: 100px;
+        @font-face {
+            font-family: 'Park zoo';
+            src: url('/fonts/Parkzoo-Regular.woff2') format('woff2'),
+                 url('/fonts/Parkzoo-Regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
         }
     </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+<body class="font-sans text-white flex flex-col min-h-screen">
 
-<body class="relative font-sans">
+<video autoplay muted loop class="fixed w-full h-full object-cover -z-10">
+  <source src="{{ asset('video.mp4') }}" type="video/mp4">
+</video>
+<div class="fixed inset-0 bg-black/50 -z-10"></div>
 
-    <!-- VIDEO FONDO -->
-    <video autoplay muted loop class="fixed top-0 left-0 w-full h-full object-cover -z-10">
-        <source src="{{ asset('Video.mp4') }}" type="video/mp4">
-    </video>
+<header class="flex justify-center pt-8 px-6">
+  <div class="flex items-center gap-8 bg-black/40 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-white/20">
+    <img src="{{ asset('logo.png') }}" class="w-12">
+    <nav class="hidden md:flex gap-5 text-lg font-parkzoo items-center">
+      <a href="/" class="hover:text-amber-300 transition">Inicio</a>
+      <a href="#" class="hover:text-amber-300 transition">Tickets</a>
+      <a href="/experiencias" class="hover:text-amber-300 transition">Experiencias</a>
+      <a href="#" class="hover:text-amber-300 transition">Animales</a>
+      <a href="#" class="hover:text-amber-300 transition">Tienda</a>
+      <a href="#" class="hover:text-amber-300 transition">Contacto</a>
+      <button class="bg-amber-300 text-green-900 px-4 py-1 rounded-full hover:bg-amber-200 transition font-sans font-bold text-sm uppercase tracking-wider">Login</button>
+    </nav>
+  </div>
+</header>
 
-    <!-- HEADER -->
-    <header class="flex justify-center items-center mt-10 px-6">
-        <div class="flex items-center gap-10 bg-black/40 backdrop-blur-md px-6 py-4 rounded-2xl shadow-lg">
-
-            <img src="{{ asset('LOGO.PNG') }}" class="w-14 h-14">
-
-            <nav class="hidden md:flex gap-8 text-[#D9C8A1] text-xl">
-                <a href="/" class="hover:bg-[#D9C8A1] hover:text-[#3A6B35] px-4 py-2 rounded-full transition">Inicio</a>
-                <a href="#"
-                    class="hover:bg-[#D9C8A1] hover:text-[#3A6B35] px-4 py-2 rounded-full transition">Tickets</a>
-                <a href="{{route('VistaExperiencias')}}"
-                    class="hover:bg-[#D9C8A1] hover:text-[#3A6B35] px-4 py-2 rounded-full transition">Experiencias</a>
-                <a href="#seccion-animales"
-                    class="hover:bg-[#D9C8A1] hover:text-[#3A6B35] px-4 py-2 rounded-full transition">Animales</a>
-                <a href="#" class="hover:bg-[#D9C8A1] hover:text-[#3A6B35] px-4 py-2 rounded-full transition">Tienda</a>
-                <a href="#"
-                    class="hover:bg-[#D9C8A1] hover:text-[#3A6B35] px-4 py-2 rounded-full transition">Contacto</a>
-                <a href="{{ route('login') }}">
-                    <button class="bg-[#D9C8A1] text-[#3A6B35] px-5 py-2 rounded-full hover:bg-[#3A6B35] hover:text-[#D9C8A1] transition">
-                        Iniciar Sesión
-                    </button>
-                </a>
-            </nav>
-
-
-        </div>
-    </header>
-
-    <!-- HERO -->
-    <section class="text-center mt-32 px-5">
-        <h1 class="text-5xl md:text-6xl text-[#D9C8A1] font-bold drop-shadow-lg mb-5">
-            Experiencias Únicas
-        </h1>
-        <p class="text-xl text-[#D9C8A1] drop-shadow-md">
-            Vive momentos inolvidables con nuestros animales
-        </p>
+<main class="flex-grow">
+    <section class="text-center mt-20 px-6">
+      <h1 class="text-6xl font-parkzoo mb-2 drop-shadow-lg">Experiencias del Zoológico</h1>
+      <p class="text-gray-300 max-w-xl mx-auto italic">
+        Vive momentos únicos y divertidos con nuestros animales.
+      </p>
     </section>
 
-    <!-- GRID EXPERIENCIAS -->
-    <section class="max-w-6xl mx-auto mt-16 px-5 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-        @foreach($experiencias as $exp)
-
-            <div
-                class="bg-black/70 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg border border-[#D9C8A1]/30 hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-
-                <!-- Imagen -->
-                <img src="{{ $exp->imagen }}" class="w-full h-60 object-cover">
-
-                <!-- Contenido -->
-                <div class="p-6">
-
-                    <h3 class="text-2xl text-[#D9C8A1] mb-3">
-                        {{ $exp->titulo }}
-                    </h3>
-
-                    <p class="text-[#D9C8A1] text-sm mb-4">
-                        {{ $exp->descripcion }}
-                    </p>
-
-                    <div class="flex flex-wrap gap-4 text-sm mb-4 text-[#D9C8A1]">
-                        <span><i class="bi bi-clock"></i> {{ $exp->duracion }}</span>
-                        <span><i class="bi bi-people"></i> {{ $exp->personas }}</span>
-                    </div>
-
-                    <p class="text-[#3A6B35] text-xl mb-4 font-semibold">
-                        {{ $exp->precio }} € por persona
-                    </p>
-
-                    <button
-                        class="w-full bg-[#D9C8A1] text-[#3A6B35] py-2 rounded-full hover:bg-[#3A6B35] hover:text-[#D9C8A1] transition">
-                        Reservar
-                    </button>
-
-                </div>
-            </div>
-
-        @endforeach
-
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="fixed bottom-0 w-full bg-[#D9C8A1] py-4">
-        <div class="flex justify-center gap-6 text-[#3A6B35] text-xl">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
+    <section class="max-w-6xl mx-auto mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-6 mb-20">
+      @foreach($experiencias as $exp)
+      <div class="bg-black/60 p-4 rounded-xl border border-white/20 shadow-lg hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
+        <div class="relative">
+          <img src="{{ $exp->image }}" class="w-full h-48 object-cover rounded-lg mb-2">
+          <span class="absolute top-2 left-2 bg-amber-300 text-green-900 text-xs font-bold px-2 py-1 rounded-full shadow">
+            {{ $exp->type ?? 'General' }}
+          </span>
         </div>
-    </footer>
+        <h3 class="text-xl font-parkzoo text-amber-300">{{ $exp->name }}</h3>
+        <p class="text-gray-300 text-sm mt-1 line-clamp-2">{{ $exp->description }}</p>
+        <div class="flex items-center mt-2">
+          @for ($i = 0; $i < 5; $i++)
+            <i class="{{ $i < ($exp->rating ?? 0) ? 'fa-solid' : 'fa-regular' }} fa-star text-amber-300 text-xs mr-1"></i>
+          @endfor
+        </div>
+        <div class="flex justify-between text-gray-400 text-xs mt-3 uppercase tracking-widest font-semibold">
+          <span><i class="fa-solid fa-clock mr-1"></i>{{ $exp->duration }} min</span>
+          <span><i class="fa-solid fa-user-group mr-1"></i>{{ $exp->ability }} pax</span>
+        </div>
+        <div class="flex justify-between items-center mt-4 pt-3 border-t border-white/10">
+          <span class="text-white font-bold text-xl">{{ $exp->price }} €</span>
+          <div class="flex gap-2">
+            <button class="px-4 py-1.5 rounded-full bg-amber-300 text-green-900 font-bold text-sm hover:bg-amber-200 transition-all shadow-lg">Reservar</button>
+            <a href="{{route('experienciasInfo', $exp->slug)}}" 
+            class="px-3 py-1.5 rounded-full border border-amber-300/50 text-amber-300 text-sm hover:bg-amber-300/10 transition-all font-semibold">
+            Info</a>
+          </div>
+        </div>
+      </div>
+      @endforeach
+    </section>
+</main>
+
+<footer class="bg-black/80 backdrop-blur-xl border-t border-white/10 py-6 mt-auto">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+        
+        <div class="text-gray-400 text-sm order-3 md:order-1">
+            © {{ date('Y') }} <span class="text-gray-200 font-semibold">Zoológico Aventura</span>. Todos los derechos reservados.
+        </div>
+
+        <div class="text-amber-300 font-parkzoo text-3xl order-1 md:order-2">
+            Park Zoo
+        </div>
+
+        <div class="flex gap-6 text-xl order-2 md:order-3">
+            <a href="#" class="text-gray-400 hover:text-amber-300 transition-colors"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-gray-400 hover:text-amber-300 transition-colors"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-amber-300 transition-colors"><i class="fab fa-x-twitter"></i></a>
+            <a href="#" class="text-gray-400 hover:text-amber-300 transition-colors"><i class="fab fa-youtube"></i></a>
+        </div>
+
+    </div>
+</footer>
 
 </body>
 

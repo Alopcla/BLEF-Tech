@@ -27,8 +27,10 @@ class DatabaseSeeder extends Seeder
             // Seeders de Empleados y Telefonos de empleados.
             EmployeeSeeder::class,
             EmployeeTelephoneSeeder::class,
-            // Seeder de Animales.
-            AnimalSeeder::class
+            AnimalSeeder::class,
+            SuppliersSeeder::class,
+            ProductsSeeder::class,
+            ExperienceSeeder::class
         ]);
 
 

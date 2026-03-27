@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Employee;
+use App\Models\Zone;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -14,42 +18,55 @@ class EmployeeController extends Controller
         // Recuperamos todos los empleados de la BD
         $employees = Employee::with('telephones')->get();
 
+        // Recuperar todas las zonas para el desplegable en el Dashboard
+        $zones = Zone::all();
+
         // Enviamos los datos a la vista 'employees' que creamos antes
-        return view('employees', compact('employees'));
+        return view('employees', compact('employees', 'zones'));
     }
 
     public function store(Request $request) {
-        // Validacion para que el nombre sea obligatorio
+        // 1. Añadimos el zone_id a la validación y ponemos dni en minúscula
         $request->validate([
-            'DNI' => 'required|unique:employees,DNI',
+            'dni' => 'required|unique:employees,dni', // Minúsculas
             'name' => 'required|max:255',
             'surname' => 'required',
-            'email' => 'required|email|unique:employees,email',
+            'email' => 'required|email|unique:employees,email|unique:users,email',
             'birth_date' => 'required|date',
             'address' => 'required|string|max:255',
             'province' => 'required|string|max:255',
             'number' => 'required|string',
-
+            'position' => 'required|string',
+            'zone_id' => 'required|integer|exists:zones,id', // Validamos que la zona exista
         ]);
 
-        // Creamos al empleado con todos los campos del formulario
-        $employee = Employee::create([
-            'DNI' => $request->DNI,
-            'name' => $request->name,
-            'surname' => $request->surname,
-            'email' => $request->email,
-            'birth_date' => $request->birth_date,
-            'address' => $request->address,
-            'province' => $request->province
-        ]);
+        DB::transaction(function () use ($request) {
 
-        /**  Aqui se asigna el numero de telefono junto al order automatico.
-        * Se debe al Model Event que se creo en el Modelo EmployeeTelephone
-        * y a su vez se implemento en el Modelo Employee */
-        $employee->telephones()->create([
-            'number' => $request->number
-        ]);
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->dni), // Minúsculas
+            ]);
 
-        return back()->with('success', 'Empleado registrado correctamente!');
+            // 2. Mapeamos exactamente igual que en tu imagen de Supabase
+            $employee = Employee::create([
+                'dni' => $request->dni, // Minúsculas
+                'zone_id' => $request->zone_id, // Añadido el campo de la foránea
+                'name' => $request->name,
+                'surname' => $request->surname,
+                'email' => $request->email,
+                'birth_date' => $request->birth_date,
+                'address' => $request->address,
+                'province' => $request->province,
+                'position' => $request->position
+            ]);
+
+            $employee->telephones()->create([
+                'telephone' => $request->number
+            ]);
+
+        });
+
+        return back()->with('success', '¡Empleado registrado correctamente! Su contraseña de acceso es su DNI.');
     }
 }

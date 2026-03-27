@@ -15,7 +15,7 @@
     padding: 0;
 }
 
-
+/* 2. Aseguramos que el video cubra todo y se quede al fondo */
 .video-background {
     position: fixed;
     top: 0;
@@ -23,7 +23,11 @@
     width: 100vw;
     height: 100vh;
     object-fit: cover;
-    z-index: -1;
+    z-index: 0; /* Lo pasamos a 0 para que no se esconda detrás del body */
+}
+
+body, header {
+    background-color: transparent !important;
 }
 
 header {

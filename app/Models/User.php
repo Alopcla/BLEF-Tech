@@ -46,4 +46,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Summary of getPositionAttribute: Funcion que trata de buscar al empleado mediante su email (es unico)
+     * y devuelve la posicion de su cargo de trabajo.
+     * En caso de que no se encuentre el email del empleado, sera un cliente.
+     */
+    public function getPositionAttribute()
+    {
+
+        // Se busca al empleado en la tabla Employee usando el email del usuario logueado
+        $employee = \App\Models\Employee::where('email', $this->email)->first();
+
+        // Si lo encuentra, se devuelve el cargo del empleado
+        if ($employee)
+            return $employee->position;
+
+
+        // En caso de que en la tabla no se encuentre, por descarte es un cliente
+        return 'Clientes';
+    }
 }

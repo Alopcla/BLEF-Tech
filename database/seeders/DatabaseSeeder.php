@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,13 +14,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-         /** De esta forma llamamos a los archivos externos y podemos introducir todos los Seeders aqui. */
+        /** De esta forma llamamos a los archivos externos y podemos introducir todos los Seeders aqui. */
         $this->call([
-            // 1. PRIMERO LA ESTRUCTURA ESTÁTICA
+                // 1. ESTRUCTURA ESTÁTICA
             EcosystemSeeder::class,
             ZoneSeeder::class,
-            
-            // 2. LUEGO LOS DATOS FALSOS QUE DEPENDEN DE ESA ESTRUCTURA
+            ExperienceSeeder::class,
+
+                // Seeder del Equipo Administrador (Beiroa, Alejandro, Gonzalo y Othman)
+            CoreTeamSeeder::class,
+
+                // 2. LUEGO LOS DATOS FALSOS QUE DEPENDEN DE ESA ESTRUCTURA
             EmployeeSeeder::class,
             EmployeeTelephoneSeeder::class,
             AnimalSeeder::class,

@@ -21,10 +21,10 @@
     <img src="{{ asset('logo.png') }}" class="w-12">
     <nav class="hidden md:flex gap-5 text-lg">
       <a href="/" class="hover:text-amber-300 transition">Inicio</a>
-      <a href="#" class="hover:text-amber-300 transition">Tickets</a>
+      <a href="{{ route('payment.show') }}" class="hover:text-amber-300 transition">Tickets</a>
       <a href="/experiencias" class="hover:text-amber-300 transition">Experiencias</a>
-      <a href="#" class="hover:text-amber-300 transition">Animales</a>
-      <a href="#" class="hover:text-amber-300 transition">Tienda</a>
+      <a href="{{ route('animales') }}" class="hover:text-amber-300 transition">Animales</a>
+      <a href="{{ route('tienda') }}" class="hover:text-amber-300 transition">Tienda</a>
       <a href="#" class="hover:text-amber-300 transition">Contacto</a>
       <button class="bg-amber-300 text-green-900 px-4 py-1 rounded-full hover:bg-amber-200 transition">Login</button>
     </nav>
@@ -43,7 +43,7 @@
 <section class="max-w-6xl mx-auto mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
   @foreach($experiencias as $exp)
   <div class="bg-black/60 p-4 rounded-xl border border-white/20 shadow-lg  hover:scale-105 transition-transform duration-300">
-    
+
     <!-- IMAGEN CON BADGE -->
     <div class="relative">
       <img src="{{ $exp->image }}" class="w-full h-48 object-cover rounded-lg mb-2">

@@ -15,7 +15,7 @@ class ExperienceSeeder extends Seeder
             // ZONA 1: SABANA PLANICIE (ID: 1)
             // ==========================================
             [
-                'zone_id' => 1,
+                'zone_id' => 2,
                 'name' => 'Safari de León',
                 'slug' => Str::slug('Safari de León'),
                 'description' => 'Recorrido guiado para observar leones en su hábitat natural.',
@@ -26,7 +26,7 @@ class ExperienceSeeder extends Seeder
                 'image' => 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=500'
             ],
             [
-                'zone_id' => 1,
+                'zone_id' => 2,
                 'name' => 'Encuentro con Elefantes',
                 'slug' => Str::slug('Encuentro con Elefantes'),
                 'description' => 'Alimenta y aprende sobre elefantes asiáticos.',
@@ -37,7 +37,7 @@ class ExperienceSeeder extends Seeder
                 'image' => 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=500'
             ],
             [
-                'zone_id' => 1,
+                'zone_id' => 2,
                 'name' => 'Paseo de Jirafas',
                 'slug' => Str::slug('Paseo de Jirafas'),
                 'description' => 'Caminata cercana con jirafas y explicación educativa.',
@@ -52,7 +52,7 @@ class ExperienceSeeder extends Seeder
             // ZONA 2: SABANA ACUÁTICA (ID: 2)
             // ==========================================
             [
-                'zone_id' => 2,
+                'zone_id' => 3,
                 'name' => 'Charca de Hipopótamos',
                 'slug' => Str::slug('Charca de Hipopótamos'),
                 'description' => 'Observa hipopótamos y cocodrilos en la gran charca.',
@@ -63,7 +63,7 @@ class ExperienceSeeder extends Seeder
                 'image' => 'https://images.unsplash.com/photo-1604454112929-42dedc7c8424?w=500'
             ],
             [
-                'zone_id' => 2,
+                'zone_id' => 3,
                 'name' => 'Vuelo de Flamencos',
                 'slug' => Str::slug('Vuelo de Flamencos'),
                 'description' => 'Camina entre flamencos y aprende sobre su comportamiento.',
@@ -78,7 +78,7 @@ class ExperienceSeeder extends Seeder
             // ZONA 3: JUNGLA AVIARIO Y TREPADORES (ID: 3)
             // ==========================================
             [
-                'zone_id' => 3,
+                'zone_id' => 4,
                 'name' => 'Aventura con Primates',
                 'slug' => Str::slug('Aventura con Primates'),
                 'description' => 'Explora el aviario y zona de primates con guía especializada.',
@@ -89,7 +89,7 @@ class ExperienceSeeder extends Seeder
                 'image' => 'https://images.unsplash.com/photo-1742729322173-19b4ed114ac2?w=500'
             ],
             [
-                'zone_id' => 3,
+                'zone_id' => 4,
                 'name' => 'Tucanes y Guacamayos',
                 'slug' => Str::slug('Tucanes y Guacamayos'),
                 'description' => 'Aprende sobre aves exóticas y su alimentación.',
@@ -104,7 +104,7 @@ class ExperienceSeeder extends Seeder
             // ZONA 4: JUNGLA REPTILARIO (ID: 4)
             // ==========================================
             [
-                'zone_id' => 4,
+                'zone_id' => 5,
                 'name' => 'Reptiles del Mundo',
                 'slug' => Str::slug('Reptiles del Mundo'),
                 'description' => 'Explora serpientes, iguanas y dragones de Komodo.',
@@ -115,7 +115,7 @@ class ExperienceSeeder extends Seeder
                 'image' => 'https://images.unsplash.com/photo-1563234979-58ec78995a97?w=500'
             ],
             [
-                'zone_id' => 4,
+                'zone_id' => 5,
                 'name' => 'Anfibios y Serpientes',
                 'slug' => Str::slug('Anfibios y Serpientes'),
                 'description' => 'Muestra educativa sobre ranas venenosas y víboras.',

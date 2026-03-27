@@ -13,6 +13,7 @@ class Ticket extends Model
         'date',
         'price',
         'type',
+        'email',
         'date_used'
     ];
 

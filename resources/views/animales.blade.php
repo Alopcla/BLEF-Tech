@@ -12,7 +12,7 @@
     <title>Zoologico</title>
     <!-- En el href, se utiliza la funcion de Laravel (asset), sirve para archivos fisicos(imagenes, CSS, videos).
      Automaticamente buscara en las carpetas correspondientes. En este caso la ruta seria ' public/css/style.css ' -->
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/animales.css') }}">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -25,17 +25,16 @@
 </head>
 
 <body>
-    <video class="video-background" autoplay muted loop>
-        <!-- Archivo fisico (video.mp4), por lo tanto, funcion asset -->
-        <source src="{{ asset('Video.mp4') }}" type="video/mp4">
-    </video>
     <header>
         <div class="barra-tiempo" id="temperatura"></div>
         <div class="barra-navegacion">
 
             <!-- De la misma forma con el logo del zoo. Al ser en la carpeta public,
              no es necesario indicar la ruta, solamente nombrar el archivo -->
-            <img src="{{ asset('LOGO.PNG') }}" alt="Logo_del_zoologico">
+            <a href="/">
+                <img src="{{ asset('LOGO.PNG') }}" alt="Logo_del_zoologico">
+            </a>
+
             <button class="abrir-menu" id="abrir"><i class="bi bi-list"></i></button>
             <nav id="nav">
                 <button class="cerrar-menu" id="cerrar"><i class="bi bi-x-lg"></i></button>
@@ -57,6 +56,9 @@
             </nav>
         </div>
     </header>
+
+    <!-- FUNCIONALIDAD ANIMALES -->
+    <div id="pagina-animales-root" style="min-height: 100vh;"></div>
 
     <footer>
         <div class="redes-sociales">

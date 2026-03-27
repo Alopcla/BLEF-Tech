@@ -10,7 +10,37 @@
 
 <body class="p-10 bg-gray-100">
     <div class="max-w-6xl mx-auto">
+
+        <div class="flex justify-end mb-4">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                    class="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-red-700 transition font-bold">
+                    🚪 Cerrar Sesión
+                </button>
+            </form>
+        </div>
+
         <h1 class="text-3xl font-bold mb-8 text-gray-800">Gestion de Empleados</h1>
+        <!-- Botones de navegación exclusivos del Administrador -->
+        <div class="mb-8 flex flex-wrap gap-4">
+            <a href="{{ route('medico.dashboard') }}"
+                class="bg-teal-600 text-white px-4 py-2 rounded shadow hover:bg-teal-700 transition">
+                🩺 Ir a Panel Médico
+            </a>
+            <a href="{{ route('guia.dashboard') }}"
+                class="bg-orange-500 text-white px-4 py-2 rounded shadow hover:bg-orange-600 transition">
+                🗺️ Ir a Panel Guía
+            </a>
+            <a href="{{ route('mantenimiento.dashboard') }}"
+                class="bg-gray-600 text-white px-4 py-2 rounded shadow hover:bg-gray-700 transition">
+                🛠️ Ir a Panel Mantenimiento
+            </a>
+            <a href="{{ route('cuidador.dashboard') }}"
+                class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition">
+                🥩 Ir a Panel Cuidador
+            </a>
+        </div>
 
         <div class="bg-white p-6 rounded-lg shadow-md mb-10 border-t-4 border-green-500">
             <h2 class="text-xl font-bold mb-4">Registrar nuevo empleado</h2>
@@ -29,6 +59,25 @@
                     <input type="text" name="number" placeholder="Telefono" class="border p-2 rounded" required>
                     <input type="text" name="address" placeholder="Direccion" class="border p-2 rounded" required>
                     <input type="text" name="province" placeholder="Provincia" class="border p-2 rounded" required>
+                    <!-- Campo para elegir el puesto de trabajo -->
+                    <select name="position" class="border p-2 rounded w-full mt-2" required>
+                        <option value="" disabled selected>Selecciona el puesto del empleado...</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Médico">Médico Veterinario</option>
+                        <option value="Guía">Guía</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                        <option value="Cuidador">Cuidador</option>
+                    </select>
+
+                    <!-- Menu despegable de las zonas traido desde EmployeeController -->
+                    <select name="zone_id"
+                        class="border-gray-300 focus:border-indigo-500 rounded-md shadow-sm block mt-1 w-full" required>
+                        <option value="" disabled selected>Selecciona la zona asignada...</option>
+
+                        @foreach ($zones as $zone)
+                            <option value="{{ $zone->id }}">{{ $zone->type }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                     Guardar empleado

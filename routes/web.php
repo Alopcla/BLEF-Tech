@@ -55,8 +55,20 @@ Route::middleware(['auth'])->group(function () {
 
     // PANEL DEL ADMINISTRADOR
     Route::middleware(['position:Administrador'])->group(function () {
+        // Ruta para dirigirnos al panel de Administador, donde veremos a todos los empleados
+        // y podemos realizar CRUD.
         Route::get('/empleados', [EmployeeController::class, 'index'])->name('employees.index');
+        // Ruta para registrar un nuevo empleado
         Route::post('/registrar-nuevo-empleado', [EmployeeController::class, 'store'])->name('employees.store');
+        // Ruta para borrar un empleado
+        Route::delete('/empleados/{encrypted_dni}', [
+            App\Http\Controllers\EmployeeController::class, 'destroy'])->name('employees.destroy');
+        // Ruta para poder editar a un empleado ya creado
+        Route::get('/empleados/{encrypted_dni}/editar', [
+            App\Http\Controllers\EmployeeController::class, 'edit'])->name('employees.edit');
+        // Ruta PUT para actualizar los datos del empleado
+        Route::put('/empleados/{encrypted_dni}', [
+            App\Http\Controllers\EmployeeController::class, 'update'])->name('employees.update');
     });
 
     // PANEL DEL MEDICO
@@ -92,11 +104,6 @@ Route::middleware(['auth'])->group(function () {
  * *****************************************************
  *  FIN DE LAS RUTAS A LA HORA DE LOGUEARSE SEGUN PUESTO
  * *****************************************************/
-
-
-/** Rutas de Empleados */
-// Route::get('/empleados', [EmployeeController::class, 'index'])->name('employees.index');
-// Route::post('/registrar-nuevo-empleado', [EmployeeController::class, 'store'])->name('employees.store');
 
 /** Rutas de Pago */
 Route::get('/pago', [PaymentController::class, 'showForm'])->name('payment.show');

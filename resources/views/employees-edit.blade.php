@@ -16,7 +16,8 @@
             <h1 class="text-2xl font-bold text-gray-800">✏️ Editar Ficha de Empleado</h1>
             <p class="text-gray-500">Modificando los datos de: <span
                     class="font-bold text-blue-600">{{ $employee->name }} {{ $employee->surname }}</span> (DNI:
-                {{ $employee->dni }})</p>
+                {{ $employee->dni }})
+            </p>
         </div>
 
         @if ($errors->any())
@@ -29,7 +30,7 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('employees.update', $employee->dni) }}" method="POST">
+        <form action="{{ route('employees.update', encrypt($employee->dni)) }}" method="POST">
             @csrf
             @method('PUT') <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
@@ -61,8 +62,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 p-4 bg-blue-50 rounded-lg">
                 <div>
                     <label class="block text-sm font-medium text-blue-900 mb-1">Puesto de Trabajo</label>
-                    <input type="text" name="position" value="{{ $employee->position }}"
-                        class="w-full border-gray-300 rounded-md shadow-sm p-2 border" required>
+                    <select name="position" class="w-full border-gray-300 rounded-md shadow-sm p-2 border bg-white"
+                        required>
+                        <option value="Administrador" {{ $employee->position == 'Administrador' ? 'selected' : '' }}>
+                            Administrador</option>
+                        <option value="Guía" {{ $employee->position == 'Guía' ? 'selected' : '' }}>Guía</option>
+                        <option value="Mantenimiento" {{ $employee->position == 'Mantenimiento' ? 'selected' : '' }}>
+                            Mantenimiento</option>
+                        <option value="Cuidador" {{ $employee->position == 'Cuidador' ? 'selected' : '' }}>Cuidador
+                        </option>
+                        <option value="Médico" {{ $employee->position == 'Médico' ? 'selected' : '' }}>Médico</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-blue-900 mb-1">Zona Asignada</label>
@@ -70,7 +80,7 @@
                         required>
                         @foreach($zones as $zone)
                             <option value="{{ $zone->id }}" {{ $employee->zone_id == $zone->id ? 'selected' : '' }}>
-                                {{ $zone->name }}
+                                {{ $zone->type }}
                             </option>
                         @endforeach
                     </select>

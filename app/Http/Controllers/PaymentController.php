@@ -17,7 +17,6 @@ class PaymentController extends Controller
 
     public function processPayment(Request $request)
     {
-        // 1. VALIDACIÓN
         $request->validate([
             'email'    => 'required|email',
             'dia'      => 'required|date',
@@ -29,31 +28,20 @@ class PaymentController extends Controller
         ]);
 
         try {
-            // --- LÓGICA DE CONTROL DE CUPO ---
             $fechaVisita = $request->dia;
             $cantidadPedida = (int)$request->cantidad;
 
-            $vendidos = DB::table('tickets')
-                ->where('day_used', $fechaVisita)
-                ->count();
-
+            $vendidos = DB::table('tickets')->where('day_used', $fechaVisita)->count();
             $maximo = 10;
             $disponibles = $maximo - $vendidos;
 
-            // Si el cupo está lleno, volvemos con los datos previos
             if ($vendidos >= $maximo) {
-                return back()
-                    ->with('error', "Lo sentimos, el cupo para el día " . date('d/m/Y', strtotime($fechaVisita)) . " está completo.")
-                    ->withInput();
+                return back()->with('error', "Cupo completo.")->withInput();
             }
 
-            // Si piden más de lo que queda, volvemos con los datos previos
             if ($cantidadPedida > $disponibles) {
-                return back()
-                    ->with('error', "Solo quedan $disponibles entradas disponibles. Por favor, ajusta la cantidad.")
-                    ->withInput();
+                return back()->with('error', "Solo quedan $disponibles entradas.")->withInput();
             }
-            // ---------------------------------
 
             $ticketsParaEmail = [];
 
@@ -67,6 +55,7 @@ class PaymentController extends Controller
                         'day_used'   => $request->dia,
                         'price'      => 15.00,
                         'type'       => $request->metod,
+                        'email'      => $request->email, // <--- AHORA SE GUARDA EL EMAIL
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
@@ -97,10 +86,7 @@ class PaymentController extends Controller
 
             return back()->with('success', '¡Compra realizada con éxito! Revisa tu email.');
         } catch (\Exception $e) {
-            // Si hay un error inesperado, también mantenemos los inputs
-            return back()
-                ->with('error', 'Error en el proceso: ' . $e->getMessage())
-                ->withInput();
+            return back()->with('error', 'Error: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -119,5 +105,65 @@ class PaymentController extends Controller
         return response()->json([
             'available' => $disponibles < 0 ? 0 : $disponibles
         ]);
+    }
+
+    //Bloque de reclamaciones
+    public function reclamacionesIndex()
+    {
+        return view('admin.reclamaciones', ['tickets' => null]);
+    }
+
+    public function buscarTickets(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'fecha' => 'required|date'
+        ]);
+
+        // Buscamos los tickets que coincidan con ambos campos
+        $tickets = DB::table('tickets')
+            ->where('email', $request->email)
+            ->where('day_used', $request->fecha)
+            ->get();
+
+        return view('admin.reclamaciones', [
+            'tickets' => $tickets,
+            'email'   => $request->email,
+            'fecha'   => $request->fecha
+        ]);
+    }
+
+    public function cancelarCompra($fecha, $email)
+    {
+        // Borramos solo los tickets de ese usuario para ese día
+        DB::table('tickets')
+            ->where('email', $email)
+            ->where('day_used', $fecha)
+            ->delete();
+
+        return redirect()->route('reclamaciones.index')->with('success', 'Compra cancelada correctamente.');
+    }
+
+    public function reenviarTickets(Request $request)
+    {
+        // Buscamos los tickets de nuevo para enviarlos
+        $tickets = DB::table('tickets')
+            ->where('email', $request->email)
+            ->get()
+            ->map(function ($t) {
+                return [
+                    'id' => $t->id,
+                    'date' => $t->date,
+                    'day_used' => $t->day_used,
+                    'price' => $t->price
+                ];
+            })->toArray();
+
+        if (count($tickets) > 0) {
+            Mail::to($request->email)->send(new TicketMail($tickets));
+            return back()->with('success', 'Tickets reenviados a ' . $request->email);
+        }
+
+        return back()->with('error', 'No se encontraron tickets para reenviar.');
     }
 }

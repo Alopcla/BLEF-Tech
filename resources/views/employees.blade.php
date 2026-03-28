@@ -40,6 +40,10 @@
                 class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition">
                 🥩 Ir a Panel Cuidador
             </a>
+            <a href="{{ route('reclamaciones.index') }}"
+                class="bg-yellow-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition inline-flex items-center gap-2">
+                🎫 Reclamaciones
+            </a>
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow-md mb-10 border-t-4 border-green-500">
@@ -75,7 +79,7 @@
                         <option value="" disabled selected>Selecciona la zona asignada...</option>
 
                         @foreach ($zones as $zone)
-                            <option value="{{ $zone->id }}">{{ $zone->type }}</option>
+                        <option value="{{ $zone->id }}">{{ $zone->type }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -85,7 +89,7 @@
             </form>
 
             @if(session('success'))
-                <p class="mt-3 text-green-600 font-semibold">{{ session('success') }}</p>
+            <p class="mt-3 text-green-600 font-semibold">{{ session('success') }}</p>
             @endif
 
         </div>
@@ -101,11 +105,11 @@
 
     <div class="grid grid-cols-1 md:grid-cols3 gap-4">
         @foreach ($employees as $employee)
-            {{-- Esto es un comentario...
+        {{-- Esto es un comentario...
             Se usa " : " antes de los atributos para pasar variables de PHP.
             Para que no explote, utilizaremos el operador en caso de que un empleado
             no tenga telefono --}}
-            <x-user-card :employee="$employee" />
+        <x-user-card :employee="$employee" />
         @endforeach
     </div>
 

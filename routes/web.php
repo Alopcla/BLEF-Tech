@@ -67,6 +67,7 @@ Route::get('/paypal/success', function () {
 
 /** --- EXPERIENCIAS --- **/
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
+Route::get('/experiencias/{slug}', [ExperienciaController::class, 'MostrarInfo'])->name('experienciasInfo');
 
 /** --- GESTIÓN DE RECLAMACIONES --- **/
 Route::prefix('admin/reclamaciones')->group(function () {

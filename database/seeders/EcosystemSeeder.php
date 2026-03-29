@@ -14,6 +14,12 @@ class EcosystemSeeder extends Seeder
     public function run(): void
     {
         Ecosystem::create([
+            'name' => 'Empresa',
+            'climate' => 'Fresco',
+            'region' => 'España'
+        ]);
+
+        Ecosystem::create([
             'name' => 'Sabana Africana',
             'climate' => 'Árido/Seco',
             'region' => 'África'

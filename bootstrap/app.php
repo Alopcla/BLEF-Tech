@@ -12,7 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Se registra el middleware CheckPosition
+        $middleware->alias(['position' => \App\Http\Middleware\CheckPosition::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

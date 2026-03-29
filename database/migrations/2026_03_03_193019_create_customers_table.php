@@ -11,13 +11,12 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             // PK es el DNI (string), no un id autoincremental
             $table->string('dni')->primary();
-            
+
             $table->string('user_name')->unique();
             $table->string('name');
             $table->string('surnames');
             $table->string('email')->unique();
             $table->string('address');
-            $table->string('category');
 
             $table->timestamps();
         });

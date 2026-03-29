@@ -20,8 +20,7 @@ class Customer extends Model
         'name',
         'surnames',
         'email',
-        'address',
-        'category'
+        'address'
     ];
 
     // Relación 1:N -> Un cliente tiene muchos teléfonos

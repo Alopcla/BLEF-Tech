@@ -33,7 +33,7 @@
                     <a href="/">Inicio</a>
                     <a href="{{ route('payment.show') }}">Tickets</a>
                     <a href="{{ route('VistaExperiencias') }}">Experiencias</a>
-                    <a href="/#seccion-animales">Animales</a>
+                    <a href="{{ route('animales') }}">Animales</a>
                     <a href="{{ route('tienda') }}" class="activo">Tienda</a>
                     <a href="#">Contacto</a>
                     <a href="{{ route('login') }}">

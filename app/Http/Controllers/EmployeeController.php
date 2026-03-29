@@ -16,17 +16,24 @@ class EmployeeController extends Controller
      */
 
     /**
-     * Summary of index: Funcion que carga la vista principal del Dashboard con todos los empleados
-     * @return \Illuminate\Contracts\View\View
+     * Summary of index: Devuelve los empleados y zonas en formato JSON para React
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        // Recuperamos todos los empleados de la BD
-        $employees = Employee::with('telephones')->get();
-        // Recuperar todas las zonas para el desplegable en el Dashboard
-        $zones = Zone::all();
-        // Enviamos los datos a la vista 'employees' que creamos antes
-        return view('employees', compact('employees', 'zones'));
+        try {
+            // Ahora Laravel SÍ encontrará la relación 'zone' que acabamos de crear
+            $employees = Employee::with(['zone', 'telephones'])->get();
+
+            return response()->json([
+                'employees' => $employees,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Fallo en la base de datos: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

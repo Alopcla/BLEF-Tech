@@ -72,4 +72,13 @@ class Employee extends Model
     public function telephones() {
         return $this->hasMany(EmployeeTelephone::class, 'employee_dni', 'dni')->orderBy('order');
     }
+
+    /**
+     * Summary of zone: Relacion del Modelo.
+     * Establecemos que un Empleado pertenece a una Zona concreta.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function zone() {
+        return $this->belongsTo(Zone::class, 'zone_id');
+    }
 }

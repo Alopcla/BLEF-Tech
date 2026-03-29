@@ -22,19 +22,15 @@ Route::get('/dashboard', function () {
 
     $employee = Auth::user();
 
-    if($employee->position === 'Administrador')
+    if ($employee->position === 'Administrador')
         return redirect()->route('employees.index');
-
-    elseif($employee->position === 'Médico')
+    elseif ($employee->position === 'Médico')
         return redirect()->route('medico.dashboard');
-
-    elseif($employee->position === 'Guía')
+    elseif ($employee->position === 'Guía')
         return redirect()->route('guia.dashboard');
-
-    elseif($employee->position === 'Mantenimiento')
+    elseif ($employee->position === 'Mantenimiento')
         return redirect()->route('mantenimiento.dashboard');
-
-    elseif($employee->position === 'Cuidador')
+    elseif ($employee->position === 'Cuidador')
         return redirect()->route('cuidador.dashboard');
 
     return view('dashboard');
@@ -55,20 +51,21 @@ Route::middleware(['auth'])->group(function () {
 
     // PANEL DEL ADMINISTRADOR
     Route::middleware(['position:Administrador'])->group(function () {
-        // Ruta para dirigirnos al panel de Administador, donde veremos a todos los empleados
-        // y podemos realizar CRUD.
-        Route::get('/empleados', [EmployeeController::class, 'index'])->name('employees.index');
-        // Ruta para registrar un nuevo empleado
+
+        // 1. RUTA VISUAL (React)
+        Route::get('/empleados', function () {
+            return view('admin-react');
+        })->name('employees.index');
+
+        // 2. RUTA DE DATOS (JSON API)
+        Route::get('/api/empleados', [EmployeeController::class, 'index']);
+
+        // 3. RUTAS DE ACCIÓN (CRUD)
         Route::post('/registrar-nuevo-empleado', [EmployeeController::class, 'store'])->name('employees.store');
-        // Ruta para borrar un empleado
-        Route::delete('/empleados/{encrypted_dni}', [
-            App\Http\Controllers\EmployeeController::class, 'destroy'])->name('employees.destroy');
-        // Ruta para poder editar a un empleado ya creado
-        Route::get('/empleados/{encrypted_dni}/editar', [
-            App\Http\Controllers\EmployeeController::class, 'edit'])->name('employees.edit');
-        // Ruta PUT para actualizar los datos del empleado
-        Route::put('/empleados/{encrypted_dni}', [
-            App\Http\Controllers\EmployeeController::class, 'update'])->name('employees.update');
+        Route::delete('/empleados/{encrypted_dni}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+        Route::get('/empleados/{encrypted_dni}/editar', [EmployeeController::class, 'edit'])->name('employees.edit');
+        Route::put('/empleados/{encrypted_dni}', [EmployeeController::class, 'update'])->name('employees.update');
+
     });
 
     // PANEL DEL MEDICO

@@ -122,6 +122,17 @@ Route::get('/animales', function () {
     return view('animales');
 })->name('animales');
 
+/** --- GESTIÓN DE RECLAMACIONES --- **/
+Route::prefix('admin/reclamaciones')->group(function () {
+    Route::get('/', [PaymentController::class, 'reclamacionesIndex'])->name('reclamaciones.index');
+
+    // CAMBIO IMPORTANTE: Cambiado de POST a GET para permitir el "back()" sin error 405
+    Route::get('/buscar', [PaymentController::class, 'buscarTickets'])->name('reclamaciones.buscar');
+
+    Route::post('/reenviar', [PaymentController::class, 'reenviarTickets'])->name('reclamaciones.reenviar');
+    Route::delete('/cancelar/{fecha}/{email}', [PaymentController::class, 'cancelarCompra'])->name('reclamaciones.cancelar');
+});
+
 /** Ruta para el Login */
 require __DIR__ . '/auth.php';
 

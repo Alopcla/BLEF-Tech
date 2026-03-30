@@ -5,6 +5,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ExperienciaController;
 use App\Http\Controllers\Auth\GoogleController;
+// Añadimos el controlador del médico aquí arriba para que quede más limpio
+use App\Http\Controllers\MedicalRecordController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -73,8 +75,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    /* --- PANELES ESPECÍFICOS --- */
-    Route::get('/medico/dashboard', function () { return "Panel Médico"; })->name('medico.dashboard')->middleware('position:Médico');
+    /* --- PANEL MÉDICO (REACT) --- */
+    // Agrupamos todo lo del médico bajo su propio middleware para mayor seguridad y limpieza
+    Route::middleware(['position:Médico'])->group(function () {
+        // Vista principal
+        Route::get('/medico/dashboard', function () { return view('medico-react'); })->name('medico.dashboard');
+
+        // API para React (Leer y Guardar)
+        Route::get('/api/medico/datos', [MedicalRecordController::class, 'getDoctorData']);
+        Route::post('/api/medico/historial', [MedicalRecordController::class, 'storeRecord']);
+        Route::post('/api/medico/animal', [MedicalRecordController::class, 'storeAnimal']);
+    });
+
+    /* --- OTROS PANELES ESPECÍFICOS --- */
     Route::get('/guia/dashboard', function () { return "Panel Guía"; })->name('guia.dashboard')->middleware('position:Guía');
     Route::get('/mantenimiento/dashboard', function () { return "Panel Mantenimiento"; })->name('mantenimiento.dashboard')->middleware('position:Mantenimiento');
     Route::get('/cuidador/dashboard', function () { return "Panel Cuidador"; })->name('cuidador.dashboard')->middleware('position:Cuidador');

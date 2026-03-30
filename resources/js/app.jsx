@@ -3,6 +3,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import AnimalGallery from './Components/AnimalGallery';
 import AdminDashboard from './Components/AdminDashboard';
+import DoctorDashboard from './Components/DoctorDashboard';
 
 // Buscamos el contenedor en animales.blade.php
 const container = document.getElementById('pagina-animales-root');
@@ -15,9 +16,15 @@ if (container) {
 }
 
 // Buscamos la "caja vacía" que dejamos en el Blade
-const rootElement = document.getElementById('admin-dashboard-root');
+const adminElement = document.getElementById('admin-dashboard-root');
 // Si la encontramos (es decir, si estamos en la ruta /empleados), pintamos el panel de React
-if (rootElement) {
-    const root = createRoot(rootElement);
+if (adminElement) {
+    const root = createRoot(adminElement);
     root.render(<AdminDashboard />);
+}
+
+// --- PANEL DE MÉDICO (ESTO ES LO NUEVO) ---
+const doctorRootEl = document.getElementById('doctor-dashboard-root');
+if (doctorRootEl) {
+    createRoot(doctorRootEl).render(<DoctorDashboard />);
 }

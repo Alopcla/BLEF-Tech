@@ -22,7 +22,7 @@
     <nav class="hidden md:flex gap-5 text-lg">
       <a href="/" class="hover:text-amber-300 transition">Inicio</a>
       <a href="{{ route('payment.show') }}" class="hover:text-amber-300 transition">Tickets</a>
-      <a href="/experiencias" class="hover:text-amber-300 transition">Experiencias</a>
+      <a href="{{ route('VistaExperiencias') }}" class="hover:text-amber-300 transition">Experiencias</a>
       <a href="{{ route('animales') }}" class="hover:text-amber-300 transition">Animales</a>
       <a href="{{ route('tienda') }}" class="hover:text-amber-300 transition">Tienda</a>
       <a href="#" class="hover:text-amber-300 transition">Contacto</a>
@@ -80,7 +80,7 @@
         <button class="px-3 py-1 rounded-full bg-gradient-to-r from-amber-300 to-amber-400 text-green-900 font-semibold shadow-md hover:scale-105 transition-all">
           Reservar
         </button>
-        <a href="{{route('experienciasInfo', $exp->slug)}}">
+        <a href="{{route('VistaExperiencias', $exp->slug)}}">
           <button class="px-3 py-1 rounded-full border border-amber-300 text-amber-300 font-semibold hover:bg-amber-300 hover:text-green-900 transition-all">
             Más info
           </button>

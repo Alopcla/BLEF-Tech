@@ -1,0 +1,160 @@
+import React, { useState, useRef } from 'react';
+import axios from 'axios';
+
+const MapaZoologic = () => {
+    const [infoZona, setInfoZona] = useState(null);
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0, quadrantX: 'right', quadrantY: 'bottom' });
+    const containerRef = useRef(null);
+
+    // IDs exactos según tu tabla de Supabase
+    const zonas = [
+        { id: 'Edificio', top: '75%', left: '20%', nombre: 'BLEF-Tech' },
+        { id: 'Terrestre', top: '60%', left: '55%', nombre: 'Sabana / Terrestre' },
+        { id: 'Acuático', top: '65%', left: '85%', nombre: 'Charca / Acuático' },
+        { id: 'Aviario', top: '25%', left: '38%', nombre: 'Aviario' },
+        { id: 'Reptilario', top: '22%', left: '55%', nombre: 'Reptilario' },
+        { id: 'Trepadores y Terrestres', top: '25%', left: '75%', nombre: 'Jungla' },
+    ];
+
+    const manejarHover = async (id) => {
+        try {
+            const response = await axios.get(`/api/zones/tipo/${encodeURIComponent(id)}`);
+            setInfoZona(response.data);
+        } catch (error) {
+            console.error("Error al obtener datos de la zona:", error);
+        }
+    };
+
+    const manejarMovimientoMouse = (e) => {
+        if (!containerRef.current) return;
+
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const quadrantX = x > rect.width / 2 ? 'left' : 'right';
+        const quadrantY = y > rect.height / 2 ? 'top' : 'bottom';
+
+        setMousePos({ x, y, quadrantX, quadrantY });
+    };
+
+    return (
+        <div
+            ref={containerRef}
+            className="relative w-full max-w-6xl mx-auto rounded-xl overflow-hidden shadow-2xl border-4 border-[#2d3a3a] bg-[#1a1a1a]"
+            onMouseMove={manejarMovimientoMouse}
+        >
+            {/* Imagen de fondo */}
+            <img
+                src="/img/mapa/fondo.png"
+                className="w-full h-auto block select-none pointer-events-none"
+                alt="Mapa Zoologic"
+            />
+
+            {/* Puntos de interés */}
+            {zonas.map((zona) => (
+                <div
+                    key={zona.id}
+                    className="absolute w-8 h-8 -translate-x-1/2 -translate-y-1/2 cursor-pointer group z-10"
+                    style={{ top: zona.top, left: zona.left }}
+                    onMouseEnter={() => manejarHover(zona.id)}
+                    onMouseLeave={() => setInfoZona(null)}
+                >
+                    <div className="absolute inset-0 bg-yellow-400 rounded-full animate-ping opacity-30"></div>
+                    <div className="relative w-full h-full bg-white/20 hover:bg-yellow-400/50 border-2 border-white rounded-full transition-all duration-300 shadow-lg flex items-center justify-center">
+                        <span className="text-white font-bold text-xs opacity-0 group-hover:opacity-100">?</span>
+                    </div>
+                </div>
+            ))}
+
+            {/* Popup Dinámico e Inteligente */}
+            {infoZona && (
+                <div
+                    className="absolute z-[100] bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl p-0 w-80 pointer-events-none ring-1 ring-black/5 transition-all duration-200 ease-out flex flex-col"
+                    style={{
+                        left: mousePos.x,
+                        top: mousePos.y,
+                        height: '350px',
+                        transform: `translate(${mousePos.quadrantX === 'left' ? '-110%' : '10%'}, ${mousePos.quadrantY === 'top' ? '-105%' : '5%'})`
+                    }}
+                >
+                    {/* CABECERA (Fija) */}
+                    <div className="bg-green-600 px-4 py-3 shrink-0 z-20 rounded-t-2xl shadow-sm">
+                        <h3 className="text-white font-black uppercase tracking-tighter text-lg leading-none">
+                            {infoZona.type}
+                        </h3>
+                        <p className="text-green-100 text-[10px] font-bold uppercase mt-1">
+                            📍 {infoZona.dimensions_m2} m² de hábitat
+                        </p>
+                    </div>
+
+                    {/* CUERPO (Contenedor que corta el contenido) */}
+                    <div className="flex-1 overflow-hidden-container bg-white">
+
+                        {/* ESTE DIV ES EL QUE SE MUEVE (Suma animales + experiencias) */}
+                        <div className={`p-4 ${(infoZona.animals?.length + (infoZona.experiences?.length || 0)) > 6 ? 'animate-scroll' : ''}`}>
+
+                            <p className="text-gray-600 text-xs italic mb-4 leading-tight border-l-2 border-green-200 pl-2">
+                                "{infoZona.description}"
+                            </p>
+
+                            {/* Sección Animales */}
+                            <div className="space-y-2">
+                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">
+                                    Animales en zona ({infoZona.animals?.length || 0})
+                                </span>
+
+                                <div className="grid grid-cols-2 gap-2">
+                                    {infoZona.animals && infoZona.animals.map((animal, i) => (
+                                        <div
+                                            key={i}
+                                            className="bg-gray-50 text-gray-700 text-[10px] px-2 py-2 rounded-lg border border-gray-100 font-semibold flex items-center gap-1.5 shadow-sm"
+                                        >
+                                            <span className="shrink-0 text-xs">🐾</span>
+                                            <span className="truncate">{animal.name}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* SECCIÓN DE EXPERIENCIAS (DENTRO DEL SCROLL) */}
+                            {infoZona.experiences && infoZona.experiences.length > 0 && (
+                                <div className="mt-5 pt-3 border-t border-dashed border-gray-200 space-y-2">
+                                    <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest block">
+                                        Experiencias VIP ✨
+                                    </span>
+                                    <div className="flex flex-col gap-2">
+                                        {infoZona.experiences.map((exp, i) => (
+                                            <div
+                                                key={i}
+                                                className="flex justify-between items-center bg-amber-50/50 border border-amber-100 rounded-lg px-3 py-2 shadow-sm"
+                                            >
+                                                <div>
+                                                    <p className="text-[11px] font-bold text-amber-900 leading-none">{exp.name}</p>
+                                                    <p className="text-[9px] text-amber-700 mt-1">{exp.duration} min</p>
+                                                </div>
+                                                <span className="text-[11px] font-black text-amber-600 bg-white px-2 py-0.5 rounded-full border border-amber-200">
+                                                    {exp.price}€
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* FOOTER (Fijo) */}
+                    <div className="bg-gray-50 px-4 py-2 border-t border-gray-100 flex justify-between items-center shrink-0 rounded-b-2xl z-20">
+                        <span className="text-[9px] font-bold text-green-700 uppercase tracking-tighter">Zoologic Auto-Scan</span>
+                        <div className="flex gap-1">
+                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default MapaZoologic;

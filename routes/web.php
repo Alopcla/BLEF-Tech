@@ -92,6 +92,10 @@ Route::controller(PaymentController::class)->group(function () {
     Route::get('/check-availability', 'checkAvailability')->name('check.availability');
 });
 
+/** --- MAPA --- **/
+Route::get('/mapa', function () {
+    return view('mapa'); // Asegúrate de que el nombre coincida con tu .blade.php
+})->name('mapa.index');
 Route::get('/paypal/success', function () {
     return redirect()->route('payment.show')->with('success', '¡Pago realizado con éxito!');
 })->name('paypal.success');

@@ -27,6 +27,20 @@ export default function EmployeeDrawer({
 
     if (!employee) return null;
 
+    // Añade una caja vacía al array de teléfonos
+    const handleAddPhone = () => {
+        setEditData({
+            ...editData,
+            telephones: [...(editData.telephones || []), { telephone: "" }],
+        });
+    };
+
+    // Elimina una caja de teléfono específica
+    const handleRemovePhone = (index) => {
+        const newPhones = editData.telephones.filter((_, i) => i !== index);
+        setEditData({ ...editData, telephones: newPhones });
+    };
+
     const handleClose = () => {
         setIsConfirming(false);
         setIsEditing(false);
@@ -46,22 +60,38 @@ export default function EmployeeDrawer({
 
     const handleUpdate = async () => {
     try {
+        // 1. Limpiamos los datos antes de enviarlos a Laravel
+        const payload = {
+            ...editData,
+            // Si la zona está vacía, forzamos un null real para que Laravel no explote
+            zone_id: editData.zone_id ? parseInt(editData.zone_id) : null
+        };
+
         const response = await fetch(`/empleados/${employee.dni}`, {
             method: 'PUT',
-            // ... tus headers y el body: JSON.stringify(editData)
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
         });
 
         if (response.ok) {
-            // --- AQUÍ VA EL CÓDIGO ---
-            alert("Datos actualizados con éxito.");
-
-            // Por último, recargas para ver los cambios reales
+            alert("¡Datos actualizados con éxito!");
             window.location.reload();
         } else {
-            alert("Error al actualizar");
+            // 2. Extraemos el error exacto que devuelve Laravel
+            const errorData = await response.json();
+            console.error("Fallo detectado:", errorData);
+
+            // Mostramos el mensaje de validación real en el alert
+            const errorMessage = errorData.message || JSON.stringify(errorData.errors) || "Error desconocido en el servidor";
+            alert("❌ Laravel dice: \n\n" + errorMessage);
         }
     } catch (error) {
-        console.error(error);
+        console.error("Fallo de red:", error);
+        alert("Fallo de conexión con el servidor.");
     }
 };
 
@@ -304,21 +334,34 @@ export default function EmployeeDrawer({
                             )?.map((tel, idx) => (
                                 <div
                                     key={idx}
-                                    className="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-100 overflow-hidden"
+                                    className="flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-100"
                                 >
                                     {isEditing ? (
-                                        <input
-                                            value={tel.telephone}
-                                            onChange={(e) =>
-                                                handlePhoneChange(
-                                                    idx,
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className={inputClass}
-                                        />
-                                    ) : (
                                         <>
+                                            <input
+                                                value={tel.telephone}
+                                                onChange={(e) =>
+                                                    handlePhoneChange(
+                                                        idx,
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400"
+                                                placeholder="Ej: 600123456"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    handleRemovePhone(idx)
+                                                }
+                                                className="w-9 h-9 flex items-center justify-center bg-red-50 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-colors shrink-0"
+                                                title="Borrar teléfono"
+                                            >
+                                                <i className="fa-solid fa-trash-can text-xs"></i>
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <div className="flex items-center justify-between w-full px-2 py-1">
                                             <span className="text-sm font-mono font-bold text-slate-600 truncate flex-1 pr-4">
                                                 <i className="fa-solid fa-phone mr-2 text-slate-400"></i>{" "}
                                                 {tel.telephone}
@@ -328,10 +371,22 @@ export default function EmployeeDrawer({
                                                     ? "Principal"
                                                     : `Secundario ${idx}`}
                                             </span>
-                                        </>
+                                        </div>
                                     )}
                                 </div>
                             ))}
+
+                            {/* El nuevo botón mágico para añadir más líneas */}
+                            {isEditing && (
+                                <button
+                                    type="button"
+                                    onClick={handleAddPhone}
+                                    className="w-full mt-2 py-2 border-2 border-dashed border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-all flex justify-center items-center gap-2"
+                                >
+                                    <i className="fa-solid fa-plus"></i> AÑADIR
+                                    OTRO TELÉFONO
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

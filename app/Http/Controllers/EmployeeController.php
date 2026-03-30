@@ -94,16 +94,16 @@ class EmployeeController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($dni)
-{
-    $employee = Employee::where('dni', $dni)->first();
+    {
+        $employee = Employee::where('dni', $dni)->first();
 
-    if ($employee) {
-        $employee->telephones()->delete(); // Borrar hijos
-        $employee->delete();               // Borrar padre
+        if ($employee) {
+            $employee->telephones()->delete(); // Borrar hijos
+            $employee->delete();               // Borrar padre
+        }
+
+        return response()->json(['status' => 'ok']);
     }
-
-    return response()->json(['status' => 'ok']);
-}
 
     /**
      * Summary of edit: Funcion para cargar la vista donde editaremos a un empleado existente
@@ -129,44 +129,46 @@ class EmployeeController extends Controller
      * @return void
      */
     public function update(Request $request, $dni)
-{
-    $employee = Employee::where('dni', $dni)->firstOrFail();
+    {
+        $employee = Employee::where('dni', $dni)->firstOrFail();
 
-    // 1. Validación: 'telephones' ahora es un array
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'surname' => 'required|string',
-        'address' => 'required|string',
-        'province' => 'required|string',
-        'position' => 'required|string',
-        'zone_id' => 'required|integer|exists:zones,id',
-        'telephones' => 'required|array', // Validamos que sea el array de React
-    ]);
+        // 1. Validación Corregida
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string',
+            'address' => 'required|string',
+            'province' => 'required|string',
+            'position' => 'required|string',
+            'zone_id' => 'nullable|integer|exists:zones,id', // <-- AHORA PERMITE NULOS
+            'telephones' => 'array', // <-- RECONOCE EL ARRAY DE REACT
+        ]);
 
-    try {
-        DB::transaction(function () use ($request, $employee) {
-            // A) Actualizar Empleado
-            $employee->update($request->only(['name', 'surname', 'address', 'province', 'position', 'zone_id']));
+        try {
+            \DB::transaction(function () use ($request, $employee) {
+                // A) Actualizar datos básicos del empleado
+                $employee->update($request->only(['name', 'surname', 'address', 'province', 'position', 'zone_id']));
 
-            // B) Actualizar Usuario
-            $user = User::where('email', $employee->email)->first();
-            if ($user) {
-                $user->update(['name' => $request->name]);
-            }
-
-            // C) Sincronizar TODOS los teléfonos
-            // Borramos los viejos y creamos los que vienen del formulario
-            $employee->telephones()->delete();
-            foreach ($request->telephones as $tel) {
-                if (!empty($tel['telephone'])) {
-                    $employee->telephones()->create(['telephone' => $tel['telephone']]);
+                // B) Sincronizar nombre en la tabla Users
+                $user = \App\Models\User::where('email', $employee->email)->first();
+                if ($user) {
+                    $user->update(['name' => $request->name]);
                 }
-            }
-        });
 
-        return response()->json(['message' => '¡Actualizado con éxito!', 'success' => true]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
+                // C) Sincronizar Teléfonos (Borra los viejos y crea los nuevos)
+                if ($request->has('telephones')) {
+                    $employee->telephones()->delete();
+                    foreach ($request->telephones as $tel) {
+                        // Solo guardamos si el input no está vacío
+                        if (!empty($tel['telephone'])) {
+                            $employee->telephones()->create(['telephone' => $tel['telephone']]);
+                        }
+                    }
+                }
+            });
+
+            return response()->json(['message' => 'Actualizado con éxito', 'success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-}
 }

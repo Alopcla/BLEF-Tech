@@ -5,6 +5,8 @@ import { createRoot } from 'react-dom/client'; // Importamos createRoot directam
 // Importación de componentes
 import AnimalGallery from './Components/AnimalGallery';
 import MapaZoologic from './Components/MapaZoologic';
+import AdminDashboard from './Components/AdminDashboard';
+import DoctorDashboard from './Components/DoctorDashboard';
 
 // Lógica para la Galería de Animales
 const animalContainer = document.getElementById('pagina-animales-root');
@@ -24,10 +26,7 @@ if (mapaContainer) {
         </React.StrictMode>
     );
 }
-import { createRoot } from 'react-dom/client';
-import AnimalGallery from './Components/AnimalGallery';
-import AdminDashboard from './Components/AdminDashboard';
-import DoctorDashboard from './Components/DoctorDashboard';
+
 
 // Buscamos el contenedor en animales.blade.php
 const container = document.getElementById('pagina-animales-root');

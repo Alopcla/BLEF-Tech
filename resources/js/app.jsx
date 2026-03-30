@@ -1,14 +1,26 @@
-// import './bootstrap';
+import './bootstrap';
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot } from 'react-dom/client'; // Importamos createRoot directamente
+
+// Importación de componentes
 import AnimalGallery from './Components/AnimalGallery';
+import MapaZoologic from './Components/MapaZoologic';
 
-// 1. Buscamos el NUEVO contenedor que creaste en animales.blade.php
-const container = document.getElementById('pagina-animales-root');
-
-// 2. Si el contenedor existe (es decir, si estamos en la ruta /animales)
-if (container) {
-    const root = createRoot(container);
-    // 3. Renderizamos la galería directamente. ¡Sin rodeos ni eventos de clic!
+// Lógica para la Galería de Animales
+const animalContainer = document.getElementById('pagina-animales-root');
+if (animalContainer) {
+    const root = createRoot(animalContainer);
     root.render(<AnimalGallery />);
+}
+
+// Lógica para el Mapa del Zoo
+const mapaContainer = document.getElementById('react-mapa');
+if (mapaContainer) {
+    // IMPORTANTE: Usamos 'createRoot' directamente, NO 'ReactDOM.createRoot'
+    const root = createRoot(mapaContainer);
+    root.render(
+        <React.StrictMode>
+            <MapaZoologic />
+        </React.StrictMode>
+    );
 }

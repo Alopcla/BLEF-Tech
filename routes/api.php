@@ -18,3 +18,8 @@ Route::get('/user', function (Request $request) {
 Route::get('/animales', [AnimalController::class, 'index']);
 
 Route::get('/products', [ProductController::class, 'index']);
+
+//Ruta para trabajar el mapa
+use App\Http\Controllers\Api\ZoneController;
+
+Route::get('/zones/tipo/{type}', [ZoneController::class, 'getZoneInfo']);

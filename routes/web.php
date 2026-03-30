@@ -78,3 +78,8 @@ Route::prefix('admin/reclamaciones')->group(function () {
     Route::post('/reenviar', [PaymentController::class, 'reenviarTickets'])->name('reclamaciones.reenviar');
     Route::delete('/cancelar/{fecha}/{email}', [PaymentController::class, 'cancelarCompra'])->name('reclamaciones.cancelar');
 });
+
+/** --- MAPA --- **/
+Route::get('/mapa', function () {
+    return view('mapa'); // Asegúrate de que el nombre coincida con tu .blade.php
+})->name('mapa.index');

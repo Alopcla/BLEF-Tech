@@ -5,6 +5,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ExperienciaController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AlertController;
 
 /** --- PÁGINA PRINCIPAL Y SECCIONES --- **/
 Route::get('/', function () {
@@ -83,3 +84,8 @@ Route::prefix('admin/reclamaciones')->group(function () {
 Route::get('/mapa', function () {
     return view('mapa'); // Asegúrate de que el nombre coincida con tu .blade.php
 })->name('mapa.index');
+
+/** --- ALERTAS MAPA --- */
+Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.index');
+Route::post('/alerts', [AlertController::class, 'store'])->name('alerts.store');
+Route::delete('/alerts/{id}', [AlertController::class, 'destroy'])->name('alerts.destroy');

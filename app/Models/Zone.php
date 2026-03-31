@@ -39,4 +39,11 @@ class Zone extends Model
     {
         return $this->hasMany(Experience::class);
     }
+
+    // Relación 1:N -> Un evento pude taner varias zonas
+    public function events()
+    {
+        // Vinculamos 'type' de Zone con 'zone_type' de ZoneEvent
+        return $this->hasMany(ZoneEvent::class, 'zone_type', 'type');
+    }
 }

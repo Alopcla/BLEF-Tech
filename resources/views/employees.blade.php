@@ -44,6 +44,10 @@
                 class="bg-yellow-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition inline-flex items-center gap-2">
                 🎫 Reclamaciones
             </a>
+            <a href="{{ route('alerts.index') }}"
+                class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 transition inline-flex items-center gap-2">
+                📢 Manejar Alertas del Mapa
+            </a>
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow-md mb-10 border-t-4 border-green-500">

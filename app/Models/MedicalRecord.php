@@ -12,13 +12,13 @@ class MedicalRecord extends Model
     protected $fillable = [
         'animal_id',
         'employee_dni',
-        'record_date',
+        'date',
         'diagnosis',
         'treatment'
     ];
 
     protected $casts = [
-        'record_date' => 'date',
+        'date' => 'date',
     ];
 
     // Relación N:1 -> El registro pertenece a un animal

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import EmployeeCard from "./EmployeeCard";
 import EmployeeDrawer from "./EmployeeDrawer";
 import EmployeeFormModal from "./EmployeeFormModal";
+import NavigationModules from "./NavigationModules";
 
 // Estilos Corporativos del Zoo
 const roleStyles = {
@@ -41,23 +42,6 @@ const roleStyles = {
         colorValue: "stone",
     },
 };
-
-// Sub-componente de Estadísticas
-const StatCard = ({ title, value, icon, color }) => (
-    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4 transition-all hover:shadow-md">
-        <div
-            className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg bg-${color}-50 text-${color}-600 border border-${color}-100`}
-        >
-            <i className={`fa-solid ${icon}`}></i>
-        </div>
-        <div>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                {title}
-            </p>
-            <p className="text-xl font-black text-slate-800">{value}</p>
-        </div>
-    </div>
-);
 
 export default function AdminDashboard() {
     // --- ESTADOS ---
@@ -100,24 +84,6 @@ export default function AdminDashboard() {
         });
     }, [rawEmployees, searchTerm, selectedRole]);
 
-    // --- ESTADÍSTICAS ---
-    const stats = useMemo(
-        () => ({
-            total: rawEmployees.length,
-            administradores: rawEmployees.filter(
-                (e) => e.position === "Administrador",
-            ).length,
-            medicos: rawEmployees.filter((e) => e.position === "Médico").length,
-            cuidadores: rawEmployees.filter((e) => e.position === "Cuidador")
-                .length,
-            guias: rawEmployees.filter((e) => e.position === "Guía").length,
-            mantenimiento: rawEmployees.filter(
-                (e) => e.position === "Mantenimiento",
-            ).length,
-        }),
-        [rawEmployees],
-    );
-
     // --- ACCIONES (BORRAR Y GUARDAR) ---
     const handleDeleteEmployee = (dni) => {
         fetch(`/empleados/${dni}`, {
@@ -130,7 +96,7 @@ export default function AdminDashboard() {
         })
             .then(() => {
                 alert("Empleado eliminado");
-                window.location.reload(); // Lo más simple: recargar para limpiar la lista
+                window.location.reload();
             })
             .catch((err) => alert("Error al borrar"));
     };
@@ -161,7 +127,6 @@ export default function AdminDashboard() {
     };
 
     const roles = [
-        "Todos",
         "Administrador",
         "Médico",
         "Cuidador",
@@ -206,24 +171,25 @@ export default function AdminDashboard() {
 
             <main className="max-w-[1600px] mx-auto px-6 mt-8 flex flex-col lg:flex-row gap-8">
                 {/* COLUMNA IZQUIERDA: CONTROLES */}
-                <aside className="w-full lg:w-1/3 xl:w-1/4 space-y-6">
+                <aside className="w-full lg:w-1/3 xl:w-1/4 flex flex-col gap-6">
+
+                    {/* Botones de Acción */}
                     <button
                         onClick={() => setIsFormOpen(true)}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white px-5 py-4 rounded-2xl font-black shadow-md transition-all flex justify-center items-center gap-3"
                     >
-                        <i className="fa-solid fa-plus text-lg"></i> NUEVO
-                        EMPLEADO
+                        <i className="fa-solid fa-plus text-lg"></i> NUEVO EMPLEADO
                     </button>
 
                     <a
                         href="/admin/reclamaciones"
                         className="w-full bg-amber-50 border border-amber-200 text-amber-700 px-5 py-3 rounded-2xl font-bold transition-all flex justify-center items-center gap-3 hover:bg-amber-100 shadow-sm"
                     >
-                        <i className="fa-solid fa-ticket text-lg"></i>{" "}
-                        RECLAMACIONES TICKETS
+                        <i className="fa-solid fa-ticket text-lg"></i> RECLAMACIONES TICKETS
                     </a>
 
-                    <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-5 shadow-sm">
+                    {/* Buscador y Filtros con Estadísticas */}
+                    <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5">
                         <div className="relative">
                             <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                             <input
@@ -234,70 +200,58 @@ export default function AdminDashboard() {
                                 className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                             />
                         </div>
+
                         <div className="flex flex-col gap-2">
-                            {roles.map((role) => (
-                                <button
-                                    key={role}
-                                    onClick={() => setSelectedRole(role)}
-                                    className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between border ${selectedRole === role ? "bg-blue-50 text-blue-700 border-blue-200 shadow-inner" : "bg-transparent text-slate-600 border-slate-100 hover:bg-slate-50"}`}
-                                >
-                                    <div className="flex items-center gap-2">
-                                        {role !== "Todos" && (
-                                            <i
-                                                className={`fa-solid ${roleStyles[role].icon}`}
-                                            ></i>
-                                        )}{" "}
-                                        {role}
-                                    </div>
-                                    {selectedRole === role && (
-                                        <i className="fa-solid fa-check text-blue-600"></i>
-                                    )}
-                                </button>
-                            ))}
+                            {/* Botón Todos */}
+                            <button
+                                onClick={() => setSelectedRole("Todos")}
+                                className={`w-full flex justify-between items-center px-4 py-3 rounded-xl text-sm font-bold transition-all border ${
+                                    selectedRole === "Todos"
+                                        ? "bg-blue-50 text-blue-700 border-blue-200"
+                                        : "bg-transparent text-slate-600 border-transparent hover:bg-slate-50"
+                                }`}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <i className="fa-solid fa-users w-5 text-center"></i> Todos
+                                </div>
+                                <span className={`px-2 py-0.5 rounded-full text-xs ${selectedRole === "Todos" ? 'bg-blue-100 text-blue-800' : 'bg-slate-100 text-slate-500'}`}>
+                                    {rawEmployees.length}
+                                </span>
+                            </button>
+
+                            {/* Botones por Rol */}
+                            {roles.map((role) => {
+                                const count = rawEmployees.filter(emp => emp.position === role).length;
+                                const style = roleStyles[role];
+                                const isActive = selectedRole === role;
+
+                                return (
+                                    <button
+                                        key={role}
+                                        onClick={() => setSelectedRole(role)}
+                                        className={`w-full flex justify-between items-center px-4 py-3 rounded-xl text-sm font-bold transition-all border ${
+                                            isActive
+                                                ? `${style.bg} ${style.text} ${style.border}`
+                                                : "bg-transparent text-slate-600 border-transparent hover:bg-slate-50"
+                                        }`}
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <i className={`fa-solid ${style.icon} w-5 text-center`}></i> {role}
+                                        </div>
+                                        <span className={`px-2 py-0.5 rounded-full text-xs ${isActive ? 'bg-white/60' : 'bg-slate-100 text-slate-500'}`}>
+                                            {count}
+                                        </span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
-                        <StatCard
-                            title="Plantilla"
-                            value={isLoading ? "..." : stats.total}
-                            icon="fa-users"
-                            color="blue"
-                        />
-                        <StatCard
-                            title="Admin"
-                            value={isLoading ? "..." : stats.administradores}
-                            icon="fa-user-tie"
-                            color="emerald"
-                        />
-                        <StatCard
-                            title="Médicos"
-                            value={isLoading ? "..." : stats.medicos}
-                            icon="fa-user-doctor"
-                            color="teal"
-                        />
-                        <StatCard
-                            title="Cuidadores"
-                            value={isLoading ? "..." : stats.cuidadores}
-                            icon="fa-paw"
-                            color="lime"
-                        />
-                        <StatCard
-                            title="Guías"
-                            value={isLoading ? "..." : stats.guias}
-                            icon="fa-compass"
-                            color="orange"
-                        />
-                        <StatCard
-                            title="Manten."
-                            value={isLoading ? "..." : stats.mantenimiento}
-                            icon="fa-screwdriver-wrench"
-                            color="stone"
-                        />
-                    </div>
+                    {/* Accesos a otros Paneles */}
+                    <NavigationModules currentPanel="Administrador" />
                 </aside>
 
-                {/* COLUMNA DERECHA: TARJETAS */}
+                {/* COLUMNA DERECHA: TARJETAS DE EMPLEADOS */}
                 <section className="flex-1">
                     {isLoading ? (
                         <div className="flex justify-center items-center h-64">
@@ -341,7 +295,7 @@ export default function AdminDashboard() {
                         : null
                 }
                 onDelete={handleDeleteEmployee}
-                zones={zones} // <--- REVISA QUE ESTA LÍNEA ESTÉ EXACTAMENTE ASÍ
+                zones={zones}
             />
 
             <EmployeeFormModal

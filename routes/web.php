@@ -85,6 +85,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/api/medico/datos', [MedicalRecordController::class, 'getDoctorData']);
         Route::post('/api/medico/historial', [MedicalRecordController::class, 'storeRecord']);
         Route::post('/api/medico/animal', [MedicalRecordController::class, 'storeAnimal']);
+        Route::delete('/api/medico/animal/{id}', [MedicalRecordController::class, 'destroyAnimal']);
     });
 
     /* --- OTROS PANELES ESPECÍFICOS --- */

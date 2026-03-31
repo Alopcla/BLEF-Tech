@@ -87,4 +87,17 @@ class MedicalRecordController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Animal creado']);
     }
+
+    public function destroyAnimal($id)
+    {
+        $animal = Animal::find($id);
+
+        if (!$animal) {
+            return response()->json(['error' => 'Animal no encontrado'], 404);
+        }
+
+        $animal->delete();
+
+        return response()->json(['success' => true, 'message' => 'Animal eliminado correctamente']);
+    }
 }

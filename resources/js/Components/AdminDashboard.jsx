@@ -145,7 +145,7 @@ export default function AdminDashboard() {
                         </div>
                         <h1 className="text-xl font-black tracking-tight text-slate-800">
                             Zoo<span className="text-blue-600">Pro</span>{" "}
-                            Dashboard
+                            Admin
                         </h1>
                     </div>
                     <form method="POST" action="/logout" className="m-0">

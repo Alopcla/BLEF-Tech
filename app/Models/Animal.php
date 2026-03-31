@@ -19,6 +19,7 @@ class Animal extends Model
         'image',
         'last_fed_date',
         'last_fed_by',
+        'food_ration'
     ];
 
     protected $casts = [

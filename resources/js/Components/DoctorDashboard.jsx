@@ -112,7 +112,7 @@ export default function DoctorDashboard() {
                             <i className="fa-solid fa-stethoscope"></i>
                         </div>
                         <h1 className="text-xl font-black tracking-tight text-slate-800">
-                            Zoo<span className="text-teal-600">Pro</span> Médico
+                            Zoo<span className="text-teal-600">Pro</span> Doctor
                         </h1>
                     </div>
                     {/* Botón Cerrar Sesión */}

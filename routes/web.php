@@ -8,15 +8,24 @@ use App\Http\Controllers\Auth\GoogleController;
 // Añadimos el controlador del médico aquí arriba para que quede más limpio
 use App\Http\Controllers\MedicalRecordController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AlertController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
 | RUTAS PÚBLICAS
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () { return view('welcome'); });
-Route::get('/animales', function () { return view('animales'); })->name('animales');
-Route::get('/tienda', function () { return view('tienda'); })->name('tienda');
+
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/animales', function () {
+    return view('animales');
+})->name('animales');
+Route::get('/tienda', function () {
+    return view('tienda');
+})->name('tienda');
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
 
 // Autenticación Google
@@ -35,7 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Redirección inicial según puesto
     Route::get('/dashboard', function () {
         $employee = Auth::user();
-        return match($employee->position) {
+        return match ($employee->position) {
             'Administrador' => redirect()->route('employees.index'),
             'Médico'        => redirect()->route('medico.dashboard'),
             'Guía'          => redirect()->route('guia.dashboard'),
@@ -55,7 +64,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /* --- PANEL ADMINISTRADOR (REACT) --- */
     Route::middleware(['position:Administrador'])->group(function () {
         // Vista principal de React
-        Route::get('/empleados', function () { return view('admin-react'); })->name('employees.index');
+        Route::get('/empleados', function () {
+            return view('admin-react');
+        })->name('employees.index');
 
         // API de datos para React
         Route::get('/api/empleados', [EmployeeController::class, 'index']);
@@ -75,6 +86,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
+    /* --- PANELES ESPECÍFICOS --- */
+    Route::get('/medico/dashboard', function () {
+        return "Panel Médico";
+    })->name('medico.dashboard')->middleware('position:Médico');
+    Route::get('/guia/dashboard', function () {
+        return "Panel Guía";
+    })->name('guia.dashboard')->middleware('position:Guía');
+    Route::get('/mantenimiento/dashboard', function () {
+        return "Panel Mantenimiento";
+    })->name('mantenimiento.dashboard')->middleware('position:Mantenimiento');
+    Route::get('/cuidador/dashboard', function () {
+        return "Panel Cuidador";
+    })->name('cuidador.dashboard')->middleware('position:Cuidador');
     /* --- PANEL MÉDICO (REACT) --- */
     // Agrupamos todo lo del médico bajo su propio middleware para mayor seguridad y limpieza
     Route::middleware(['position:Médico'])->group(function () {
@@ -110,6 +134,11 @@ Route::controller(PaymentController::class)->group(function () {
 Route::get('/mapa', function () {
     return view('mapa'); // Asegúrate de que el nombre coincida con tu .blade.php
 })->name('mapa.index');
+
+/** --- ALERTAS MAPA --- */
+Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.index');
+Route::post('/alerts', [AlertController::class, 'store'])->name('alerts.store');
+Route::delete('/alerts/{id}', [AlertController::class, 'destroy'])->name('alerts.destroy');
 Route::get('/paypal/success', function () {
     return redirect()->route('payment.show')->with('success', '¡Pago realizado con éxito!');
 })->name('paypal.success');

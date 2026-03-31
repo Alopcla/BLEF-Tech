@@ -89,10 +89,34 @@ const MapaZoologic = () => {
                     </div>
 
                     {/* CUERPO (Contenedor que corta el contenido) */}
-                    <div className="flex-1 overflow-hidden-container bg-white">
+                    <div className="flex-1 overflow-hidden-container bg-white relative">
 
-                        {/* ESTE DIV ES EL QUE SE MUEVE (Suma animales + experiencias) */}
-                        <div className={`p-4 ${(infoZona.animals?.length + (infoZona.experiences?.length || 0)) > 6 ? 'animate-scroll' : ''}`}>
+                        {/* DIV ANIMADO: Sumamos animales + experiencias + eventos para decidir si hay scroll */}
+                        <div className={`p-4 ${((infoZona.animals?.length || 0) + (infoZona.experiences?.length || 0) + (infoZona.events?.length || 0)) > 5 ? 'animate-scroll' : ''}`}>
+
+                            {/* --- SECCIÓN DE EVENTOS Y ALERTAS --- */}
+                            {infoZona.events && infoZona.events.length > 0 && (
+                                <div className="mb-4 space-y-2">
+                                    {infoZona.events.map((evento, i) => (
+                                        <div
+                                            key={i}
+                                            className={`p-2 rounded-xl border-l-4 shadow-sm animate-pulse ${evento.level === 'peligro' ? 'bg-red-50 border-red-500 text-red-900' :
+                                                    evento.level === 'alerta' ? 'bg-amber-50 border-amber-500 text-amber-900' :
+                                                        'bg-green-50 border-green-500 text-green-900'
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-0.5">
+                                                <span className="text-[10px] font-black uppercase tracking-wider">
+                                                    {evento.level === 'peligro' ? '⚠️' : evento.level === 'alerta' ? '🔔' : 'ℹ️'} {evento.title}
+                                                </span>
+                                            </div>
+                                            <p className="text-[9px] leading-tight font-medium opacity-90">
+                                                {evento.message}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
 
                             <p className="text-gray-600 text-xs italic mb-4 leading-tight border-l-2 border-green-200 pl-2">
                                 "{infoZona.description}"
@@ -117,7 +141,7 @@ const MapaZoologic = () => {
                                 </div>
                             </div>
 
-                            {/* SECCIÓN DE EXPERIENCIAS (DENTRO DEL SCROLL) */}
+                            {/* SECCIÓN DE EXPERIENCIAS */}
                             {infoZona.experiences && infoZona.experiences.length > 0 && (
                                 <div className="mt-5 pt-3 border-t border-dashed border-gray-200 space-y-2">
                                     <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest block">

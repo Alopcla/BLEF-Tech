@@ -1,35 +1,35 @@
-import './bootstrap';
-import React from 'react';
-import { createRoot } from 'react-dom/client'; // Importamos createRoot directamente
+import "./bootstrap";
+import React from "react";
+import { createRoot } from "react-dom/client"; // Importamos createRoot directamente
 
 // Importación de componentes
-import AnimalGallery from './Components/AnimalGallery';
-import MapaZoologic from './Components/MapaZoologic';
-import AdminDashboard from './Components/AdminDashboard';
-import DoctorDashboard from './Components/DoctorDashboard';
+import AnimalGallery from "./Components/AnimalGallery";
+import MapaZoologic from "./Components/MapaZoologic";
+import AdminDashboard from "./Components/AdminDashboard";
+import DoctorDashboard from "./Components/DoctorDashboard";
+import KeeperDashboard from "./Components/KeeperDashboard";
 
 // Lógica para la Galería de Animales
-const animalContainer = document.getElementById('pagina-animales-root');
+const animalContainer = document.getElementById("pagina-animales-root");
 if (animalContainer) {
     const root = createRoot(animalContainer);
     root.render(<AnimalGallery />);
 }
 
 // Lógica para el Mapa del Zoo
-const mapaContainer = document.getElementById('react-mapa');
+const mapaContainer = document.getElementById("react-mapa");
 if (mapaContainer) {
     // IMPORTANTE: Usamos 'createRoot' directamente, NO 'ReactDOM.createRoot'
     const root = createRoot(mapaContainer);
     root.render(
         <React.StrictMode>
             <MapaZoologic />
-        </React.StrictMode>
+        </React.StrictMode>,
     );
 }
 
-
 // Buscamos el contenedor en animales.blade.php
-const container = document.getElementById('pagina-animales-root');
+const container = document.getElementById("pagina-animales-root");
 
 // Si el contenedor existe (es decir, si estamos en la ruta /animales)
 if (container) {
@@ -39,7 +39,7 @@ if (container) {
 }
 
 // Buscamos la "caja vacía" que dejamos en el Blade
-const adminElement = document.getElementById('admin-dashboard-root');
+const adminElement = document.getElementById("admin-dashboard-root");
 // Si la encontramos (es decir, si estamos en la ruta /empleados), pintamos el panel de React
 if (adminElement) {
     const root = createRoot(adminElement);
@@ -47,7 +47,13 @@ if (adminElement) {
 }
 
 // --- PANEL DE MÉDICO (ESTO ES LO NUEVO) ---
-const doctorRootEl = document.getElementById('doctor-dashboard-root');
+const doctorRootEl = document.getElementById("doctor-dashboard-root");
 if (doctorRootEl) {
     createRoot(doctorRootEl).render(<DoctorDashboard />);
+}
+
+// --- PANEL DE CUIDADOR (KEEPER) ---
+const keeperRootEl = document.getElementById("keeper-dashboard-root");
+if (keeperRootEl) {
+    createRoot(keeperRootEl).render(<KeeperDashboard />);
 }

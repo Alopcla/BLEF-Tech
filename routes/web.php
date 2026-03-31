@@ -5,8 +5,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ExperienciaController;
 use App\Http\Controllers\Auth\GoogleController;
-// Añadimos el controlador del médico aquí arriba para que quede más limpio
 use App\Http\Controllers\MedicalRecordController;
+use App\Http\Controllers\KeeperController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +18,7 @@ Route::get('/', function () { return view('welcome'); });
 Route::get('/animales', function () { return view('animales'); })->name('animales');
 Route::get('/tienda', function () { return view('tienda'); })->name('tienda');
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
+Route::get('/mapa', function () { return view('mapa'); })->name('mapa.index');
 
 // Autenticación Google
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
@@ -27,12 +28,12 @@ require __DIR__ . '/auth.php';
 
 /*
 |--------------------------------------------------------------------------
-| RUTAS PROTEGIDAS (AUTH)
+| RUTAS PROTEGIDAS (USUARIOS LOGUEADOS)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Redirección inicial según puesto
+    // 1. Redirección inicial según puesto
     Route::get('/dashboard', function () {
         $employee = Auth::user();
         return match($employee->position) {
@@ -45,22 +46,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         };
     })->name('dashboard');
 
-    // Perfil de usuario
+    // 2. Perfil de usuario
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'edit')->name('profile.edit');
         Route::patch('/profile', 'update')->name('profile.update');
         Route::delete('/profile', 'destroy')->name('profile.destroy');
     });
 
-    /* --- PANEL ADMINISTRADOR (REACT) --- */
+    // ----------------------------------------------------
+    // PANEL ADMINISTRADOR (Gestión de RRHH)
+    // ----------------------------------------------------
     Route::middleware(['position:Administrador'])->group(function () {
-        // Vista principal de React
         Route::get('/empleados', function () { return view('admin-react'); })->name('employees.index');
-
-        // API de datos para React
         Route::get('/api/empleados', [EmployeeController::class, 'index']);
-
-        // CRUD de Empleados
         Route::post('/registrar-nuevo-empleado', [EmployeeController::class, 'store'])->name('employees.store');
         Route::get('/empleados/{encrypted_dni}/editar', [EmployeeController::class, 'edit'])->name('employees.edit');
         Route::put('/empleados/{encrypted_dni}', [EmployeeController::class, 'update'])->name('employees.update');
@@ -75,23 +73,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    /* --- PANEL MÉDICO (REACT) --- */
-    // Agrupamos todo lo del médico bajo su propio middleware para mayor seguridad y limpieza
-    Route::middleware(['position:Médico'])->group(function () {
-        // Vista principal
-        Route::get('/medico/dashboard', function () { return view('medico-react'); })->name('medico.dashboard');
+    // ----------------------------------------------------
+    // PANEL MÉDICO (Historiales Clínicos)
+    // ----------------------------------------------------
+    // No usamos middleware de posición estricto aquí para que el Admin pueda entrar.
+    // La seguridad se controla por dentro en el MedicalRecordController.
+    Route::get('/medico/dashboard', function () { return view('medico-react'); })->name('medico.dashboard');
+    Route::get('/api/medico/datos', [MedicalRecordController::class, 'getDoctorData']);
+    Route::post('/api/medico/historial', [MedicalRecordController::class, 'storeRecord']);
+    Route::post('/api/medico/animal', [MedicalRecordController::class, 'storeAnimal']);
+    Route::delete('/api/medico/animal/{id}', [MedicalRecordController::class, 'destroyAnimal']);
 
-        // API para React (Leer y Guardar)
-        Route::get('/api/medico/datos', [MedicalRecordController::class, 'getDoctorData']);
-        Route::post('/api/medico/historial', [MedicalRecordController::class, 'storeRecord']);
-        Route::post('/api/medico/animal', [MedicalRecordController::class, 'storeAnimal']);
-        Route::delete('/api/medico/animal/{id}', [MedicalRecordController::class, 'destroyAnimal']);
-    });
+    // ----------------------------------------------------
+    // PANEL CUIDADOR (Alimentación y Dietas)
+    // ----------------------------------------------------
+    // URLs en español para la vista, peticiones API en inglés apuntando a KeeperController.
+    Route::get('/cuidador/dashboard', function () { return view('keeper-react'); })->name('cuidador.dashboard');
+    Route::get('/api/keeper/data', [KeeperController::class, 'getKeeperData']);
+    Route::post('/api/keeper/feed', [KeeperController::class, 'feedAnimal']);
 
-    /* --- OTROS PANELES ESPECÍFICOS --- */
+    // ----------------------------------------------------
+    // OTROS PANELES (Pendientes de implementar React)
+    // ----------------------------------------------------
     Route::get('/guia/dashboard', function () { return "Panel Guía"; })->name('guia.dashboard')->middleware('position:Guía');
     Route::get('/mantenimiento/dashboard', function () { return "Panel Mantenimiento"; })->name('mantenimiento.dashboard')->middleware('position:Mantenimiento');
-    Route::get('/cuidador/dashboard', function () { return "Panel Cuidador"; })->name('cuidador.dashboard')->middleware('position:Cuidador');
 
 });
 
@@ -106,10 +111,6 @@ Route::controller(PaymentController::class)->group(function () {
     Route::get('/check-availability', 'checkAvailability')->name('check.availability');
 });
 
-/** --- MAPA --- **/
-Route::get('/mapa', function () {
-    return view('mapa'); // Asegúrate de que el nombre coincida con tu .blade.php
-})->name('mapa.index');
 Route::get('/paypal/success', function () {
     return redirect()->route('payment.show')->with('success', '¡Pago realizado con éxito!');
 })->name('paypal.success');

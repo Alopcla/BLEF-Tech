@@ -14,10 +14,41 @@
     <header class="bg-gradient-to-r from-blue-900 to-indigo-800 shadow-lg text-white sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
+<<<<<<< HEAD
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Gestion de Empleados</h1>
+        <!-- Botones de navegación exclusivos del Administrador -->
+        <div class="mb-8 flex flex-wrap gap-4">
+            <a href="{{ route('medico.dashboard') }}"
+                class="bg-teal-600 text-white px-4 py-2 rounded shadow hover:bg-teal-700 transition">
+                🩺 Ir a Panel Médico
+            </a>
+            <a href="{{ route('guia.dashboard') }}"
+                class="bg-orange-500 text-white px-4 py-2 rounded shadow hover:bg-orange-600 transition">
+                🗺️ Ir a Panel Guía
+            </a>
+            <a href="{{ route('mantenimiento.dashboard') }}"
+                class="bg-gray-600 text-white px-4 py-2 rounded shadow hover:bg-gray-700 transition">
+                🛠️ Ir a Panel Mantenimiento
+            </a>
+            <a href="{{ route('cuidador.dashboard') }}"
+                class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition">
+                🥩 Ir a Panel Cuidador
+            </a>
+            <a href="{{ route('reclamaciones.index') }}"
+                class="bg-yellow-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition inline-flex items-center gap-2">
+                🎫 Reclamaciones
+            </a>
+            <a href="{{ route('alerts.index') }}"
+                class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 transition inline-flex items-center gap-2">
+                📢 Manejar Alertas del Mapa
+            </a>
+        </div>
+=======
             <div class="flex items-center gap-3">
                 <i class="fa-solid fa-paw text-2xl text-blue-300"></i>
                 <h1 class="text-2xl font-black tracking-tight">Zoo<span class="text-blue-300">Admin</span></h1>
             </div>
+>>>>>>> 639e05aa0f243ea22fcf9457c162693c25c649e3
 
             <<<<<<< HEAD <div class="flex items-center gap-4">
                 <div

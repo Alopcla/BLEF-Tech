@@ -14,7 +14,7 @@
             <a href="#" class="hover:text-white transition-colors">Animales</a>
             <a href="#" class="hover:text-white transition-colors">Tickets</a>
             <a href="#" class="hover:text-white transition-colors">Contacto</a>
-            <a href="#" class="hover:text-white transition-colors">Mapa</a>
+            <a href="{{route('mapa.index')}}" class="hover:text-white transition-colors">Mapa</a>
         </nav>
 
         <div class="flex flex-col items-center md:items-end gap-3">

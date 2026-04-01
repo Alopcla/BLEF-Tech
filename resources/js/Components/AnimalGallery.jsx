@@ -23,18 +23,23 @@ const AnimalGallery = () => {
             });
     }, []);
 
-    // LÓGICA DE FILTRADO: Se ejecuta automáticamente cada vez que escribes o pulsas un filtro
+    // LÓGICA DE FILTRADO BLINDADA CONTRA NULOS
     const animalesFiltrados = animales.filter(animal => {
-        // 1. Comprobamos si el texto de búsqueda coincide con el nombre o la especie
+        // 1. Extraemos los datos asegurándonos de que nunca sean null (usamos un string vacío '' si no existen)
+        const nombre = animal.common_name || '';
+        const especie = animal.species || '';
+        const dieta = animal.diet || '';
+
+        // 2. Comprobamos la búsqueda
         const textoBusqueda = busqueda.toLowerCase();
         const coincideBusqueda =
-            animal.common_name.toLowerCase().includes(textoBusqueda) ||
-            animal.species.toLowerCase().includes(textoBusqueda);
+            nombre.toLowerCase().includes(textoBusqueda) ||
+            especie.toLowerCase().includes(textoBusqueda);
 
-        // 2. Comprobamos si la dieta coincide con el filtro seleccionado
+        // 3. Comprobamos el filtro de botones
         const coincideDieta =
             filtroDieta === 'Todos' ||
-            animal.diet.toLowerCase() === filtroDieta.toLowerCase();
+            dieta.toLowerCase() === filtroDieta.toLowerCase();
 
         // El animal solo se muestra si cumple AMBAS condiciones
         return coincideBusqueda && coincideDieta;

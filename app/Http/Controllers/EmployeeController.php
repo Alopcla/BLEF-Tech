@@ -16,17 +16,29 @@ class EmployeeController extends Controller
      */
 
     /**
-     * Summary of index: Funcion que carga la vista principal del Dashboard con todos los empleados
-     * @return \Illuminate\Contracts\View\View
+     * Summary of index: Devuelve los empleados y zonas en formato JSON para React
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        // Recuperamos todos los empleados de la BD
-        $employees = Employee::with('telephones')->get();
-        // Recuperar todas las zonas para el desplegable en el Dashboard
-        $zones = Zone::all();
-        // Enviamos los datos a la vista 'employees' que creamos antes
-        return view('employees', compact('employees', 'zones'));
+        try {
+            // 1. Traemos los empleados con sus relaciones
+            $employees = Employee::with(['zone', 'telephones'])->get();
+
+            // 2. Traemos TODAS las zonas de la tabla zonas para el desplegable de React
+            $zones = Zone::all();
+
+            // 3. Enviamos AMBOS en la respuesta JSON
+            return response()->json([
+                'employees' => $employees,
+                'zones' => $zones, // <--- ESTO ES LO QUE LE FALTA A REACT
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Fallo en la base de datos: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -37,48 +49,43 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Añadimos el zone_id a la validación y ponemos dni en minúscula
-        $request->validate([
-            'dni' => 'required|unique:employees,dni', // Minúsculas
+        // 1. Validación estricta
+        $validated = $request->validate([
+            'dni' => 'required|unique:employees,dni',
             'name' => 'required|max:255',
             'surname' => 'required',
             'email' => 'required|email|unique:employees,email|unique:users,email',
             'birth_date' => 'required|date',
             'address' => 'required|string|max:255',
             'province' => 'required|string|max:255',
-            'number' => 'required|string',
+            'telephone' => 'required|string', // <--- Laravel busca esta llave
             'position' => 'required|string',
-            'zone_id' => 'required|integer|exists:zones,id', // Validamos que la zona exista
+            'zone_id' => 'required|integer|exists:zones,id',
         ]);
 
-        DB::transaction(function () use ($request) {
+        try {
+            return DB::transaction(function () use ($request, $validated) {
+                // Crear Usuario
+                User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->dni),
+                ]);
 
-            User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->dni), // Minúsculas
-            ]);
+                // Crear Empleado (Usamos solo los datos del empleado, excluyendo el teléfono)
+                $employeeData = $request->except('telephone');
+                $employee = Employee::create($employeeData);
 
-            // 2. Mapeamos exactamente igual que en tu imagen de Supabase
-            $employee = Employee::create([
-                'dni' => $request->dni, // Minúsculas
-                'zone_id' => $request->zone_id, // Añadido el campo de la foránea
-                'name' => $request->name,
-                'surname' => $request->surname,
-                'email' => $request->email,
-                'birth_date' => $request->birth_date,
-                'address' => $request->address,
-                'province' => $request->province,
-                'position' => $request->position
-            ]);
+                // Crear Teléfono (Usamos el campo 'telephone' que viene de React)
+                $employee->telephones()->create([
+                    'telephone' => $request->telephone
+                ]);
 
-            $employee->telephones()->create([
-                'telephone' => $request->number
-            ]);
-
-        });
-
-        return back()->with('success', '¡Empleado registrado correctamente! Su contraseña de acceso es su DNI.');
+                return response()->json(['message' => '¡Registrado!'], 201);
+            });
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -86,30 +93,16 @@ class EmployeeController extends Controller
      * @param string $encrypted_dni
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($encrypted_dni)
+    public function destroy($dni)
     {
-        // Desencriptamos el DNI y buscamos al empleado
-        $dni = decrypt($encrypted_dni);
-        $employee = Employee::where('dni', $dni)->firstOrFail();
+        $employee = Employee::where('dni', $dni)->first();
 
-        DB::transaction(function () use ($employee) {
-            // Primero borramos sus telefonos asociados (hay que borrar primero sus foraneas)
-            $employee->telephones()->delete();
+        if ($employee) {
+            $employee->telephones()->delete(); // Borrar hijos
+            $employee->delete();               // Borrar padre
+        }
 
-            /* Despues eliminamos los datos del empleados en la tabla Users.
-             * Recordar que la tabla Users es la llave para poder hacer Login al dashboard
-             * Identificamos en Users al empleado mediante el email **/
-            $user = User::where('email', $employee->email)->first();
-
-            if ($user) {
-                $user->delete();
-            }
-
-            // Y por ultimo, borramos al empleado
-            $employee->delete();
-        });
-
-        return back()->with('success', '¡Empleado eliminado correctamente!');
+        return response()->json(['status' => 'ok']);
     }
 
     /**
@@ -135,78 +128,47 @@ class EmployeeController extends Controller
      * @param Employee $employee
      * @return void
      */
-    public function update(Request $request, $encrypted_dni)
+    public function update(Request $request, $dni)
     {
-        // Desencriptamos el DNI y buscamos al empleado
-        $dni = decrypt($encrypted_dni);
         $employee = Employee::where('dni', $dni)->firstOrFail();
 
-        // 1. Validamos los datos básicos
-        $request->validate([
-            'name' => 'required|max:255',
-            'surname' => 'required',
-            'address' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
+        // 1. Validación Corregida
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string',
+            'address' => 'required|string',
+            'province' => 'required|string',
             'position' => 'required|string',
-            'zone_id' => 'required|integer|exists:zones,id',
-            'telephones' => 'nullable|array',
-            'telephones.*' => 'required|string', // Si dejas la cajita, no puede estar vacía
-            'new_telephones' => 'nullable|array',
-            'new_telephones.*' => 'nullable|string',
+            'zone_id' => 'nullable|integer|exists:zones,id', // <-- AHORA PERMITE NULOS
+            'telephones' => 'array', // <-- RECONOCE EL ARRAY DE REACT
         ]);
 
-        // 2. VALIDACIÓN ESTRICTA DE MÍNIMO 1 TELÉFONO
-        // Contamos cuántos teléfonos viejos nos envían y cuántos nuevos (ignorando los vacíos)
-        $oldPhonesCount = count($request->telephones ?? []);
-        $newPhonesCount = count(array_filter($request->new_telephones ?? []));
+        try {
+            \DB::transaction(function () use ($request, $employee) {
+                // A) Actualizar datos básicos del empleado
+                $employee->update($request->only(['name', 'surname', 'address', 'province', 'position', 'zone_id']));
 
-        if (($oldPhonesCount + $newPhonesCount) === 0) {
-            // Si la suma es 0, lo devolvemos con un mensaje de error a la vista
-            return back()->withErrors(['telephones' => '¡Atención! El empleado debe tener al menos un número de teléfono registrado.'])->withInput();
-        }
-
-        // 3. Transacción de base de datos
-        DB::transaction(function () use ($request, $employee) {
-
-            // A) Actualizamos empleado
-            $employee->update([
-                'name' => $request->name,
-                'surname' => $request->surname,
-                'address' => $request->address,
-                'province' => $request->province,
-                'position' => $request->position,
-                'zone_id' => $request->zone_id,
-            ]);
-
-            // B) Actualizamos usuario
-            $user = User::where('email', $employee->email)->first();
-            if ($user) {
-                $user->update(['name' => $request->name]);
-            }
-
-            // C) ELIMINAR TELÉFONOS BORRADOS EN EL HTML
-            // Cogemos los IDs de los teléfonos que SÍ han llegado en el formulario
-            $telefonosEnviados = array_keys($request->telephones ?? []);
-            // Le decimos a la BD: Borra todos los teléfonos de este empleado que NO estén en esa lista
-            $employee->telephones()->whereNotIn('id', $telefonosEnviados)->delete();
-
-            // D) ACTUALIZAR los teléfonos viejos que se quedaron
-            if ($request->has('telephones')) {
-                foreach ($request->telephones as $id => $number) {
-                    $employee->telephones()->where('id', $id)->update(['telephone' => $number]);
+                // B) Sincronizar nombre en la tabla Users
+                $user = \App\Models\User::where('email', $employee->email)->first();
+                if ($user) {
+                    $user->update(['name' => $request->name]);
                 }
-            }
 
-            // E) CREAR teléfonos nuevos
-            if ($request->has('new_telephones')) {
-                foreach ($request->new_telephones as $number) {
-                    if (!empty($number)) {
-                        $employee->telephones()->create(['telephone' => $number]);
+                // C) Sincronizar Teléfonos (Borra los viejos y crea los nuevos)
+                if ($request->has('telephones')) {
+                    $employee->telephones()->delete();
+                    foreach ($request->telephones as $tel) {
+                        // Solo guardamos si el input no está vacío
+                        if (!empty($tel['telephone'])) {
+                            $employee->telephones()->create(['telephone' => $tel['telephone']]);
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        return redirect()->route('employees.index')->with('success', '¡Ficha de empleado actualizada correctamente!');
+            return response()->json(['message' => 'Actualizado con éxito', 'success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

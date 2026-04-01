@@ -42,7 +42,7 @@
                 </a>
             @else
                 <a href="{{ route('login') }}" class="group flex items-center gap-2 border border-[#D9C8A1]/30 px-4 py-2 rounded-xl text-[#D9C8A1] hover:bg-[#D9C8A1] hover:text-[#1A2E1A] transition-all duration-500 text-sm font-bold">
-                    <span>Login</span>
+                    <span>Iniciar Sesión</span>
                     <i class="fa-solid fa-arrow-right-to-bracket transition-transform group-hover:translate-x-1"></i>
                 </a>
             @endauth
@@ -72,8 +72,13 @@
             </nav>
 
             <div class="mt-auto">
+                <a href="{{ route('login') }}" 
+                class="flex items-center justify-between p-4 border border-[#D9C8A1]/20 rounded-2xl text-[#D9C8A1] hover:bg-white/5 transition-all duration-300 mb-6">
+                    <span class="font-bold tracking-wide">Iniciar Sesión</span>
+                    <i class="fa-solid fa-arrow-right-to-bracket opacity-50"></i>
+                </a>
                 <a href="{{ route('payment.show') }}" class="w-full py-5 bg-gradient-to-r from-[#F2C94C] to-[#F2994A] text-[#1A2E1A] rounded-2xl font-black text-center block text-lg uppercase tracking-widest shadow-xl">
-                    Tickets VIP
+                    Tickets
                 </a>
             </div>
         </div>

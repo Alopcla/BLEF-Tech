@@ -5,7 +5,7 @@
             <img src="{{ asset('LOGO.PNG') }}" class="w-12 brightness-110" alt="Park Zoo">
             <div class="h-8 w-[1px] bg-[#D9C8A1]/20 hidden md:block"></div>
             <div>
-                <h4 class="font-parkzoo text-lg font-bold text-[#D9C8A1] leading-none">Park Zoo</h4>
+                <h4 class="font-parkzoo text-lg font-bold text-[#D9C8A1] leading-none">BLEF-TECH</h4>
                 <p class="text-[11px] text-[#D9C8A1]/60 uppercase tracking-widest mt-1">Explora lo salvaje</p>
             </div>
         </div>

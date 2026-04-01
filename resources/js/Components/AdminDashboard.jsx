@@ -187,7 +187,13 @@ export default function AdminDashboard() {
                     >
                         <i className="fa-solid fa-ticket text-lg"></i> RECLAMACIONES TICKETS
                     </a>
-
+                    {/*Boton para manejar las alertas*/}
+                    <a
+                        href="/alerts"
+                        className="w-full bg-indigo-50 border border-indigo-200 text-indigo-700 px-5 py-3 rounded-2xl font-bold transition-all flex justify-center items-center gap-3 hover:bg-indigo-100 shadow-sm mt-2"
+                    >
+                        <i className="fa-solid fa-bullhorn text-lg"></i> MANEJAR ALERTAS
+                    </a>
                     {/* Buscador y Filtros con Estadísticas */}
                     <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5">
                         <div className="relative">
@@ -205,11 +211,10 @@ export default function AdminDashboard() {
                             {/* Botón Todos */}
                             <button
                                 onClick={() => setSelectedRole("Todos")}
-                                className={`w-full flex justify-between items-center px-4 py-3 rounded-xl text-sm font-bold transition-all border ${
-                                    selectedRole === "Todos"
-                                        ? "bg-blue-50 text-blue-700 border-blue-200"
-                                        : "bg-transparent text-slate-600 border-transparent hover:bg-slate-50"
-                                }`}
+                                className={`w-full flex justify-between items-center px-4 py-3 rounded-xl text-sm font-bold transition-all border ${selectedRole === "Todos"
+                                    ? "bg-blue-50 text-blue-700 border-blue-200"
+                                    : "bg-transparent text-slate-600 border-transparent hover:bg-slate-50"
+                                    }`}
                             >
                                 <div className="flex items-center gap-2">
                                     <i className="fa-solid fa-users w-5 text-center"></i> Todos
@@ -229,11 +234,10 @@ export default function AdminDashboard() {
                                     <button
                                         key={role}
                                         onClick={() => setSelectedRole(role)}
-                                        className={`w-full flex justify-between items-center px-4 py-3 rounded-xl text-sm font-bold transition-all border ${
-                                            isActive
-                                                ? `${style.bg} ${style.text} ${style.border}`
-                                                : "bg-transparent text-slate-600 border-transparent hover:bg-slate-50"
-                                        }`}
+                                        className={`w-full flex justify-between items-center px-4 py-3 rounded-xl text-sm font-bold transition-all border ${isActive
+                                            ? `${style.bg} ${style.text} ${style.border}`
+                                            : "bg-transparent text-slate-600 border-transparent hover:bg-slate-50"
+                                            }`}
                                     >
                                         <div className="flex items-center gap-2">
                                             <i className={`fa-solid ${style.icon} w-5 text-center`}></i> {role}

@@ -32,7 +32,7 @@ class ReserveExperience extends Model
     // Relación N:1 -> La reserva es de una experiencia
     public function experience()
     {
-        return $this->belongsTo(Experience::class);
+        return $this->belongsTo(Experience::class, 'experience_id');
     }
 
     // Relación N:1 -> La reserva la guía un empleado

@@ -8,7 +8,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::dropIfExists('reserve_experiences');
 
         Schema::create('reserve_experiences', function (Blueprint $table) {
             // Campo 'id' principal de la reserva

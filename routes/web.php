@@ -43,7 +43,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'Administrador' => redirect()->route('employees.index'),
             'Médico'        => redirect()->route('medico.dashboard'),
             'Guía'          => redirect()->route('guia.dashboard'),
-            'Mantenimiento' => redirect()->route('mantenimiento.dashboard'),
             'Cuidador'      => redirect()->route('cuidador.dashboard'),
             default         => view('dashboard'),
         };
@@ -96,17 +95,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // ----------------------------------------------------
+    // PANEL GUÍA (Acceso: Guía y Admin)
+    // ----------------------------------------------------
+    Route::middleware(['position:Guía,Administrador'])->group(function () {
+        Route::get('/guia/dashboard', function () {
+            return view('guide-react');
+        })->name('guia.dashboard');
+
+        Route::get('/api/guide/data', [App\Http\Controllers\GuideController::class, 'getGuideData']);
+        Route::post('/api/guide/complete', [App\Http\Controllers\GuideController::class, 'completeExperience']);
+    });
+
+    // ----------------------------------------------------
     // ALERTAS MAPA (Del compañero)
     // ----------------------------------------------------
     Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.index');
     Route::post('/alerts', [AlertController::class, 'store'])->name('alerts.store');
     Route::delete('/alerts/{id}', [AlertController::class, 'destroy'])->name('alerts.destroy');
-
-    // ----------------------------------------------------
-    // OTROS PANELES (Acceso: Empleado específico y Admin)
-    // ----------------------------------------------------
-    Route::get('/guia/dashboard', function () { return "Panel Guía"; })->name('guia.dashboard')->middleware('position:Guía,Administrador');
-    Route::get('/mantenimiento/dashboard', function () { return "Panel Mantenimiento"; })->name('mantenimiento.dashboard')->middleware('position:Mantenimiento,Administrador');
 
 });
 
@@ -124,3 +129,4 @@ Route::controller(PaymentController::class)->group(function () {
 Route::get('/paypal/success', function () {
     return redirect()->route('payment.show')->with('success', '¡Pago realizado con éxito!');
 })->name('paypal.success');
+

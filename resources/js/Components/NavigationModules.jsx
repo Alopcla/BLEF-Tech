@@ -23,11 +23,6 @@ export default function NavigationModules({ currentPanel }) {
             icon: 'fa-map-signs', bg: 'bg-orange-50', text: 'text-orange-900', border: 'border-orange-100',
             hoverBg: 'hover:bg-orange-500', hoverText: 'group-hover:text-orange-100'
         },
-        {
-            id: 'Mantenimiento', href: '/mantenimiento/dashboard', title: 'Mantenimiento', desc: 'Incidencias y tareas',
-            icon: 'fa-tools', bg: 'bg-stone-50', text: 'text-stone-800', border: 'border-stone-200',
-            hoverBg: 'hover:bg-stone-700', hoverText: 'group-hover:text-stone-300'
-        }
     ];
 
     // Filtramos para NO mostrar el panel en el que estamos actualmente

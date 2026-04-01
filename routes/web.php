@@ -20,6 +20,7 @@ Route::get('/', function () { return view('welcome'); });
 Route::get('/animales', function () { return view('animales'); })->name('animales');
 Route::get('/tienda', function () { return view('tienda'); })->name('tienda');
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
+Route::get('/experiencias/{slug}', [ExperienciaController::class, 'MostrarInfo'])->name('experienciasInfo');
 Route::get('/mapa', function () { return view('mapa'); })->name('mapa.index');
 
 // Autenticación Google

@@ -1,107 +1,89 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Experiencias - Zoológico</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body class="font-sans text-white">
+@extends('layouts.app')
 
-<!-- VIDEO DE FONDO -->
-<video autoplay muted loop class="fixed w-full h-full object-cover -z-10">
-  <source src="{{ asset('video.mp4') }}" type="video/mp4">
-</video>
-<div class="fixed inset-0 bg-black/50 -z-10"></div>
+@section('title', 'Experiencias')
 
-<!-- HEADER -->
-<header class="flex justify-center pt-8 px-6">
-  <div class="flex items-center gap-8 bg-black/40 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-white/20">
-    <img src="{{ asset('logo.png') }}" class="w-12">
-    <nav class="hidden md:flex gap-5 text-lg">
-      <a href="/" class="hover:text-amber-300 transition">Inicio</a>
-      <a href="{{ route('payment.show') }}" class="hover:text-amber-300 transition">Tickets</a>
-      <a href="{{ route('VistaExperiencias') }}" class="hover:text-amber-300 transition">Experiencias</a>
-      <a href="{{ route('animales') }}" class="hover:text-amber-300 transition">Animales</a>
-      <a href="{{ route('tienda') }}" class="hover:text-amber-300 transition">Tienda</a>
-      <a href="#" class="hover:text-amber-300 transition">Contacto</a>
-      <button class="bg-amber-300 text-green-900 px-4 py-1 rounded-full hover:bg-amber-200 transition">Login</button>
-    </nav>
-  </div>
-</header>
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+@endpush
 
-<!-- TITULO -->
-<section class="text-center mt-20 px-6">
-  <h1 class="text-4xl font-bold mb-2">Experiencias del Zoológico</h1>
-  <p class="text-gray-300 max-w-xl mx-auto">
-    Vive momentos únicos y divertidos con nuestros animales.
-  </p>
-</section>
+@section('content')
 
-<!-- EXPERIENCIAS -->
-<section class="max-w-6xl mx-auto mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
-  @foreach($experiencias as $exp)
-  <div class="bg-black/60 p-4 rounded-xl border border-white/20 shadow-lg  hover:scale-105 transition-transform duration-300">
+    {{-- Hero: Más limpio y con colores coherentes --}}
+    <section class="text-center mt-32 px-6">
+        <span class="text-[#D9C8A1] uppercase tracking-[4px] text-xs font-bold">Descubre lo inolvidable</span>
+        <h1 class="text-4xl md:text-5xl font-parkzoo font-bold mt-2 text-white fuenteZoo">Experiencias <span class="text-[#D9C8A1]">Park Zoo</span></h1>
+        <div class="w-16 h-[2px] bg-[#D9C8A1] mx-auto mt-4"></div>
+        <p class="text-gray-400 max-w-xl mx-auto mt-6 italic">
+            Vive momentos únicos y conecta con la esencia de la vida silvestre.
+        </p>
+    </section>
 
-    <!-- IMAGEN CON BADGE -->
-    <div class="relative">
-      <img src="{{ $exp->image }}" class="w-full h-48 object-cover rounded-lg mb-2">
-      <span class="absolute top-2 left-2 bg-amber-300 text-green-900 text-xs font-semibold px-2 py-1 rounded-full shadow">
-        {{ $exp->type ?? 'General' }}
-      </span>
-    </div>
-
-    <!-- NOMBRE Y DESCRIPCIÓN -->
-    <h3 class="text-xl font-semibold">{{ $exp->name }}</h3>
-    <p class="text-gray-300 text-sm mt-1">{{ $exp->description }}</p>
-
-    <!-- ESTRELLAS DE RATING -->
-    <div class="flex items-center mt-1">
-      @for ($i = 0; $i < 5; $i++)
-        @if($i < ($exp->rating ?? 0))
-          <i class="fa-solid fa-star text-amber-300 mr-1"></i>
-        @else
-          <i class="fa-regular fa-star text-gray-400 mr-1"></i>
+    {{-- Grid de experiencias --}}
+<section class="max-w-7xl mx-auto mt-16 grid md:grid-cols-2 lg:grid-cols-3 gap-10 px-6 mb-20">
+    @foreach($experiencias as $exp)
+    <div class="group relative bg-[#1A2E1A]/40 backdrop-blur-md rounded-[2rem] border border-white/5 p-3 pb-6 transition-all duration-500 hover:bg-[#1A2E1A]/80 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:-translate-y-2">
+        
+        @if($loop->first)
+            <div class="absolute -top-3 -right-3 z-20 bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-xl rotate-12 uppercase tracking-tighter">
+                Popular 🔥
+            </div>
         @endif
-      @endfor
-    </div>
 
-    <!-- DURACIÓN Y CAPACIDAD -->
-    <div class="flex justify-between text-gray-300 text-sm mt-2">
-      <span><i class="fa-solid fa-clock mr-1"></i>{{ $exp->duration }} min</span>
-      <span><i class="fa-solid fa-user-group mr-1"></i>{{ $exp->ability }} personas</span>
-    </div>
+        {{-- Contenedor de Imagen con forma orgánica --}}
+        <div class="relative h-64 w-full overflow-hidden rounded-[1.5rem] mb-6">
+            <img src="{{ $exp->image }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 group-hover:rotate-1" alt="{{ $exp->name }}">
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-[#1A2E1A] via-transparent to-transparent opacity-80"></div>
 
-    <!-- PRECIO Y BOTONES -->
-    <div class="flex justify-between items-center mt-2">
-      <span class="text-amber-300 font-semibold text-lg">{{ $exp->price }} €</span>
-      <div class="flex gap-2">
-        <button class="px-3 py-1 rounded-full bg-gradient-to-r from-amber-300 to-amber-400 text-green-900 font-semibold shadow-md hover:scale-105 transition-all">
-          Reservar
-        </button>
-        <a href="{{route('VistaExperiencias', $exp->slug)}}">
-          <button class="px-3 py-1 rounded-full border border-amber-300 text-amber-300 font-semibold hover:bg-amber-300 hover:text-green-900 transition-all">
-            Más info
-          </button>
-        </a>
-      </div>
-    </div>
+            <div class="absolute top-4 left-4 backdrop-blur-md bg-white/10 border border-white/20 text-white text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest">
+                {{ $exp->type ?? 'Safari' }}
+            </div>
 
-  </div>
-  @endforeach
+            <div class="absolute bottom-4 right-4 bg-[#D9C8A1] text-[#1A2E1A] px-4 py-1 rounded-lg font-black text-lg shadow-2xl">
+                {{ $exp->price }}€
+            </div>
+        </div>
+
+        {{-- Texto y Detalles --}}
+        <div class="px-4">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="w-2 h-2 rounded-full bg-[#D9C8A1] animate-pulse"></div>
+                <h3 class="text-2xl font-parkzoo font-bold text-white leading-tight fuenteZoo">{{ $exp->name }}</h3>
+            </div>
+            
+            <p class="text-gray-400 text-sm line-clamp-2 mb-6 font-medium leading-relaxed">
+                {{ $exp->description }}
+            </p>
+
+            {{-- Info Bar con Iconos Refinados --}}
+            <div class="flex justify-between items-center py-4 border-t border-white/10 mb-6">
+                <div class="flex flex-col">
+                    <span class="text-[10px] uppercase text-[#D9C8A1]/50 tracking-tighter">Duración</span>
+                    <span class="text-white text-xs font-bold flex items-center gap-1">
+                        <i class="fa-regular fa-clock text-[#D9C8A1]"></i> {{ $exp->duration }}min
+                    </span>
+                </div>
+                <div class="h-8 w-[1px] bg-white/10"></div>
+                <div class="flex flex-col items-end">
+                    <span class="text-[10px] uppercase text-[#D9C8A1]/50 tracking-tighter">Grupo</span>
+                    <span class="text-white text-xs font-bold flex items-center gap-1">
+                        {{ $exp->ability }} pers. <i class="fa-solid fa-paw text-[#D9C8A1]"></i>
+                    </span>
+                </div>
+            </div>
+
+            {{-- Botones --}}
+            <div class="flex gap-3">
+                <button class="flex-[3] bg-[#D9C8A1] text-[#1A2E1A] py-4 rounded-2xl font-black text-xs uppercase tracking-[2px] shadow-[0_10px_20px_rgba(217,200,161,0.2)] hover:bg-white hover:shadow-[#D9C8A1]/40 transition-all duration-300">
+                    Reservar Ahora
+                </button>
+                <a href="{{ route('experienciasInfo', $exp->slug) }}" class="flex-1 border border-[#D9C8A1]/30 rounded-2xl flex items-center justify-center text-[#D9C8A1] hover:bg-[#D9C8A1]/10 transition-colors">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    @endforeach
 </section>
 
-<!-- FOOTER -->
-<footer class="mt-10 bg-black/70 py-6 text-center text-gray-400">
-  <div class="flex justify-center gap-4 text-xl mb-2">
-    <a href="#" class="hover:text-amber-300"><i class="fab fa-facebook"></i></a>
-    <a href="#" class="hover:text-amber-300"><i class="fab fa-instagram"></i></a>
-    <a href="#" class="hover:text-amber-300"><i class="fab fa-twitter"></i></a>
-    <a href="#" class="hover:text-amber-300"><i class="fab fa-youtube"></i></a>
-  </div>
-  <p>© {{ date('Y') }} Zoológico. Todos los derechos reservados.</p>
-</footer>
-
-</body>
-</html>
+@endsection

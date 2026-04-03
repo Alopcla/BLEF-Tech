@@ -29,7 +29,7 @@ return new class extends Migration
             // Campo 'precio', conteniendo el precio numeros decimalos. Ejemplo: 10,20 euros
             $table->decimal('price');
             // Campo 'capacidad', numero de personas puede ocupar dicha experiencia
-            $table->integer('ability');
+            $table->integer('capacity');
             // Campo 'Imagen', contiene la imagen de la experiencia
             $table->string('image')->nullable(); // Permite null si no hay imagen
             

@@ -17,8 +17,7 @@ class Experience extends Model
         'details',
         'duration_min',
         'price',
-        'max_capacity',
-        'ability',
+        'capacity',
         'image'
     ];
 
@@ -26,5 +25,30 @@ class Experience extends Model
     public function zone()
     {
         return $this->belongsTo(Zone::class);
+    }
+
+    // Relación: una experiencia tiene muchas reservas
+    public function reservations()
+    {
+        return $this->hasMany(ReserveExperience::class);
+    }
+
+    // DISPONIBILIDAD DINÁMICA
+    public function getAvailableSpotsAttribute()
+    {
+        $reserved = $this->reservations()
+            ->where('status', 'paid')
+            ->count();
+
+        return max(0, $this->capacity - $reserved);
+    }
+
+
+    /** OBTENER EXPERIENCIA MAS POPULAR */
+    public function scopePopular($query)
+    {
+        return $query->withCount(['reservations' => function ($q) {
+            $q->where('status', 'paid');
+        }])->orderByDesc('reservations_count');
     }
 }

@@ -11,23 +11,29 @@ return new class extends Migration
         Schema::dropIfExists('reserve_experiences');
 
         Schema::create('reserve_experiences', function (Blueprint $table) {
-            // Campo 'id' principal de la reserva
             $table->id();
 
-            // 1. Columnas de las Claves Foráneas
-            $table->string('customer_dni');
-            $table->unsignedBigInteger('experience_id'); // Cambiado a convención de Laravel
-            $table->string('employee_guide_dni');
+            // Relación con experiencia
+            $table->unsignedBigInteger('experience_id');
 
-            // 2. Datos de la reserva
-            $table->date('reservation_date');
-            $table->boolean('status')->default(true); // Sin comillas
+            // Datos de Stripe / usuario
+            $table->string('email');
+            $table->date('reservation_date')->nullable();
+            $table->decimal('price', 8, 2);
+
+            // Stripe tracking (MUY IMPORTANTE)
+            $table->string('stripe_session_id')->unique();
+
+            // Estado de la reserva
+            $table->string('status')->default('pending');
+
             $table->timestamps();
 
-            // 3. Declaración MANUAL de las 3 Claves Foráneas
-            $table->foreign('customer_dni')->references('dni')->on('customers')->onDelete('cascade');
-            $table->foreign('experience_id')->references('id')->on('experiences')->onDelete('cascade');
-            $table->foreign('employee_guide_dni')->references('dni')->on('employees')->onDelete('cascade');
+            // Foreign key
+            $table->foreign('experience_id')
+                  ->references('id')
+                  ->on('experiences')
+                  ->onDelete('cascade');
         });
     }
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\AlertController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+
 /*
 |--------------------------------------------------------------------------
 | RUTAS PÚBLICAS
@@ -107,7 +108,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ----------------------------------------------------
     Route::get('/guia/dashboard', function () { return "Panel Guía"; })->name('guia.dashboard')->middleware('position:Guía,Administrador');
     Route::get('/mantenimiento/dashboard', function () { return "Panel Mantenimiento"; })->name('mantenimiento.dashboard')->middleware('position:Mantenimiento,Administrador');
-
 });
 
 /*
@@ -120,6 +120,12 @@ Route::controller(PaymentController::class)->group(function () {
     Route::post('/pago', 'processPayment')->name('payment.process');
     Route::get('/check-availability', 'checkAvailability')->name('check.availability');
 });
+
+Route::get('/pago/success', [PaymentController::class, 'paymentSuccess'])
+    ->name('payment.success');
+
+Route::get('/pago/error', [PaymentController::class, 'paymentError'])
+    ->name('payment.error');
 
 Route::get('/paypal/success', function () {
     return redirect()->route('payment.show')->with('success', '¡Pago realizado con éxito!');

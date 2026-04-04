@@ -19,6 +19,8 @@ Route::get('/animales', [AnimalController::class, 'index']);
 
 Route::get('/products', [ProductController::class, 'index']);
 
+Route::get('/products/{id}', [ProductController::class, 'show']);
+
 //Ruta para trabajar el mapa
 use App\Http\Controllers\Api\ZoneController;
 

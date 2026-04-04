@@ -21,6 +21,7 @@
 @push('scripts')
     @viteReactRefresh
     @vite(['resources/js/tienda.jsx'])
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.74/build/spline-viewer.js"></script>
 @endpush
 
 

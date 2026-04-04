@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const obtenerColorCategoria = (categoria) => {
     if (!categoria) return { bg: 'bg-neutral-800', text: 'text-neutral-400', dot: '#6b7280' };
@@ -16,6 +17,7 @@ const ShopCard = ({ producto }) => {
     const agotado = producto.stock <= 0;
     const pocoStock = producto.stock > 0 && producto.stock <= 10;
     const imagenFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(producto.name)}&size=500&background=1a1a1a&color=E0D7B6&font-size=0.15&bold=true`;
+    const navigate = useNavigate();
 
     const handleCarrito = () => {
         if (agotado) return;
@@ -29,7 +31,9 @@ const ShopCard = ({ producto }) => {
         }`}>
 
             {/* Imagen */}
-            <div className="relative w-full h-48 bg-neutral-900 overflow-hidden">
+            <div
+            onClick={() => navigate(`/tienda/producto/${producto.id}`)}
+            className="relative w-full h-48 bg-neutral-900 overflow-hidden">
                 <img
                     src={producto.image || imagenFallback}
                     alt={producto.name}
@@ -78,7 +82,10 @@ const ShopCard = ({ producto }) => {
                         </p>
                     </div>
                     <button
-                        onClick={handleCarrito}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleCarrito();
+                        }}
                         disabled={agotado}
                         className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${
                             agotado

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import AnimalCard from './AnimalCard';
+import React, { useState, useEffect } from "react";
+import AnimalCard from "./AnimalCard";
 
 const AnimalGallery = () => {
     // Estados originales
@@ -7,28 +7,28 @@ const AnimalGallery = () => {
     const [cargando, setCargando] = useState(true);
 
     // NUEVOS ESTADOS: Para el buscador y los filtros
-    const [busqueda, setBusqueda] = useState('');
-    const [filtroDieta, setFiltroDieta] = useState('Todos');
+    const [busqueda, setBusqueda] = useState("");
+    const [filtroDieta, setFiltroDieta] = useState("Todos");
 
     useEffect(() => {
-        fetch('/api/animales')
-            .then(response => response.json())
-            .then(datos => {
+        fetch("/api/animales")
+            .then((response) => response.json())
+            .then((datos) => {
                 setAnimales(datos.data);
                 setCargando(false);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error("Error al cargar los animales:", error);
                 setCargando(false);
             });
     }, []);
 
     // LÓGICA DE FILTRADO BLINDADA CONTRA NULOS
-    const animalesFiltrados = animales.filter(animal => {
+    const animalesFiltrados = animales.filter((animal) => {
         // 1. Extraemos los datos asegurándonos de que nunca sean null (usamos un string vacío '' si no existen)
-        const nombre = animal.common_name || '';
-        const especie = animal.species || '';
-        const dieta = animal.diet || '';
+        const nombre = animal.common_name || "";
+        const especie = animal.species || "";
+        const dieta = animal.diet || "";
 
         // 2. Comprobamos la búsqueda
         const textoBusqueda = busqueda.toLowerCase();
@@ -38,7 +38,7 @@ const AnimalGallery = () => {
 
         // 3. Comprobamos el filtro de botones
         const coincideDieta =
-            filtroDieta === 'Todos' ||
+            filtroDieta === "Todos" ||
             dieta.toLowerCase() === filtroDieta.toLowerCase();
 
         // El animal solo se muestra si cumple AMBAS condiciones
@@ -46,33 +46,42 @@ const AnimalGallery = () => {
     });
 
     // Array de dietas para generar los botones automáticamente
-    const opcionesDieta = ['Todos', 'Carnívoro', 'Herbívoro', 'Omnívoro', 'Piscívoro', 'Frugívoro', 'Insectívoro'];
+    const opcionesDieta = [
+        "Todos",
+        "Carnívoro",
+        "Herbívoro",
+        "Omnívoro",
+        "Piscívoro",
+        "Frugívoro",
+        "Insectívoro",
+    ];
 
     return (
         <section className="!bg-transparent min-h-screen pb-24 w-full">
-            <style>
-                {`
-                    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&display=swap');
-                    .fuente-zoo { font-family: 'Fredoka', sans-serif; }
-                `}
-            </style>
 
-            {/* Título */}
-            <div className="pt-16 pb-8 md:pt-24 flex justify-center">
-                <h1
-                    className="fuente-zoo text-6xl md:text-8xl text-white/90 tracking-wide text-center transform hover:scale-105 transition duration-500"
-                    style={{ textShadow: '3px 3px 0px rgba(0,0,0,0.9), 8px 8px 15px rgba(0,0,0,0.6)' }}
-                >
-                    Nuestro Zoológico
+            {/* Título (Estilo Hero sincronizado con Experiencias) */}
+            <section className="text-center pt-24 pb-12 px-6">
+                <span className="text-[#D9C8A1] uppercase tracking-[4px] text-xs font-bold">
+                    Conoce a nuestros protagonistas
+                </span>
+
+                {/* Nota: Usamos las mismas clases de fuente que tu compañero */}
+                <h1 className="text-4xl md:text-5xl font-parkzoo mt-2 text-white fuenteZoo">
+                    Nuestros <span className="text-[#D9C8A1]">Animales</span>
                 </h1>
-            </div>
+
+                <div className="w-16 h-[2px] bg-[#D9C8A1] mx-auto mt-4"></div>
+
+                <p className="text-gray-400 max-w-xl mx-auto mt-6 italic">
+                    Descubre la asombrosa diversidad de especies que cuidamos y protegemos en nuestras instalaciones.
+                </p>
+            </section>
 
             {/* ==========================================
                 NUEVA SECCIÓN: CONTROLES DE BÚSQUEDA Y FILTRO
                 ========================================== */}
             <div className="container mx-auto px-4 max-w-7xl mb-12">
                 <div className="bg-[#171717]/80 backdrop-blur-md p-6 rounded-[32px] border border-neutral-800 shadow-2xl flex flex-col md:flex-row gap-6 items-center justify-between">
-
                     {/* Barra de Búsqueda */}
                     <div className="relative w-full md:w-1/3">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-neutral-400">
@@ -95,8 +104,8 @@ const AnimalGallery = () => {
                                 onClick={() => setFiltroDieta(dieta)}
                                 className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
                                     filtroDieta === dieta
-                                        ? 'bg-[#E0D7B6] text-black shadow-[0_0_15px_rgba(224,215,182,0.4)] scale-105'
-                                        : 'bg-neutral-800 text-neutral-400 border border-neutral-700 hover:bg-neutral-700 hover:text-white'
+                                        ? "bg-[#E0D7B6] text-black shadow-[0_0_15px_rgba(224,215,182,0.4)] scale-105"
+                                        : "bg-neutral-800 text-neutral-400 border border-neutral-700 hover:bg-neutral-700 hover:text-white"
                                 }`}
                             >
                                 {dieta}
@@ -110,17 +119,28 @@ const AnimalGallery = () => {
             {/* Cuadrícula de Animales */}
             <div className="container mx-auto px-4 max-w-7xl !bg-transparent">
                 {cargando ? (
-                    <p className="text-center text-2xl text-white font-bold animate-pulse" style={{textShadow: '2px 2px 4px black'}}>
+                    <p
+                        className="text-center text-2xl text-white font-bold animate-pulse"
+                        style={{ textShadow: "2px 2px 4px black" }}
+                    >
                         Cargando animales...
                     </p>
                 ) : animalesFiltrados.length === 0 ? (
                     /* Mensaje si la búsqueda no encuentra nada */
                     <div className="text-center py-20">
                         <i className="bi bi-emoji-frown text-6xl text-neutral-500 mb-4 block"></i>
-                        <h3 className="text-2xl text-white font-bold">No hemos encontrado ningún animal</h3>
-                        <p className="text-neutral-400 mt-2">Prueba a buscar con otras palabras o quita los filtros.</p>
+                        <h3 className="text-2xl text-white font-bold">
+                            No hemos encontrado ningún animal
+                        </h3>
+                        <p className="text-neutral-400 mt-2">
+                            Prueba a buscar con otras palabras o quita los
+                            filtros.
+                        </p>
                         <button
-                            onClick={() => { setBusqueda(''); setFiltroDieta('Todos'); }}
+                            onClick={() => {
+                                setBusqueda("");
+                                setFiltroDieta("Todos");
+                            }}
                             className="mt-6 text-[#E0D7B6] underline hover:text-white transition"
                         >
                             Limpiar búsqueda

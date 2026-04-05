@@ -114,11 +114,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/alerts', [AlertController::class, 'store'])->name('alerts.store');
     Route::delete('/alerts/{id}', [AlertController::class, 'destroy'])->name('alerts.destroy');
 
-    // ----------------------------------------------------
-    // OTROS PANELES (Acceso: Empleado específico y Admin)
-    // ----------------------------------------------------
-    Route::get('/guia/dashboard', function () { return "Panel Guía"; })->name('guia.dashboard')->middleware('position:Guía,Administrador');
-    Route::get('/mantenimiento/dashboard', function () { return "Panel Mantenimiento"; })->name('mantenimiento.dashboard')->middleware('position:Mantenimiento,Administrador');
 });
 
 /*

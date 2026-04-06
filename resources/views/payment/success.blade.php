@@ -24,6 +24,10 @@
     .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #D9C8A1; border-radius: 10px; }
+
+    /* PARCHE 1: Estilo para ocultar tickets extras sin romper el diseño */
+    .ticket-extra { display: none !important; }
+    .ticket-visible { display: flex !important; }
 </style>
 
 <div class="min-h-screen relative overflow-hidden flex items-center justify-center py-12 px-4">
@@ -57,9 +61,8 @@
                 {{-- VISTA EXPERIENCIA --}}
                 <div class="flex flex-col md:flex-row items-stretch">
                     <div class="md:w-2/5 h-56 md:h-auto relative">
-                        {{-- Imagen de fallback si no llega la real --}}
                         <img src="{{ $experiencia->image ?? 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=2070&auto=format&fit=crop' }}" 
-                             class="absolute inset-0 w-full h-full object-cover" alt="Experiencia">
+                               class="absolute inset-0 w-full h-full object-cover" alt="Experiencia">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#1A2E1A] md:bg-gradient-to-r md:from-transparent md:to-[#1A2E1A]/90"></div>
                     </div>
                     <div class="p-8 md:p-10 md:w-3/5">
@@ -102,16 +105,17 @@
                     <div class="flex justify-between items-end mb-8">
                         <div>
                             <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Tus Entradas</h2>
-                            <p class="text-white/40 text-sm">Descarga tus tickets en el correo electrónico</p>
+                            <p class="text-white/40 text-sm">Presenta estos códigos en la entrada</p>
                         </div>
                         <div class="text-right">
                             <span class="text-3xl font-black text-[#D9C8A1]">{{ number_format($amount, 2) }}€</span>
                         </div>
                     </div>
 
-                    <div class="space-y-3 max-h-[380px] overflow-y-auto pr-3 custom-scrollbar">
-                        @foreach($tickets as $ticket)
-                            <div class="relative bg-white/[0.03] border border-white/10 rounded-2xl p-5 flex items-center justify-between group hover:bg-white/[0.07] transition-all duration-300">
+                    <div class="space-y-3" id="tickets-container">
+                        @foreach($tickets as $index => $ticket)
+                            {{-- PARCHE 2: Clase condicional para ocultar a partir del 3 --}}
+                            <div class="relative bg-white/[0.03] border border-white/10 rounded-2xl p-5 flex items-center justify-between group hover:bg-white/[0.07] transition-all duration-300 {{ $index >= 3 ? 'ticket-extra' : 'ticket-visible' }}">
                                 {{-- Muescas de ticket --}}
                                 <div class="absolute -left-[9px] top-1/2 -translate-y-1/2 w-4 h-8 bg-[#0A120A] rounded-full border border-white/10"></div>
                                 <div class="absolute -right-[9px] top-1/2 -translate-y-1/2 w-4 h-8 bg-[#0A120A] rounded-full border border-white/10"></div>
@@ -122,7 +126,7 @@
                                     </div>
                                     <div>
                                         <p class="text-white font-bold tracking-wide text-lg">Entrada General</p>
-                                        <p class="text-white/30 text-[10px] uppercase font-black tracking-widest">ID: #{{ str_pad($ticket['id'], 6, '0', STR_PAD_LEFT) }}</p>
+                                        <p class="text-[#D9C8A1] font-mono text-sm font-bold tracking-[2px] uppercase">{{ $ticket['cod'] }}</p>
                                     </div>
                                 </div>
                                 <div class="text-right">
@@ -132,6 +136,15 @@
                             </div>
                         @endforeach
                     </div>
+
+                    {{-- Botón Ver Más --}}
+                    @if(count($tickets) > 3)
+                        <div class="mt-6 text-center">
+                            <button id="btn-ver-mas" onclick="revelarTickets()" class="text-[#D9C8A1] text-[10px] font-black uppercase tracking-[3px] border border-[#D9C8A1]/30 px-6 py-2 rounded-full hover:bg-[#D9C8A1] hover:text-[#1A2E1A] transition-all">
+                                Ver {{ count($tickets) - 3 }} más
+                            </button>
+                        </div>
+                    @endif
                 </div>
             @endif
         </div>
@@ -155,4 +168,17 @@
         </div>
     </div>
 </div>
+
+{{-- Script para la lógica de visualización --}}
+<script>
+    function revelarTickets() {
+        const extras = document.querySelectorAll('.ticket-extra');
+        extras.forEach(t => {
+            // Cambiamos a la clase visible para asegurar que herede el flex
+            t.classList.remove('ticket-extra');
+            t.classList.add('ticket-visible', 'animate-fade-in-up');
+        });
+        document.getElementById('btn-ver-mas').style.display = 'none';
+    }
+</script>
 @endsection

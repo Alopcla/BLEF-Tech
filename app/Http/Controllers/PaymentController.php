@@ -10,37 +10,71 @@ use App\Services\StripeService;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str; // Necesario para generar códigos únicos
 
 class PaymentController extends Controller
 {
     public function showForm()
     {
-        return view('payment.form');
+        $fecha = now()->addDay()->format('Y-m-d');
+        return view('payment.form', compact('fecha'));
     }
 
     public function processPayment(Request $request)
     {
         $request->validate([
-            'amount'   => 'required|numeric|min:0.01',
             'concepto' => 'required|string',
             'tipo'     => 'required|string',
             'meta'     => 'nullable|array',
         ]);
 
-        $email = auth()->user()->email;
+        if ($request->tipo === 'ticket') {
+            $fecha = $request->meta['dia'];
+            $cantidad = (int) $request->meta['cantidad'];
+
+            // CAMBIO: Ahora contamos filas en lugar de sumar columna cantidad
+            $vendidos = DB::table('tickets')
+                ->where('visit_day', $fecha)
+                ->where('status', 'paid')
+                ->count();
+
+            $capacidad = 100; // Ajusta tu capacidad máxima aquí
+            $disponibles = max(0, $capacidad - $vendidos);
+
+            if ($cantidad > $disponibles) {
+                return back()->with('error', 'No hay entradas suficientes para esta fecha.');
+            }
+        }
+
+        $email = Auth::check() ? Auth::user()->email : $request->email;
+
+        switch ($request->tipo) {
+            case 'ticket':
+                $cantidad = (int) ($request->meta['cantidad'] ?? 1);
+                $amount   = $cantidad * 15.00;
+                break;
+
+            case 'experiencia':
+                $experiencia = DB::table('experiences')
+                    ->where('id', $request->meta['experiencia_id'])
+                    ->firstOrFail();
+                $amount = (float) $experiencia->price;
+                break;
+
+            default:
+                return back()->with('error', 'Tipo de pago no válido.');
+        }
 
         try {
             $stripe  = new StripeService();
             $session = $stripe->createCheckoutSession([
                 'email'       => $email,
-                'amount'      => $request->amount,
+                'amount'      => $amount,
                 'concepto'    => $request->concepto,
                 'description' => null,
                 'tipo'        => $request->tipo,
                 'meta'        => $request->meta ?? [],
             ]);
-
-            
 
             return redirect()->away($session->url);
 
@@ -60,72 +94,70 @@ class PaymentController extends Controller
             $tipo     = $metadata->tipo;
             $meta     = json_decode($metadata->meta, true);
             $amount   = $session->amount_total / 100;
-
-            /** PARA EVITAR DUPLICADOS */
             $sessionId = $session->id;
-
-            $yaProcesado = DB::table('reserve_experiences')
-                ->where('stripe_session_id', $sessionId)
-                ->exists();
-
-            if ($yaProcesado) {
-                $experiencia = DB::table('experiences')
-                    ->where('id', $meta['experiencia_id'] ?? null)
-                    ->first();
-
-                return view('payment.success', [
-                    'email'       => $email,
-                    'tipo'        => $tipo,
-                    'meta'        => $meta,
-                    'amount'      => $amount,
-                    'tickets'     => [],
-                    'experiencia' => $experiencia,
-                ]);
-            }
-
 
             $ticketsParaEmail = [];
             $experiencia = null;
 
             switch ($tipo) {
-
                 case 'ticket':
-                    DB::transaction(function () use ($email, $meta, &$ticketsParaEmail) {
-                        for ($i = 0; $i < $meta['cantidad']; $i++) {
+                    $yaProcesadoTicket = DB::table('tickets')
+                        ->where('stripe_session_id', $sessionId)
+                        ->exists();
+
+                    if (!$yaProcesadoTicket) {
+                        $cantidad = (int) $meta['cantidad'];
+                        $precioIndividual = $amount / $cantidad;
+
+                        // CREACIÓN DE TICKETS INDIVIDUALES
+                        for ($i = 0; $i < $cantidad; $i++) {
+                            $codTicket = 'ZOO-' . strtoupper(Str::random(8));
+                            
                             $nuevoId = DB::table('tickets')->insertGetId([
-                                'date'       => now(),
-                                'day_used'   => $meta['dia'],
-                                'price'      => 15.00,
-                                'type'       => 'stripe',
-                                'email'      => $email,
-                                'created_at' => now(),
-                                'updated_at' => now(),
+                                'user_id'            => auth()->id() ?? null,
+                                'email'              => $email,
+                                'cod_ticket'         => $codTicket,
+                                'visit_day'          => $meta['dia'],
+                                'price'              => $precioIndividual,
+                                'total_order_amount' => $amount,
+                                'stripe_session_id'  => $sessionId,
+                                'status'             => 'paid',
+                                'created_at'         => now(),
+                                'updated_at'         => now(),
                             ]);
+
                             $ticketsParaEmail[] = [
                                 'id'       => $nuevoId,
+                                'cod'      => $codTicket,
                                 'date'     => now()->format('d/m/Y H:i'),
                                 'day_used' => date('d/m/Y', strtotime($meta['dia'])),
-                                'price'    => 15.00,
+                                'price'    => $precioIndividual,
                             ];
                         }
-                    });
-                    Mail::to($email)->send(new TicketMail($ticketsParaEmail));
+                        Mail::to($email)->send(new TicketMail($ticketsParaEmail));
+                    }
                     break;
 
                 case 'experiencia':
-                    DB::table('reserve_experiences')->insert([
-                        'experience_id'       => $meta['experiencia_id'],
-                        'email'               => $email,
-                        'reservation_date'    => $meta['fecha'] ?? now(),
-                        'price'               => $amount,
-                        'stripe_session_id'   => $sessionId,
-                        'status'              => 'paid',
-                        'created_at'          => now(),
-                        'updated_at'          => now(),
-                    ]);
-                    $experiencia = DB::table('experiences')
-                        ->where('id', $meta['experiencia_id'])
-                        ->first();
+                    $yaProcesadoExp = DB::table('reserve_experiences')
+                        ->where('stripe_session_id', $sessionId)
+                        ->exists();
+
+                    if (!$yaProcesadoExp) {
+                        DB::table('reserve_experiences')->insert([
+                            'experience_id'    => $meta['experiencia_id'],
+                            'ticket_id'        => $meta['ticket_id'] ?? null, // GUARDAMOS EL ID DEL TICKET SELECCIONADO
+                            'email'            => $email,
+                            'reservation_date' => $meta['fecha'] ?? now(),
+                            'price'            => $amount,
+                            'stripe_session_id'=> $sessionId,
+                            'status'           => 'paid',
+                            'created_at'       => now(),
+                            'updated_at'       => now(),
+                        ]);
+                    }
+                    
+                    $experiencia = DB::table('experiences')->where('id', $meta['experiencia_id'])->first();
                     break;
             }
 
@@ -139,41 +171,19 @@ class PaymentController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return redirect()->route('payment.show')
-                ->with('error', 'Error al confirmar el pago: ' . $e->getMessage());
+            return redirect()->route('payment.show')->with('error', 'Error: ' . $e->getMessage());
         }
     }
 
-    public function paymentError()
-    {
-        return redirect()->route('payment.show')
-            ->with('error', 'El pago ha sido cancelado. Inténtalo de nuevo.');
-    }
-
-    public function checkAvailability(Request $request)
-    {
-        $fecha       = $request->query('date');
-        $vendidos    = DB::table('tickets')->where('day_used', $fecha)->count();
-        $disponibles = 10 - $vendidos;
-
-        return response()->json(['available' => max(0, $disponibles)]);
-    }
-
-    public function reclamacionesIndex()
-    {
-        return view('admin.reclamaciones', ['tickets' => null]);
-    }
+    // --- MÉTODOS DE ADMINISTRACIÓN CORREGIDOS (visit_day) ---
 
     public function buscarTickets(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'fecha' => 'required|date',
-        ]);
+        $request->validate(['email' => 'required|email', 'fecha' => 'required|date']);
 
         $tickets = DB::table('tickets')
             ->where('email', $request->email)
-            ->where('day_used', $request->fecha)
+            ->where('visit_day', $request->fecha) // Corregido a visit_day
             ->get();
 
         return view('admin.reclamaciones', [
@@ -187,11 +197,10 @@ class PaymentController extends Controller
     {
         DB::table('tickets')
             ->where('email', $email)
-            ->where('day_used', $fecha)
+            ->where('visit_day', $fecha) // Corregido a visit_day
             ->delete();
 
-        return redirect()->route('reclamaciones.index')
-            ->with('success', 'Compra cancelada correctamente.');
+        return redirect()->route('reclamaciones.index')->with('success', 'Tickets eliminados.');
     }
 
     public function reenviarTickets(Request $request)
@@ -201,16 +210,17 @@ class PaymentController extends Controller
             ->get()
             ->map(fn($t) => [
                 'id'       => $t->id,
-                'date'     => $t->date,
-                'day_used' => $t->day_used,
+                'cod'      => $t->cod_ticket,
+                'date'     => $t->created_at,
+                'day_used' => $t->visit_day, // Corregido
                 'price'    => $t->price,
             ])->toArray();
 
         if (count($tickets) > 0) {
             Mail::to($request->email)->send(new TicketMail($tickets));
-            return back()->with('success', 'Tickets reenviados a ' . $request->email);
+            return back()->with('success', 'Tickets reenviados.');
         }
 
-        return back()->with('error', 'No se encontraron tickets para reenviar.');
+        return back()->with('error', 'No se encontraron tickets.');
     }
 }

@@ -1,264 +1,230 @@
-<!DOCTYPE html>
-<html lang="es">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pasarela de Pago - Park Zoo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
-    <link rel="stylesheet" href="{{ asset('estilos/estilo.css') }}">
-</head>
+@section('title', 'Comprar Tickets')
 
-<body>
-    @php
-    $manana = date('Y-m-d', strtotime('+1 day'));
-    $limite = date('Y-m-d', strtotime('+30 days'));
-    @endphp
+@section('video', 'true')
 
-    <header>
-        <a href="/"><img src="{{ asset('recursos/favicon.ico') }}" alt="Zoologic"></a>
-    </header>
+@section('content')
 
-    <div class="payment-box">
-        <h2>Pasarela de Pago</h2>
+{{-- Espaciador para el header --}}
+<div class="h-24 lg:h-32"></div>
 
-        @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show custom-alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+<div class="min-h-[80vh] flex items-center justify-center px-4 pb-20">
+    {{-- Tarjeta Principal --}}
+    <div class="w-full max-w-xl bg-[#1A2E1A] border border-white/10 rounded-[2.5rem] p-8 lg:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl relative overflow-hidden">
+        
+        {{-- Adorno visual de fondo --}}
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-[#D9C8A1]/10 rounded-full blur-3xl"></div>
+
+        <header class="relative z-10 mb-10 text-center">
+            <span class="text-[#D9C8A1] uppercase tracking-[5px] text-[10px] font-black">Acceso General</span>
+            <h2 class="font-parkzoo text-4xl lg:text-5xl text-white mt-2 fuenteZoo">Reserva tu <span class="text-[#D9C8A1]">Aventura</span></h2>
+            <p class="text-white/40 text-xs mt-4 max-w-xs mx-auto">Selecciona la fecha de tu visita y el número de exploradores.</p>
+        </header>
+
+        {{-- Alertas de éxito o error --}}
+        @if(session('success') || session('error'))
+            <div class="relative z-10 mb-8 animate-fade-in">
+                @if(session('success'))
+                    <div class="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-3 rounded-2xl text-sm flex items-center gap-3">
+                        <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+                    </div>
+                @else
+                    <div class="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-2xl text-sm flex items-center gap-3">
+                        <i class="fa-solid fa-circle-exclamation"></i> {{ session('error') }}
+                    </div>
+                @endif
+            </div>
         @endif
 
-        @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show custom-alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        @endif
-
-        <form action="{{ route('payment.process') }}" method="POST" id="purchaseForm">
+        <form action="{{ route('payment.process') }}" method="POST" id="purchaseForm" class="relative z-10 space-y-6">
             @csrf
+            <input type="hidden" name="tipo" value="ticket">
+            <input type="hidden" name="concepto" value="Entradas Park Zoo">
 
-            <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                    <label class="form-label">Día de visita</label>
-                    <input type="date" name="dia" class="form-control" min="{{ $manana }}" max="{{ $limite }}" value="{{ old('dia', $manana) }}" required>
-                    <div id="disponibilidad-feedback" class="mt-2 fw-bold" style="font-size: 0.85rem;"></div>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Tipo de tarjeta</label>
-                    <select name="metod" class="form-select" required>
-                        <option value="Visa" {{ old('metod') == 'Visa' ? 'selected' : '' }}>Visa</option>
-                        <option value="Mastercard" {{ old('metod') == 'Mastercard' ? 'selected' : '' }}>Mastercard</option>
-                        <option value="JCB" {{ old('metod') == 'JCB' ? 'selected' : '' }}>JCB</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                    <label class="form-label">Número de tarjeta</label>
-                    <input type="text" name="tarjeta" class="form-control" value="{{ old('tarjeta') }}" placeholder="0000 0000 0000 0000" pattern="[0-9]{13,19}" required>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Mes</label>
-                    <select name="mes" class="form-select" required>
-                        @for ($i = 1; $i <= 12; $i++)
-                            @php $m=sprintf('%02d', $i); @endphp
-                            <option value="{{ $m }}" {{ old('mes') == $m ? 'selected' : '' }}>{{ $m }}</option>
-                            @endfor
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Año</label>
-                    <select name="anio" class="form-select" required>
-                        @php $currentYear = (int)date("Y"); @endphp
-                        @for ($i = 0; $i <= 15; $i++)
-                            @php $y=$currentYear + $i; @endphp
-                            <option value="{{ $y }}" {{ old('anio') == $y ? 'selected' : '' }}>{{ $y }}</option>
-                            @endfor
-                    </select>
-                </div>
-            </div>
-
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <label class="form-label">CVV</label>
-                    <input type="text" name="cvv" class="form-control" placeholder="000" pattern="[0-9]{3,4}" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Cantidad de entradas</label>
-                    <input type="number" name="cantidad" class="form-control" value="{{ old('cantidad', 1) }}" min="1" max="10" required>
-                </div>
-            </div>
-
-            <div class="row g-3 mb-3">
-                <div class="col-md-12">
-                    <label class="form-label text-white-50">Correo Electrónico para recibir las entradas</label>
-                    <input type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="usuario@ejemplo.com" required>
-                </div>
-            </div>
-
-            <h5 class="border-bottom pb-2 mb-3">Información de Facturación</h5>
-
-            <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                    <input type="text" name="nombre" class="form-control" value="{{ old('nombre') }}" placeholder="Nombre" required>
-                </div>
-                <div class="col-md-6">
-                    <input type="text" name="apellidos" class="form-control" value="{{ old('apellidos') }}" placeholder="Apellidos" required>
-                </div>
-            </div>
-
-            <div class="row g-3 mb-3">
-                <div class="col-md-8">
-                    <input type="text" name="direccion" class="form-control" value="{{ old('direccion') }}" placeholder="Dirección de facturación" required>
-                </div>
-                <div class="col-md-4">
-                    <input type="text" name="cp" class="form-control" value="{{ old('cp') }}" placeholder="C.P." required>
-                </div>
-            </div>
-
+            {{-- Sección Email --}}
             @auth
-            <div id="guardaInfo" class="form-check mb-4">
-                <input class="form-check-input" type="checkbox" name="save" id="save" {{ old('save') ? 'checked' : '' }}>
-                <label class="form-check-label text-white-50" for="save" style="font-size: 0.9rem;">
-                    Guardar información para la próxima vez
-                </label>
-            </div>
+                <input type="hidden" name="email" value="{{ auth()->user()->email }}">
+                <div class="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 flex items-center justify-between">
+                    <span class="text-white/40 text-xs uppercase font-bold tracking-widest">Visitante</span>
+                    <span class="text-[#D9C8A1] text-sm font-bold">{{ auth()->user()->email }}</span>
+                </div>
+            @else
+                <div class="group/input relative">
+                    <label class="absolute -top-2 left-4 bg-[#1A2E1A] px-2 text-[10px] text-[#D9C8A1] font-black uppercase tracking-widest z-20">Email de contacto</label>
+                    <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-white/20 group-focus-within/input:text-[#D9C8A1] transition-colors">
+                        <i class="fa-solid fa-envelope text-xs"></i>
+                    </div>
+                    <input type="email" name="email" required
+                           class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-6 py-4 text-white text-sm focus:outline-none focus:border-[#D9C8A1]/50 focus:ring-1 focus:ring-[#D9C8A1]/20 transition-all"
+                           placeholder="tu@email.com">
+                </div>
             @endauth
 
+            {{-- Sección Fecha y Cantidad --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{-- Fecha --}}
+                <div class="group/input relative">
+                    <label class="absolute -top-2 left-4 bg-[#1A2E1A] px-2 text-[10px] text-[#D9C8A1] font-black uppercase tracking-widest z-20">Fecha</label>
+                    <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-white/20 group-focus-within/input:text-[#D9C8A1] transition-colors">
+                        <i class="fa-solid fa-calendar-day text-xs"></i>
+                    </div>
+                    {{-- Usamos la variable $fecha que viene del controlador --}}
+                    <input type="date" name="meta[dia]" id="inputFecha" required
+                           min="{{ $fecha }}" value="{{ $fecha }}"
+                           class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-6 py-4 text-white text-sm focus:outline-none focus:border-[#D9C8A1]/50 transition-all cursor-pointer">
+                </div>
 
-            <button type="submit" class="btn-pagar shadow" id="btnSubmit">Realizar Pago con Tarjeta</button>
+                {{-- Cantidad --}}
+                <div class="group/input relative">
+                    <label class="absolute -top-2 left-4 bg-[#1A2E1A] px-2 text-[10px] text-[#D9C8A1] font-black uppercase tracking-widest z-20">Entradas</label>
+                    <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-white/20 group-focus-within/input:text-[#D9C8A1] transition-colors">
+                        <i class="fa-solid fa-ticket text-xs"></i>
+                    </div>
+                    <input type="number" name="meta[cantidad]" id="inputCantidad" required
+                           min="1" max="10" value="1"
+                           class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-6 py-4 text-white text-sm focus:outline-none focus:border-[#D9C8A1]/50 transition-all">
+                </div>
+            </div>
 
-            <div class="text-center my-3 text-white-50">— O pagar con —</div>
-            <div id="paypal-button-container"></div>
-        </form>
+            {{-- Feedback disponibilidad --}}
+            <div id="disponibilidad-feedback" class="text-center py-2 transition-all duration-300 min-h-[1.5rem]"></div>
+
+            {{-- Resumen de Pago --}}
+            <div class="bg-gradient-to-br from-black/40 to-black/10 rounded-3xl p-6 border border-white/5 shadow-inner">
+                <div class="flex justify-between items-center">
+                    <div class="space-y-1">
+                        <span class="text-white/30 text-[10px] uppercase font-black tracking-widest block">Total a pagar</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-white/60 text-xs">Precio unitario:</span>
+                            <span class="bg-[#D9C8A1]/10 text-[#D9C8A1] text-[10px] px-2 py-0.5 rounded-full font-bold">15,00 €</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-white font-black text-3xl lg:text-4xl tracking-tighter" id="precioTotal">15,00 €</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Botón de Pago --}}
+            <div class="pt-4">
+                <button type="submit" id="btnSubmit"
+                    class="group relative w-full flex items-center justify-center gap-3 bg-gradient-to-r from-[#F2C94C] via-[#D9C8A1] to-[#F2994A] text-[#1A2E1A] py-5 rounded-2xl font-black uppercase text-xs tracking-[3px] shadow-[0_15px_40px_rgba(217,200,161,0.2)] hover:shadow-[0_20px_50px_rgba(217,200,161,0.4)] hover:-translate-y-1 active:scale-95 transition-all duration-300 overflow-hidden">
+                    <div class="absolute inset-0 w-full h-full bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+                    <span class="relative z-10" id="btnText">Confirmar y Pagar</span>
+                    <i class="fa-solid fa-arrow-right relative z-10 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                
+                <div class="flex items-center justify-center gap-6 mt-8 opacity-30 grayscale hover:grayscale-0 transition-all duration-500">
+                    <i class="fa-brands fa-cc-stripe text-3xl text-white"></i>
+                    <i class="fa-brands fa-cc-visa text-2xl text-white"></i>
+                    <i class="fa-brands fa-cc-mastercard text-2xl text-white"></i>
+                </div>
+            </div>
         </form>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!--Bloque de control de aforos, textos de ayuda-->
-    <script>
-        const form = document.getElementById('purchaseForm');
-        const inputFecha = document.querySelector('input[name="dia"]');
-        const inputCantidad = document.querySelector('input[name="cantidad"]');
-        const btnSubmit = document.getElementById('btnSubmit');
-        const feedback = document.getElementById('disponibilidad-feedback');
+<style>
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(0.8) sepia(50%) saturate(500%) hue-rotate(10deg);
+        cursor: pointer;
+    }
+    /* Estilo preventivo para botón deshabilitado */
+    button:disabled {
+        cursor: not-allowed !important;
+        pointer-events: none;
+    }
+</style>
 
-        // Función para actualizar el texto de ayuda
-        function revisarCupo() {
-            const fecha = inputFecha.value;
-            if (!fecha) return;
+@endsection
 
-            feedback.innerHTML = '<span class="text-white-50">Consultando disponibilidad...</span>';
+@push('scripts')
+<script>
+    const inputFecha       = document.getElementById('inputFecha');
+    const inputCantidad    = document.getElementById('inputCantidad');
+    const btnSubmit        = document.getElementById('btnSubmit');
+    const btnText          = document.getElementById('btnText');
+    const feedback         = document.getElementById('disponibilidad-feedback');
+    const precioTotal      = document.getElementById('precioTotal');
+    const precioPorEntrada = 15;
 
-            fetch(`{{ route('check.availability') }}?date=${fecha}`)
-                .then(response => response.json())
-                .then(data => {
-                    actualizarInterfaz(data.available);
-                })
-                .catch(error => console.error('Error:', error));
+    function actualizarPrecio() {
+        const cantidad = parseInt(inputCantidad.value) || 0;
+        precioTotal.textContent = (cantidad * precioPorEntrada).toFixed(2).replace('.', ',') + ' €';
+    }
+
+    async function revisarCupo() {
+        const fecha = inputFecha.value;
+        if (!fecha) return;
+        
+        feedback.innerHTML = '<span class="text-white/20 text-[10px] uppercase font-bold tracking-widest animate-pulse">Verificando cupo...</span>';
+
+        try {
+            const r = await fetch(`{{ route('check.availability') }}?date=${fecha}`);
+            const data = await r.json();
+            actualizarInterfaz(data.available);
+        } catch (e) {
+            feedback.innerHTML = '';
         }
+    }
 
-        function actualizarInterfaz(disponibles) {
-            if (disponibles <= 0) {
-                feedback.innerHTML = '<span class="text-danger">✘ No hay entradas para este día</span>';
-                btnSubmit.disabled = true;
-                btnSubmit.style.opacity = '0.5';
-            } else {
-                feedback.innerHTML = `<span class="text-success">✔ Quedan ${disponibles} disponibles</span>`;
-                btnSubmit.disabled = false;
-                btnSubmit.style.opacity = '1';
-                inputCantidad.max = disponibles;
-                if (parseInt(inputCantidad.value) > disponibles) {
-                    inputCantidad.value = disponibles;
-                }
-            }
-        }
-
-        // --- VALIDACIÓN DE ÚLTIMO SEGUNDO ---
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault(); // Detenemos el envío
-
-            const fecha = inputFecha.value;
-            const cantidadSolicitada = parseInt(inputCantidad.value);
-
-            // Bloqueamos botón para evitar doble clic
+    function actualizarInterfaz(disponibles) {
+        if (disponibles <= 0) {
+            feedback.innerHTML = '<div class="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full"><span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping"></span><span class="text-red-400 text-[10px] font-black uppercase tracking-widest">Agotado para esta fecha</span></div>';
+            
             btnSubmit.disabled = true;
-            btnSubmit.innerText = 'Verificando cupo final...';
+            btnSubmit.classList.add('opacity-50', 'grayscale');
+            btnText.textContent = 'Entradas Agotadas';
+            
+            inputCantidad.value = 0;
+            inputCantidad.disabled = true; // <--- Bloqueo para que no confunda al usuario
+        } else {
+            feedback.innerHTML = `<div class="inline-flex items-center gap-2 px-3 py-1 bg-[#D9C8A1]/10 border border-[#D9C8A1]/20 rounded-full"><span class="text-[#D9C8A1] text-[10px] font-black uppercase tracking-widest">¡Quedan ${disponibles} plazas disponibles!</span></div>`;
+            
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove('opacity-50', 'grayscale');
+            btnText.textContent = 'Confirmar y Pagar';
+            
+            inputCantidad.disabled = false; // <--- Desbloqueo
+            inputCantidad.max = disponibles;
 
-            try {
-                const response = await fetch(`{{ route('check.availability') }}?date=${fecha}`);
-                const data = await response.json();
-                const disponiblesAhora = data.available;
-
-                if (disponiblesAhora <= 0) {
-                    alert('Lo sentimos mucho pero se han vendido todas las entradas para este día justo ahora.');
-                    location.reload(); // Refrescamos para mostrar el estado real
-                } else if (cantidadSolicitada > disponiblesAhora) {
-                    alert(`¡Atención! Justo ahora alguien ha comprado entradas y solo quedan ${disponiblesAhora} disponibles. Por favor, ajusta tu cantidad.`);
-                    actualizarInterfaz(disponiblesAhora);
-                    btnSubmit.innerText = 'Realizar Pago';
-                } else {
-                    // Si todo sigue bien, enviamos el formulario
-                    btnSubmit.innerText = 'Procesando pago...';
-                    form.submit();
-                }
-            } catch (error) {
-                console.error('Error en la verificación final:', error);
-                btnSubmit.disabled = false;
-                btnSubmit.innerText = 'Realizar Pago';
+            if (parseInt(inputCantidad.value) <= 0) inputCantidad.value = 1;
+            if (parseInt(inputCantidad.value) > disponibles) {
+                inputCantidad.value = disponibles;
             }
-        });
+        }
+        actualizarPrecio();
+    }
 
-        inputFecha.addEventListener('change', revisarCupo);
-        document.addEventListener('DOMContentLoaded', revisarCupo);
-    </script>
-    <!--Bloque Paypal-->
-    <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency=EUR"></script>
+    // El submit lo dejamos así si quieres seguridad máxima:
+    document.getElementById('purchaseForm').addEventListener('submit', async function(e) {
+        if (btnSubmit.disabled) return e.preventDefault(); // Doble seguro
 
-    <script>
-        paypal.Buttons({
-            style: {
-                layout: 'vertical',
-                color: 'gold',
-                shape: 'rect',
-                label: 'paypal'
-            },
+        btnSubmit.disabled = true;
+        btnText.textContent = 'Validando reserva...';
+        
+        // Esta parte hace que si alguien tarda 10 min en el formulario, 
+        // no le deje pagar si las entradas se acabaron mientras escribía.
+        const r = await fetch(`{{ route('check.availability') }}?date=${inputFecha.value}`);
+        const data = await r.json();
+        
+        if (data.available < inputCantidad.value) {
+            e.preventDefault();
+            actualizarInterfaz(data.available);
+            alert("Lo sentimos, el aforo acaba de cambiar. Por favor, ajusta tu reserva.");
+            return;
+        }
 
-            // Se ejecuta al hacer clic en el botón de PayPal
-            createOrder: function(data, actions) {
-                // Obtenemos la cantidad de entradas del input de tu formulario
-                const cantidad = document.querySelector('input[name="cantidad"]').value;
-                const precioUnitario = 15.00; // Define aquí el precio de la entrada
-                const total = (cantidad * precioUnitario).toFixed(2);
+        btnText.textContent = 'Abriendo Stripe...';
+    });
 
-                return actions.order.create({
-                    purchase_units: [{
-                        description: "Entradas para Park Zoo - Cantidad: " + cantidad,
-                        amount: {
-                            value: total
-                        }
-                    }]
-                });
-            },
+    inputFecha.addEventListener('change', revisarCupo);
+    inputCantidad.addEventListener('input', actualizarPrecio);
 
-            // Se ejecuta cuando el pago es aprobado por PayPal
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
-                    // Redirigimos a la ruta de Laravel que activa el mensaje de sesión
-                    window.location.href = "/paypal/success";
-                });
-            },
-
-            onCancel: function(data) {
-                alert('Pago cancelado.');
-            }
-        }).render('#paypal-button-container');
-    </script>
-</body>
-
-
-</html>
+    document.addEventListener('DOMContentLoaded', () => {
+        revisarCupo();
+        actualizarPrecio();
+    });
+</script>
+@endpush

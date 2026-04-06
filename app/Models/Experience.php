@@ -27,6 +27,12 @@ class Experience extends Model
         return $this->belongsTo(Zone::class);
     }
 
+    // Relación: una experiencia tiene muchas reservas
+    public function reservations()
+    {
+        return $this->hasMany(ReserveExperience::class);
+    }
+
     // DISPONIBILIDAD DINÁMICA
     public function getAvailableSpotsAttribute()
     {

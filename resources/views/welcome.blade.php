@@ -12,9 +12,6 @@
     {{-- Barra de temperatura --}}
     <div class="barra-tiempo" id="temperatura"></div>
 
-    {{-- Sección animales (React) --}}
-    <div id="pagina-animales-root" style="display: none; min-height: 500px; padding: 50px;"></div>
-
 @endsection
 
 @push('scripts')

@@ -1,39 +1,56 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const obtenerColorCategoria = (categoria) => {
-    if (!categoria) return { bg: 'bg-neutral-800', text: 'text-neutral-400', dot: '#6b7280' };
+const COLOR_CATEGORIA = {
+    peluche:   { bg: 'bg-purple-900/30', text: 'text-purple-300', dot: '#a78bfa' },
+    ropa:      { bg: 'bg-blue-900/30',   text: 'text-blue-300',   dot: '#93c5fd' },
+    accesorio: { bg: 'bg-amber-900/30',  text: 'text-amber-300',  dot: '#fcd34d' },
+    libro:     { bg: 'bg-orange-900/30', text: 'text-orange-300', dot: '#fdba74' },
+    default:   { bg: 'bg-neutral-800',   text: 'text-neutral-400', dot: '#6b7280' },
+};
+
+const getColor = (categoria) => {
+    if (!categoria) return COLOR_CATEGORIA.default;
     const c = categoria.toLowerCase();
-    if (c.includes('peluche'))   return { bg: 'bg-purple-900/30', text: 'text-purple-300', dot: '#a78bfa' };
-    if (c.includes('ropa'))      return { bg: 'bg-blue-900/30',   text: 'text-blue-300',   dot: '#93c5fd' };
-    if (c.includes('accesorio')) return { bg: 'bg-amber-900/30',  text: 'text-amber-300',  dot: '#fcd34d' };
-    if (c.includes('libro'))     return { bg: 'bg-orange-900/30', text: 'text-orange-300', dot: '#fdba74' };
-    return { bg: 'bg-neutral-800', text: 'text-neutral-400', dot: '#6b7280' };
+    for (const key of Object.keys(COLOR_CATEGORIA)) {
+        if (c.includes(key)) return COLOR_CATEGORIA[key];
+    }
+    return COLOR_CATEGORIA.default;
 };
 
 const ShopCard = ({ producto }) => {
     const [añadido, setAñadido] = useState(false);
-    const color = obtenerColorCategoria(producto.category);
+    const navigate = useNavigate();
+    const color   = getColor(producto.category);
     const agotado = producto.stock <= 0;
-    const pocoStock = producto.stock > 0 && producto.stock <= 10;
-    const imagenFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(producto.name)}&size=500&background=1a1a1a&color=E0D7B6&font-size=0.15&bold=true`;
+    const poco    = producto.stock > 0 && producto.stock <= 10;
+    const fallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(producto.name)}&size=500&background=1a1a1a&color=E0D7B6&font-size=0.15&bold=true`;
 
-    const handleCarrito = () => {
+    const handleCarrito = (e) => {
+        e.stopPropagation();
         if (agotado) return;
         setAñadido(true);
         setTimeout(() => setAñadido(false), 2000);
     };
 
     return (
-        <div className={`bg-[#141914] text-white rounded-[28px] overflow-hidden flex flex-col border transition-all duration-300 group ${
-            agotado ? 'border-neutral-800 opacity-70' : 'border-neutral-800 hover:border-[#3A6B35]/60 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(58,107,53,0.15)]'
-        }`}>
-
+        <div
+            onClick={() => navigate(`/tienda/producto/${producto.id}`)}
+            className={`
+                bg-[#141914] text-white rounded-[28px] overflow-hidden flex flex-col
+                border transition-all duration-300 group cursor-pointer
+                ${agotado
+                    ? 'border-neutral-800 opacity-70'
+                    : 'border-neutral-800 hover:border-[#3A6B35]/60 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(58,107,53,0.15)]'
+                }
+            `}
+        >
             {/* Imagen */}
-            <div className="relative w-full h-48 bg-neutral-900 overflow-hidden">
+            <div className="relative w-full h-65 bg-neutral-900 overflow-hidden">
                 <img
-                    src={producto.image || imagenFallback}
+                    src={producto.image || fallback}
                     alt={producto.name}
-                    onError={e => { e.target.onerror = null; e.target.src = imagenFallback; }}
+                    onError={e => { e.target.onerror = null; e.target.src = fallback; }}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 {agotado && (
@@ -49,21 +66,19 @@ const ShopCard = ({ producto }) => {
                 {/* Categoría + stock */}
                 <div className="flex items-center justify-between">
                     <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg ${color.bg} ${color.text}`}>
-                        <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: color.dot }}></span>
+                        <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: color.dot }} />
                         {producto.category}
                     </span>
                     <span className={`text-[10px] font-semibold uppercase tracking-wider ${
-                        agotado ? 'text-red-500' : pocoStock ? 'text-yellow-400' : 'text-green-400'
+                        agotado ? 'text-red-500' : poco ? 'text-yellow-400' : 'text-green-400'
                     }`}>
-                        {agotado ? '✕ Sin stock' : pocoStock ? `⚡ Solo ${producto.stock}` : `✓ Disponible`}
+                        {agotado ? '✕ Sin stock' : poco ? `⚡ Solo ${producto.stock}` : '✓ Disponible'}
                     </span>
                 </div>
 
                 {/* Nombre y descripción */}
                 <div className="flex-grow">
-                    <h3 className="text-lg font-extrabold leading-tight mb-1">
-                        {producto.name}
-                    </h3>
+                    <h3 className="text-lg font-extrabold leading-tight mb-1">{producto.name}</h3>
                     <p className="text-neutral-500 text-xs line-clamp-2 leading-relaxed">
                         {producto.description || 'Producto exclusivo de BLR Zoo.'}
                     </p>
@@ -88,7 +103,7 @@ const ShopCard = ({ producto }) => {
                                     : 'bg-[#3A6B35] text-[#E0D7B6] hover:bg-[#E0D7B6] hover:text-[#1a3a1a] hover:scale-105'
                         }`}
                     >
-                        <i className={`bi ${añadido ? 'bi-check-lg' : agotado ? 'bi-bag-x' : 'bi-bag-plus'}`}></i>
+                        <i className={`bi ${añadido ? 'bi-check-lg' : agotado ? 'bi-bag-x' : 'bi-bag-plus'}`} />
                         {añadido ? '¡Listo!' : agotado ? 'No disp.' : 'Añadir'}
                     </button>
                 </div>

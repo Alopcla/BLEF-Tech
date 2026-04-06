@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ReserveExperience;
 use App\Models\Employee;
+use App\Models\Experience;
 use Illuminate\Support\Facades\Auth;
 
 class GuideController extends Controller
@@ -14,39 +14,23 @@ class GuideController extends Controller
         $user = Auth::user();
         $employee = Employee::where('email', $user->email)->first();
 
-        if (!$employee) {
-            return response()->json(['guide' => null, 'reservations' => []]);
+        // 1. NUEVA SEGURIDAD: Dejamos pasar tanto a Guías como a Administradores
+        if (!$employee || !in_array($employee->position, ['Guía', 'Administrador'])) {
+            return response()->json(['guide' => null, 'experiencias' => []]);
         }
 
-        // Cargamos las reservas junto con los datos de la experiencia.
-        // Si es Admin, ve todas. Si es Guía, solo las que tienen su DNI.
-        $query = ReserveExperience::with('experience');
-
-        if ($employee->position !== 'Administrador') {
-            $query->where('employee_guide_dni', $employee->dni);
+        // 2. LA LÓGICA DE ROLES
+        if ($employee->position === 'Administrador') {
+            // Si es Admin, le devolvemos el catálogo completo del Zoo
+            $experiencias = Experience::with('zone')->get();
+        } else {
+            // Si es Guía, seguimos filtrando solo por su zona asignada
+            $experiencias = Experience::with('zone')->where('zone_id', $employee->zone_id)->get();
         }
-
-        $reservations = $query->orderBy('reservation_date', 'asc')->get();
 
         return response()->json([
             'guide' => $employee,
-            'reservations' => $reservations
+            'experiencias' => $experiencias
         ]);
-    }
-
-    public function completeExperience(Request $request)
-    {
-        $request->validate([
-            'reservation_id' => 'required|exists:reserve_experiences,id'
-        ]);
-
-        $reservation = ReserveExperience::findOrFail($request->reservation_id);
-
-        // Cambiamos el status a false para marcarlo como completado
-        $reservation->update([
-            'status' => false
-        ]);
-
-        return response()->json(['success' => true, 'message' => 'Experiencia completada']);
     }
 }

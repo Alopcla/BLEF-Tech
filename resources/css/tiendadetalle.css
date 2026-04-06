@@ -1,0 +1,499 @@
+/* ============================================================
+   TIENDADETALLE.CSS — Estilos de la vista de detalle de producto
+   ============================================================ */
+
+/* ── Wrapper principal ── */
+.pd-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a1a0a 0%, #0d2d0d 50%, #051005 100%);
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+    animation: pdFadeUp 0.5s ease-out;
+}
+
+/* ── Fondo Spline ── */
+.pd-spline-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* ── Contenedor ── */
+.pd-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 40px 30px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.pd-container.with-spline {
+    background: rgba(10, 26, 10, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    margin: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+/* ── Botón volver ── */
+.pd-btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(139, 195, 74, 0.3);
+    color: #a8d974;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    width: fit-content;
+}
+
+.pd-btn-back:hover {
+    background: rgba(139, 195, 74, 0.15);
+    border-color: rgba(139, 195, 74, 0.6);
+    transform: translateX(-4px);
+}
+
+/* ── Grid dos columnas ── */
+.pd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: flex-start;
+}
+
+/* ── Columna imagen ── */
+.pd-image-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pd-image-box {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(139, 195, 74, 0.08));
+    border: 2px solid rgba(139, 195, 74, 0.2);
+    border-radius: 20px;
+    overflow: visible;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.pd-image-box.spline-active {
+    overflow: hidden;
+    padding: 0;
+}
+
+.pd-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+}
+
+.pd-image-placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 16px;
+}
+
+/* ── Columna info ── */
+.pd-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 10px 0;
+}
+
+/* ── Badge categoría ── */
+.pd-badge {
+    display: inline-block;
+    padding: 7px 15px;
+    background: rgba(168, 217, 116, 0.1);
+    border: 1px solid rgba(168, 217, 116, 0.35);
+    color: #a8d974;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+/* ── Título ── */
+.pd-title {
+    font-size: 44px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+/* ── Descripción ── */
+.pd-description {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.65;
+    margin: 0;
+}
+
+/* ── Precio ── */
+.pd-price-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 20px;
+    background: rgba(139, 195, 74, 0.08);
+    border-left: 3px solid #8bc34a;
+    border-radius: 12px;
+}
+
+.pd-price-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.pd-price-value {
+    font-size: 34px;
+    font-weight: 700;
+    color: #a8d974;
+    letter-spacing: -1px;
+}
+
+/* ── Label de sección ── */
+.pd-section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+/* ── Tallas ── */
+.pd-sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pd-size-btn {
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(139, 195, 74, 0.3);
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pd-size-btn:hover {
+    background: rgba(139, 195, 74, 0.15);
+    border-color: rgba(139, 195, 74, 0.6);
+}
+
+.pd-size-btn.active {
+    background: linear-gradient(135deg, #8bc34a, #a8d974);
+    border-color: #a8d974;
+    color: #0a1a0a;
+    box-shadow: 0 8px 20px rgba(139, 195, 74, 0.3);
+}
+
+/* ── Cantidad ── */
+.pd-qty-control {
+    display: inline-flex;
+    border: 2px solid rgba(139, 195, 74, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.pd-qty-btn {
+    padding: 10px 16px;
+    background: rgba(139, 195, 74, 0.1);
+    border: none;
+    color: #a8d974;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.pd-qty-btn:hover {
+    background: rgba(139, 195, 74, 0.25);
+}
+
+.pd-qty-input {
+    width: 64px;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px 0;
+    outline: none;
+}
+
+/* ── Acciones ── */
+.pd-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.pd-btn-add {
+    flex: 1;
+    padding: 15px 28px;
+    background: linear-gradient(135deg, #8bc34a, #a8d974);
+    color: #0a1a0a;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.25s ease;
+}
+
+.pd-btn-add:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(139, 195, 74, 0.3);
+}
+
+.pd-btn-add.done {
+    background: linear-gradient(135deg, #2d7a2d, #4caf50);
+}
+
+.pd-btn-wish {
+    width: 54px;
+    height: 54px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.07);
+    border: 2px solid rgba(139, 195, 74, 0.3);
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.pd-btn-wish:hover {
+    background: rgba(139, 195, 74, 0.15);
+    border-color: rgba(139, 195, 74, 0.5);
+    transform: scale(1.05);
+}
+
+/* ── Info cards ── */
+.pd-info-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.pd-info-card {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    background: rgba(139, 195, 74, 0.06);
+    border: 1px solid rgba(139, 195, 74, 0.18);
+    border-radius: 12px;
+    align-items: flex-start;
+}
+
+.pd-info-card .icon {
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.pd-info-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #a8d974;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.pd-info-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 3px 0 0;
+}
+
+/* ── Estados loading / error ── */
+.pd-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a1a0a 0%, #0d2d0d 50%, #051005 100%);
+}
+
+.pd-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(139, 195, 74, 0.2);
+    border-top: 3px solid #a8d974;
+    border-radius: 50%;
+    animation: pdSpin 0.9s linear infinite;
+}
+
+.pd-error {
+    text-align: center;
+}
+
+.pd-error h2 {
+    color: #ffffff;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+.pd-btn-primary {
+    padding: 13px 30px;
+    background: linear-gradient(135deg, #8bc34a, #a8d974);
+    color: #0a1a0a;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pd-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(139, 195, 74, 0.3);
+}
+
+/* ── Animaciones ── */
+@keyframes pdSpin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pdFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .pd-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+    }
+
+    .pd-title {
+        font-size: 32px;
+    }
+
+    .pd-container.with-spline {
+        margin: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pd-container {
+        padding: 20px 16px;
+    }
+
+    .pd-title {
+        font-size: 24px;
+    }
+
+    .pd-price-value {
+        font-size: 26px;
+    }
+
+    .pd-actions {
+        flex-direction: column;
+    }
+
+    .pd-btn-wish {
+        width: 100%;
+        height: 52px;
+    }
+
+    .pd-info-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Spline viewer dentro del image-box ── */
+.pd-spline-viewer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+}
+
+/* ── Botón Visualizar 3D / Cerrar 3D ── */
+.pd-spline-toggle {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    background: rgba(10, 26, 10, 0.85);
+    border: 1px solid rgba(139, 195, 74, 0.5);
+    color: #a8d974;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 100px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.pd-spline-toggle:hover {
+    background: rgba(139, 195, 74, 0.2);
+    border-color: #a8d974;
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 195, 74, 0.2);
+}
+
+.pd-spline-toggle.active {
+    background: rgba(139, 195, 74, 0.15);
+    border-color: rgba(255, 100, 100, 0.5);
+    color: #ff8a8a;
+}
+
+.pd-spline-toggle.active:hover {
+    background: rgba(255, 100, 100, 0.1);
+    border-color: #ff8a8a;
+    box-shadow: 0 8px 20px rgba(255, 100, 100, 0.15);
+}
+
+.pd-spline-icon {
+    font-size: 16px;
+}

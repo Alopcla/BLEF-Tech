@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\KeeperController;
 use App\Http\Controllers\Api\AlertController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -122,10 +123,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 | TICKETS Y PAGOS
 |--------------------------------------------------------------------------
 */
+
+// 1. Rutas de Tickets (Gestión de disponibilidad y vista de reserva)
+Route::controller(TicketController::class)->group(function () {
+    Route::get('/tickets', 'showTickets')->name('tickets.show');
+    Route::get('/check-availability', 'checkAvailability')->name('check.availability');
+});
+
 Route::controller(PaymentController::class)->group(function () {
     Route::get('/pago', 'showForm')->name('payment.show');
     Route::post('/pago', 'processPayment')->name('payment.process');
-    Route::get('/check-availability', 'checkAvailability')->name('check.availability');
 });
 
 Route::get('/pago/success', [PaymentController::class, 'paymentSuccess'])

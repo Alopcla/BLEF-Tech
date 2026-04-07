@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Experience;
+use App\Models\Ticket;
 use App\Models\ReserveExperience;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +13,13 @@ class ExperienciaController extends Controller
         $experiencias = Experience::all();
         $popular = Experience::popular()->first();
 
-        return view('experiencias', compact('experiencias', 'popular'));
+    // Validamos usando el método estático del modelo Ticket
+    $ticketvalidation = false;
+    if (Auth::check()) {
+        $ticketvalidation = Ticket::hasticket(Auth::user()->email);
+    }
+
+        return view('experiencias', compact('experiencias', 'popular', 'ticketvalidation'));
     }
 
     public function MostrarInfo($slug){

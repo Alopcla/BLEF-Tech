@@ -83,6 +83,28 @@
                         <input type="hidden" name="meta[nombre]" value="{{ $experiencias->name }}">
                         <input type="hidden" name="meta[fecha]" value="{{ now()->format('Y-m-d') }}">
 
+                        {{-- SOLO si NO está logeado --}}
+                        @guest
+                            <div class="relative w-full mb-4 group/input">
+                                {{-- Icono flotante --}}
+                                <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-[#D9C8A1]/50 group-focus-within/input:text-[#D9C8A1] transition-colors">
+                                    <i class="fa-solid fa-envelope text-xs"></i>
+                                </div>
+
+                                <input type="email" 
+                                    name="email" 
+                                    placeholder="Introduce tu email"
+                                    required
+                                    class="w-full pl-11 pr-4 py-4 rounded-2xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#D9C8A1]/30 focus:border-[#D9C8A1]/50 transition-all backdrop-blur-md shadow-inner"
+                                >
+                                
+                                {{-- Etiqueta flotante pequeña --}}
+                                <span class="absolute -top-2 left-4 bg-[#1A2E1A] px-2 text-[10px] text-[#D9C8A1] font-black uppercase tracking-widest border border-white/5 rounded-md">
+                                    Email del cliente
+                                </span>
+                            </div>
+                        @endguest
+
                         <button type="submit" class="group relative w-full sm:w-auto flex items-center justify-center gap-3 bg-gradient-to-r from-[#F2C94C] via-[#D9C8A1] to-[#F2994A] text-[#1A2E1A] px-10 py-5 rounded-2xl font-black uppercase text-xs tracking-[2px] shadow-[0_10px_30px_rgba(242,201,76,0.3)] hover:shadow-[0_15px_40px_rgba(242,201,76,0.5)] hover:-translate-y-1 active:scale-95 transition-all duration-300 overflow-hidden">
                             <div class="absolute inset-0 w-full h-full bg-white/30 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
                             <span class="relative z-10">Confirmar Reserva</span>

@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Auth;
 | RUTAS PÚBLICAS
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () { return view('welcome'); });
+
+Route::get('/', function () { return view('index-react'); });
 Route::get('/animales', function () { return view('animales'); })->name('animales');
 Route::get('/tienda', function () { return view('tienda'); })->name('tienda');
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');

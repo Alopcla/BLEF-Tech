@@ -9,6 +9,7 @@ import AdminDashboard from "./Components/AdminDashboard";
 import DoctorDashboard from "./Components/DoctorDashboard";
 import KeeperDashboard from "./Components/KeeperDashboard";
 import GuideDashboard from './Components/GuideDashboard';
+import Index from "./Components/Index";
 
 // Lógica para la Galería de Animales
 const animalContainer = document.getElementById("pagina-animales-root");
@@ -63,4 +64,10 @@ const guideRootEl = document.getElementById('guide-dashboard-root');
 if (guideRootEl) {
     // Usamos el createRoot que ya deberías tener importado arriba en tu app.jsx
     createRoot(guideRootEl).render(<GuideDashboard />);
+}
+
+// --- PÁGINA DE INICIO ---
+const indexRootEl = document.getElementById('index-root');
+if (indexRootEl) {
+    createRoot(indexRootEl).render(<Index />);
 }

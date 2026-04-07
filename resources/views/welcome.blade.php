@@ -125,7 +125,7 @@
                             class="text-[10px] text-amber-400 font-bold uppercase tracking-widest mb-1 block">•
                             Jungla</span>
                         <h3 style="font-family: 'Bebas Neue', sans-serif;" class="text-3xl text-white tracking-wider mb-1">
-                            Selva Virgen</h3>
+                            Selva</h3>
                         <p style="font-family: 'Outfit', sans-serif;" class="text-xs text-white/80 font-light">Densa
                             vegetación para primates y especies trepadoras.</p>
                     </div>
@@ -163,7 +163,7 @@
         <div class="bg-black/30 backdrop-blur-md border border-white/10 rounded-[2rem] p-8 md:p-12 lg:p-16 shadow-2xl">
             <h2 style="font-family: 'Bebas Neue', sans-serif;"
                 class="text-4xl md:text-5xl text-amber-400 tracking-wide mb-8 drop-shadow-md">
-                El Equipo Blef-Tech
+                El Equipo BLR-Zoo
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">

@@ -112,7 +112,7 @@ class PaymentController extends Controller
                         // CREACIÓN DE TICKETS INDIVIDUALES
                         for ($i = 0; $i < $cantidad; $i++) {
                             $codTicket = 'ZOO-' . strtoupper(Str::random(8));
-                            
+
                             $nuevoId = DB::table('tickets')->insertGetId([
                                 'user_id'            => auth()->id() ?? null,
                                 'email'              => $email,
@@ -156,7 +156,7 @@ class PaymentController extends Controller
                             'updated_at'       => now(),
                         ]);
                     }
-                    
+
                     $experiencia = DB::table('experiences')->where('id', $meta['experiencia_id'])->first();
                     break;
             }
@@ -222,5 +222,19 @@ class PaymentController extends Controller
         }
 
         return back()->with('error', 'No se encontraron tickets.');
+    }
+
+    /**
+     * Muestra la vista inicial del panel de reclamaciones (Tickets)
+     */
+    public function reclamacionesIndex()
+    {
+        // Retornamos la vista vacía con 'tickets' como null
+        // para que el formulario se muestre limpio al principio
+        return view('admin.reclamaciones', [
+            'tickets' => null,
+            'email'   => null,
+            'fecha'   => null
+        ]);
     }
 }

@@ -107,21 +107,18 @@ export default function DoctorDashboard() {
             {/* BARRA SUPERIOR */}
             <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
                 <div className="max-w-[1600px] mx-auto px-6 py-4 flex justify-between items-center">
-
                     {/* LOGO */}
                     <div className="flex items-center gap-3">
-                        <div className="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-md">
-                            <i className="fa-solid fa-leaf"></i>
+                        <div className="bg-teal-600 text-white w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-md">
+                            <i className="fa-solid fa-stethoscope"></i>
                         </div>
                         <h1 className="text-xl font-black tracking-tight text-slate-800">
-                            Zoo<span className="text-blue-600">Pro</span>{" "}
-                            Admin
+                            Zoo<span className="text-teal-600">Pro</span> Doctor
                         </h1>
                     </div>
 
                     {/* BOTONES DERECHA: Inicio + Desconectar */}
                     <div className="flex items-center gap-4">
-
                         {/* 🌟 EL BOTÓN MÁGICO PARA VOLVER A LARAVEL 🌟 */}
                         <a
                             href="/"
@@ -150,7 +147,6 @@ export default function DoctorDashboard() {
                             </button>
                         </form>
                     </div>
-
                 </div>
             </header>
 
@@ -328,12 +324,19 @@ function MedicalRecordDrawer({ isOpen, onClose, animal, onDelete }) {
                 className={`fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl z-50 transform transition-transform duration-500 ease-out flex flex-col border-l border-slate-200 ${isOpen ? "translate-x-0" : "translate-x-full"}`}
             >
                 <div className="bg-slate-50 p-6 relative border-b border-slate-200 shrink-0">
-
                     <div className="absolute top-4 right-4 flex gap-2">
-                        <button onClick={() => onDelete(animal.id)} className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-red-200 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm" title="Eliminar Animal">
+                        <button
+                            onClick={() => onDelete(animal.id)}
+                            className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-red-200 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                            title="Eliminar Animal"
+                        >
                             <i className="fa-solid fa-trash-can"></i>
                         </button>
-                        <button onClick={handleClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-400 hover:text-slate-700 transition-all shadow-sm" title="Cerrar">
+                        <button
+                            onClick={handleClose}
+                            className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-400 hover:text-slate-700 transition-all shadow-sm"
+                            title="Cerrar"
+                        >
                             <i className="fa-solid fa-xmark"></i>
                         </button>
                     </div>
@@ -350,7 +353,6 @@ function MedicalRecordDrawer({ isOpen, onClose, animal, onDelete }) {
                             </p>
                         </div>
                     </div>
-
                 </div>
 
                 <div className="flex-grow overflow-y-auto p-6 bg-white">

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Auth;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () { return view('index-react'); });
+Route::get('/', function () { return view('welcome'); });
 Route::get('/animales', function () { return view('animales'); })->name('animales');
 Route::get('/tienda', function () { return view('tienda'); })->name('tienda');
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');

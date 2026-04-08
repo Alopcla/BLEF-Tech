@@ -2,8 +2,40 @@
 
 @section('title', 'Experiencias')
 
+{{-- ESTO QUITA EL VIDEO TAMBIÉN AQUÍ --}}
+@section('video', 'false')
+
 @push('styles')
+    {{-- 1. El CSS de tu compañero (no lo toques) --}}
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+
+    <style>
+        /* 2. Ponemos un fondo oscuro y profesional para que no sea blanco */
+        body {
+            /* Puedes usar la misma imagen de musgo o una más oscura */
+            background: #141A14 url("/img/zoo_fondo.png") no-repeat fixed center !important;
+            background-size: cover !important;
+            position: relative;
+        }
+
+        /* 3. El filtro oscuro para que se vea igual que en la Tienda */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Un poco más oscuro para que resalten las cards */
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 4. Limpiamos capas que puedan estar tapando el fondo */
+        #app, main, .main-content, section {
+            background: transparent !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -19,12 +51,12 @@
     </section>
 
     <main class="max-w-7xl mx-auto mt-16 px-6 mb-20">
-        
+
         {{-- 1. LA POPULAR --}}
         @if($popular)
             <div class="mb-16">
                 <div class="group relative bg-[#1A2E1A]/40 backdrop-blur-md rounded-[2rem] border border-white/5 p-3 md:p-4 transition-all duration-500 hover:bg-[#1A2E1A]/80 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-                    
+
                     <div class="absolute -top-3 -right-3 z-20 bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-xl rotate-12 uppercase tracking-tighter">
                         Popular 🔥
                     </div>
@@ -111,7 +143,7 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
             @foreach($experiencias->skip(1) as $exp)
             <div class="group relative bg-[#1A2E1A]/40 backdrop-blur-md rounded-[2rem] border border-white/5 p-3 pb-6 transition-all duration-500 hover:bg-[#1A2E1A]/80 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:-translate-y-2">
-                
+
                 @if($exp->available_spots <= 0)
                     <div class="absolute -top-3 -right-3 z-20 bg-red-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-xl rotate-12 uppercase tracking-tighter">Sold Out</div>
                 @endif
@@ -172,6 +204,7 @@
                         
                         <a href="{{ route('experienciasInfo', $exp->slug) }}" class="{{ Auth::check() ? 'flex-1' : 'flex-grow py-4' }} border border-[#D9C8A1]/30 rounded-2xl flex items-center justify-center text-[#D9C8A1] hover:bg-[#D9C8A1]/10 transition-all font-bold uppercase text-[10px] tracking-widest gap-2">
                             @guest Ver Detalles @endguest <i class="fa-solid fa-arrow-right"></i>
+
                         </a>
                     </div>
                 </div>
@@ -179,6 +212,7 @@
             @endforeach
         </div>
     </main>
+
 
     {{-- MODAL --}}
     <div id="ticketModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center px-4">
@@ -249,3 +283,4 @@
         }
     </script>
 @endpush
+

@@ -44,7 +44,7 @@ class ExperienciaController extends Controller
         $experiencias = Experience::where('slug', $slug)->firstOrFail();
 
         // 1. Buscamos el email (de la URL o del usuario logueado)
-        $email = $request->get('email', auth()->user()->email ?? null);
+        $email = $request->get('email', Auth::user()->email ?? null);
 
         // 2. INICIALIZAMOS la variable como una colección vacía 
         // para que compact() siempre la encuentre.

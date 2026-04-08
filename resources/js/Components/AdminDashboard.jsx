@@ -139,6 +139,8 @@ export default function AdminDashboard() {
             {/* BARRA SUPERIOR */}
             <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
                 <div className="max-w-[1600px] mx-auto px-6 py-4 flex justify-between items-center">
+
+                    {/* LOGO */}
                     <div className="flex items-center gap-3">
                         <div className="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-md">
                             <i className="fa-solid fa-leaf"></i>
@@ -148,26 +150,42 @@ export default function AdminDashboard() {
                             Admin
                         </h1>
                     </div>
-                    <form method="POST" action="/logout" className="m-0">
-                        <input
-                            type="hidden"
-                            name="_token"
-                            value={
-                                document.querySelector(
-                                    'meta[name="csrf-token"]',
-                                )?.content
-                            }
-                        />
-                        <button
-                            type="submit"
-                            className="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 px-5 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2"
+
+                    {/* BOTONES DERECHA: Inicio + Desconectar */}
+                    <div className="flex items-center gap-4">
+
+                        {/* 🌟 EL BOTÓN MÁGICO PARA VOLVER A LARAVEL 🌟 */}
+                        <a
+                            href="/"
+                            className="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 px-5 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2"
                         >
-                            <i className="fa-solid fa-power-off"></i>{" "}
-                            Desconectar
-                        </button>
-                    </form>
+                            <i className="fa-solid fa-house"></i>
+                            Inicio
+                        </a>
+
+                        <form method="POST" action="/logout" className="m-0">
+                            <input
+                                type="hidden"
+                                name="_token"
+                                value={
+                                    document.querySelector(
+                                        'meta[name="csrf-token"]',
+                                    )?.content
+                                }
+                            />
+                            <button
+                                type="submit"
+                                className="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 px-5 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2"
+                            >
+                                <i className="fa-solid fa-power-off"></i>{" "}
+                                Desconectar
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
             </header>
+
 
             <main className="max-w-[1600px] mx-auto px-6 mt-8 flex flex-col lg:flex-row gap-8">
                 {/* COLUMNA IZQUIERDA: CONTROLES */}

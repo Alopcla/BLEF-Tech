@@ -43,7 +43,7 @@ class KeeperController extends Controller
         $animal = Animal::findOrFail($request->animal_id);
 
         $animal->update([
-            'last_fed_date' => now()->toDateString(),
+            'last_fed_date' => now(),
             'last_fed_by' => $employee->dni
         ]);
 

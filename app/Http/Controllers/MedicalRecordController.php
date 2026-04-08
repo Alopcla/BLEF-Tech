@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class MedicalRecordController extends Controller
 {
+
     public function getDoctorData()
     {
         $user = Auth::user();
@@ -63,7 +64,7 @@ class MedicalRecordController extends Controller
         MedicalRecord::create([
             'animal_id' => $request->animal_id,
             'employee_dni' => $doctor->dni,
-            'date' => now()->toDateString(),
+            'date' => now()->toDateTimeString(),
             'diagnosis' => $request->diagnosis,
             'treatment' => $request->treatment
         ]);

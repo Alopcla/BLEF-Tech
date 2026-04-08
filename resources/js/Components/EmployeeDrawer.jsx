@@ -1,5 +1,22 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom"; // <--- IMPORTACIÓN CRÍTICA
+import ReactDOM from "react-dom";
+
+// Función para calcular la edad exacta
+const calcularEdad = (fechaNacimiento) => {
+    if (!fechaNacimiento) return "";
+
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+
+    // Ajuste si aún no ha cumplido años este año
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate()))
+        edad--;
+
+    return edad;
+};
 
 export default function EmployeeDrawer({
     isOpen,
@@ -59,96 +76,45 @@ export default function EmployeeDrawer({
     };
 
     const handleUpdate = async () => {
-    try {
-        // 1. Limpiamos los datos antes de enviarlos a Laravel
-        const payload = {
-            ...editData,
-            // Si la zona está vacía, forzamos un null real para que Laravel no explote
-            zone_id: editData.zone_id ? parseInt(editData.zone_id) : null
-        };
+        try {
+            // 1. Limpiamos los datos antes de enviarlos a Laravel
+            const payload = {
+                ...editData,
+                // Si la zona está vacía, forzamos un null real para que Laravel no explote
+                zone_id: editData.zone_id ? parseInt(editData.zone_id) : null,
+            };
 
-        const response = await fetch(`/empleados/${employee.dni}`, {
-            method: 'PUT',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
+            const response = await fetch(`/empleados/${employee.dni}`, {
+                method: "PUT",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]',
+                    ).content,
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
 
-        if (response.ok) {
-            alert("¡Datos actualizados con éxito!");
-            window.location.reload();
-        } else {
-            // 2. Extraemos el error exacto que devuelve Laravel
-            const errorData = await response.json();
-            console.error("Fallo detectado:", errorData);
+            if (response.ok) {
+                alert("¡Datos actualizados con éxito!");
+                window.location.reload();
+            } else {
+                // 2. Extraemos el error exacto que devuelve Laravel
+                const errorData = await response.json();
+                console.error("Fallo detectado:", errorData);
 
-            // Mostramos el mensaje de validación real en el alert
-            const errorMessage = errorData.message || JSON.stringify(errorData.errors) || "Error desconocido en el servidor";
-            alert("❌ Laravel dice: \n\n" + errorMessage);
+                // Mostramos el mensaje de validación real en el alert
+                const errorMessage =
+                    errorData.message ||
+                    JSON.stringify(errorData.errors) ||
+                    "Error desconocido en el servidor";
+                alert("❌ Laravel dice: \n\n" + errorMessage);
+            }
+        } catch (error) {
+            console.error("Fallo de red:", error);
+            alert("Fallo de conexión con el servidor.");
         }
-    } catch (error) {
-        console.error("Fallo de red:", error);
-        alert("Fallo de conexión con el servidor.");
-    }
-};
-
-    // Función que abre el menú flotante
-    const openSelectMenu = (e) => {
-        if (!isEditing) return;
-
-        // Calculamos dónde está el botón para poner el menú encima
-        const rect = e.currentTarget.getBoundingClientRect();
-        setSelectMenuPosition({
-            top: rect.bottom + window.scrollY,
-            left: rect.left,
-            width: rect.width,
-        });
-    };
-
-    // --- SUB-COMPONENTE: MENÚ FLOTANTE CON PORTAL ---
-    const SelectPortal = ({ value, onChange }) => {
-        if (!selectMenuPosition) return null;
-
-        const menuStyle = {
-            position: "absolute",
-            top: `${selectMenuPosition.top}px`,
-            left: `${selectMenuPosition.left}px`,
-            width: `${selectMenuPosition.width}px`,
-            zIndex: 9999, // <--- POR ENCIMA DE TODO
-            backgroundColor: "white",
-            border: "1px solid #e2e8f0",
-            borderRadius: "0.75rem",
-            boxShadow:
-                "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-            maxHeight: "200px",
-            overflowY: "auto",
-            padding: "0.5rem 0",
-        };
-
-        // Pintamos el menú fuera del Drawer, en el 'body'
-        return ReactDOM.createPortal(
-            <div style={menuStyle} className="animate-fade-in-down">
-                {zones?.map((z) => (
-                    <div
-                        key={z.id}
-                        onClick={() => {
-                            onChange({
-                                target: { name: "zone_id", value: z.id },
-                            });
-                            setSelectMenuPosition(null); // Cerrar menú
-                        }}
-                        className={`px-4 py-2 text-sm cursor-pointer transition-colors
-                                   ${value === z.id ? "bg-blue-50 text-blue-700 font-bold" : "hover:bg-slate-50 text-slate-700"}`}
-                    >
-                        {z.type}
-                    </div>
-                ))}
-            </div>,
-            document.body, // <--- DESTINO DEL PORTAL
-        );
     };
 
     const inputClass =
@@ -220,7 +186,7 @@ export default function EmployeeDrawer({
                         {employee.position}
                     </div>
 
-                    {/* Información de Zona - SOLUCIÓN FINAL SIN SELECT */}
+                    {/* Información de Zona */}
                     <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100 space-y-3">
                         <div className="flex items-center gap-4">
                             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm shrink-0">
@@ -240,7 +206,7 @@ export default function EmployeeDrawer({
                             </div>
                         </div>
 
-                        {/* Si estamos editando, mostramos las zonas como botones seleccionables */}
+                        {/* Si estamos editando, mostramos las zonas */}
                         {isEditing && (
                             <div className="grid grid-cols-2 gap-2 mt-2">
                                 {zones?.map((z) => (
@@ -272,6 +238,8 @@ export default function EmployeeDrawer({
                             Información de contacto
                         </h4>
                         <div className="space-y-4">
+
+                            {/* EMAIL */}
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
                                     <i className="fa-solid fa-envelope"></i>
@@ -289,6 +257,8 @@ export default function EmployeeDrawer({
                                     </span>
                                 )}
                             </div>
+
+                            {/* DIRECCIÓN */}
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
                                     <i className="fa-solid fa-location-dot"></i>
@@ -319,6 +289,45 @@ export default function EmployeeDrawer({
                                     )}
                                 </div>
                             </div>
+
+                            {/* --- NUEVO: FECHA DE NACIMIENTO --- */}
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
+                                    <i className="fa-solid fa-cake-candles"></i>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    {isEditing ? (
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="date"
+                                                name="birth_date"
+                                                value={editData.birth_date || ""}
+                                                onChange={handleChange}
+                                                className={inputClass}
+                                            />
+                                            {editData.birth_date && (
+                                                <span className="text-[10px] bg-slate-200 px-2 py-2 rounded-lg font-black text-slate-500 shrink-0">
+                                                    {calcularEdad(editData.birth_date)} AÑOS
+                                                </span>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm font-medium text-slate-700 truncate">
+                                                {employee.birth_date
+                                                    ? new Date(employee.birth_date).toLocaleDateString('es-ES')
+                                                    : "Sin especificar"}
+                                            </span>
+                                            {employee.birth_date && (
+                                                <span className="text-[9px] bg-white px-2 py-0.5 rounded-full border border-slate-200 font-bold text-slate-400 uppercase shrink-0">
+                                                    {calcularEdad(employee.birth_date)} AÑOS
+                                                </span>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -376,7 +385,6 @@ export default function EmployeeDrawer({
                                 </div>
                             ))}
 
-                            {/* El nuevo botón mágico para añadir más líneas */}
                             {isEditing && (
                                 <button
                                     type="button"
@@ -449,9 +457,6 @@ export default function EmployeeDrawer({
                     )}
                 </div>
             </aside>
-
-            {/* --- EL COMPONENTE DEL PORTAL --- */}
-            <SelectPortal value={editData.zone_id} onChange={handleChange} />
         </>
     );
 }

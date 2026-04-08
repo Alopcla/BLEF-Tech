@@ -51,14 +51,24 @@ class EmployeeController extends Controller
     {
         // 1. Validación estricta
         $validated = $request->validate([
-            'dni' => 'required|unique:employees,dni',
+            // Validacion del DNI, cuyo formato sea de 9 cifras y 1 letra.
+            'dni' => [
+                'required',
+                'unique:employees,dni',
+                'regex:/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i'
+            ],
             'name' => 'required|max:255',
             'surname' => 'required',
             'email' => 'required|email|unique:employees,email|unique:users,email',
             'birth_date' => 'required|date',
             'address' => 'required|string|max:255',
             'province' => 'required|string|max:255',
-            'telephone' => 'required|string', // <--- Laravel busca esta llave
+            // Validacion de numero de telefono, siendo de 9 digitos (aunque sea un string)
+            'telephone' => [
+                'required',
+                'string',
+                'regex:/^[6789][0-9]{8}$/',
+            ],
             'position' => 'required|string',
             'zone_id' => 'required|integer|exists:zones,id',
         ]);
@@ -95,14 +105,34 @@ class EmployeeController extends Controller
      */
     public function destroy($dni)
     {
+        // 1. Buscamos al empleado por su DNI
         $employee = Employee::where('dni', $dni)->first();
 
         if ($employee) {
-            $employee->telephones()->delete(); // Borrar hijos
-            $employee->delete();               // Borrar padre
+            try {
+                return DB::transaction(function () use ($employee) {
+                    // 2. Buscamos al usuario vinculado por el email ANTES de borrar al empleado
+                    $user = User::where('email', $employee->email)->first();
+
+                    // 3. Borramos los teléfonos (relación hija)
+                    $employee->telephones()->delete();
+
+                    // 4. Borramos al usuario de la tabla 'users'
+                    if ($user) {
+                        $user->delete();
+                    }
+
+                    // 5. Borramos al empleado de la tabla 'employees'
+                    $employee->delete();
+
+                    return response()->json(['status' => 'ok', 'message' => 'Empleado eliminado correctamente']);
+                });
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Error al eliminar: ' . $e->getMessage()], 500);
+            }
         }
 
-        return response()->json(['status' => 'ok']);
+        return response()->json(['error' => 'Empleado no encontrado'], 404);
     }
 
     /**
@@ -149,7 +179,7 @@ class EmployeeController extends Controller
                 $employee->update($request->only(['name', 'surname', 'address', 'province', 'position', 'zone_id']));
 
                 // B) Sincronizar nombre en la tabla Users
-                $user = \App\Models\User::where('email', $employee->email)->first();
+                $user = User::where('email', $employee->email)->first();
                 if ($user) {
                     $user->update(['name' => $request->name]);
                 }

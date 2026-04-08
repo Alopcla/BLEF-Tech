@@ -1,5 +1,23 @@
 import React from 'react';
 
+// Función para calcular la edad exacta
+const calcularEdad = (fechaNacimiento) => {
+    if (!fechaNacimiento) return "";
+
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+
+    // Ajuste si aún no ha cumplido años este año
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+    }
+
+    return edad;
+};
+
 export default function EmployeeCard({ employee, style, onOpenDetails }) {
     const getInitials = (name, surname) => `${name?.charAt(0) || ''}${surname?.charAt(0) || ''}`.toUpperCase();
 
@@ -27,6 +45,7 @@ export default function EmployeeCard({ employee, style, onOpenDetails }) {
                     {employee.name} {employee.surname}
                 </h3>
 
+                {/* CAJA DE DATOS DEL EMPLEADO */}
                 <div className="mt-4 text-xs text-slate-600 w-full text-left bg-slate-50 rounded-xl p-3 border border-slate-100 space-y-2">
                     <p className="flex items-center gap-3">
                         <i className="fa-solid fa-map-location-dot text-slate-400 w-4 text-center"></i>
@@ -36,6 +55,19 @@ export default function EmployeeCard({ employee, style, onOpenDetails }) {
                         <i className="fa-solid fa-envelope text-slate-400 w-4 text-center"></i>
                         <span className="truncate">{employee.email}</span>
                     </p>
+
+                    {/* NUEVO: Fecha de Nacimiento y Edad integrada */}
+                    {employee.birth_date && (
+                        <p className="flex items-center gap-3">
+                            <i className="fa-solid fa-cake-candles text-slate-400 w-4 text-center"></i>
+                            <span className="flex items-center gap-2 truncate">
+                                {new Date(employee.birth_date).toLocaleDateString('es-ES')}
+                                <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px] font-black">
+                                    {calcularEdad(employee.birth_date)} AÑOS
+                                </span>
+                            </span>
+                        </p>
+                    )}
                 </div>
             </div>
 

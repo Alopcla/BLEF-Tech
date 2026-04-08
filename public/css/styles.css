@@ -45,6 +45,18 @@ body, header {
     font-family: 'Park zoo';
 }
 
+/* EXPERIENCIAS */
+/* Ocultar barra de scroll para Chrome, Safari y Opera */
+.custom-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Ocultar barra de scroll para IE, Edge y Firefox */
+.custom-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
 @media screen and (max-width: 900px) {
     .barra-tiempo {
         position: static;

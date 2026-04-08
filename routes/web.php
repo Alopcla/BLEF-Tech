@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\AlertController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 
 /*
@@ -23,6 +24,22 @@ Route::get('/animales', function () { return view('animales'); })->name('animale
 Route::get('/tienda', function () { return view('tienda'); })->name('tienda');
 Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
 Route::get('/experiencias/{slug}', [ExperienciaController::class, 'MostrarInfo'])->name('experienciasInfo');
+
+Route::get('/api/tickets-by-email', function (Request $request) {
+    $tickets = \App\Models\Ticket::where('email', $request->query('email'))
+        ->where('status', 'paid')
+        ->where('visit_day', '>=', now()->format('Y-m-d'))
+        ->get()
+        ->map(fn($t) => [
+            'id'                  => $t->id,
+            'cod_ticket'          => $t->cod_ticket,
+            'visit_day'           => $t->visit_day->format('Y-m-d'), 
+            'visit_day_formatted' => $t->visit_day->format('d/m/Y'),
+        ]);
+
+    return response()->json(['tickets' => $tickets]);
+});
+
 Route::get('/mapa', function () { return view('mapa'); })->name('mapa.index');
 
 // Autenticación Google

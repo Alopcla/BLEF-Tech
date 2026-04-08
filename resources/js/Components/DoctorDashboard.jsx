@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
 import NavigationModules from "./NavigationModules";
-import AnimalFormModal from "./AnimalFormModal"; // <-- Importación del formulario
+import AnimalFormModal from "./AnimalFormModal"; // Formulario de Animal
+
+const formatearFechaYHora = (fechaIso) => {
+        if (!fechaIso) return "Sin registro";
+        const fecha = new Date(fechaIso);
+        return fecha.toLocaleString("es-ES", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
 
 export default function DoctorDashboard() {
     // --- ESTADOS ---
@@ -235,12 +247,6 @@ export default function DoctorDashboard() {
             </main>
 
             {/* MODALES FLOTANTES */}
-            <MedicalRecordDrawer
-                isOpen={isDrawerOpen}
-                onClose={() => setIsDrawerOpen(false)}
-                animal={selectedAnimal}
-            />
-
             <AnimalFormModal
                 isOpen={isAnimalFormOpen}
                 onClose={() => setIsAnimalFormOpen(false)}
@@ -378,7 +384,7 @@ function MedicalRecordDrawer({ isOpen, onClose, animal, onDelete }) {
                                             <div className="flex items-center gap-2">
                                                 <i className="fa-solid fa-calendar-day text-teal-500"></i>
                                                 <span className="text-xs font-bold text-slate-600 font-mono">
-                                                    {record.date}
+                                                    {formatearFechaYHora(record.created_at)}
                                                 </span>
                                             </div>
                                             <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">

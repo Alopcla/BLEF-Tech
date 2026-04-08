@@ -16,7 +16,7 @@ return new class extends Migration {
         // Fecha en la que se alimenta el animal
         // Ultima persona que alimento a dicho animal
         Schema::table('animals', function (Blueprint $table) {
-            $table->date('last_fed_date')->nullable();
+            $table->timestamp('last_fed_date')->nullable();
             $table->string('last_fed_by')->nullable();
         });
     }

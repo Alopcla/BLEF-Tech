@@ -19,11 +19,12 @@ class Animal extends Model
         'image',
         'last_fed_date',
         'last_fed_by',
-        'food_ration'
+        'food_ration',
     ];
 
     protected $casts = [
         'birth_date' => 'date',
+        'last_fed_date' => 'datetime',
     ];
 
     // Relación N:1 -> Un animal pertenece a una zona

@@ -17,8 +17,9 @@ class MedicalRecord extends Model
         'treatment'
     ];
 
+    // Cast para transformar el campo en un tipo de dato especifico, siendo un cast de fecha con horas y minutos.
     protected $casts = [
-        'date' => 'date',
+        'date' => 'datetime',
     ];
 
     // Relación N:1 -> El registro pertenece a un animal

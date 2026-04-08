@@ -84,7 +84,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/medico/dashboard', function () { return view('medico-react'); })->name('medico.dashboard');
         Route::get('/api/medico/datos', [MedicalRecordController::class, 'getDoctorData']);
         Route::post('/api/medico/historial', [MedicalRecordController::class, 'storeRecord']);
-        Route::post('/api/medico/animal', [MedicalRecordController::class, 'storeAnimal']);
+        Route::post('/api/medico/animal', [\App\Http\Controllers\Api\AnimalController::class, 'store']);
         Route::delete('/api/medico/animal/{id}', [MedicalRecordController::class, 'destroyAnimal']);
     });
 

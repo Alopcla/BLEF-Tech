@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 
+const dietasDisponibles = [
+    { value: "Carnívoro", label: "Carnívoro" },
+    { value: "Herbívoro", label: "Herbívoro" },
+    { value: "Omnívoro", label: "Omnívoro" },
+    { value: "Insectívoro", label: "Insectívoro" },
+    { value: "Piscívoro", label: "Piscívoro" },
+];
+
 export default function AnimalFormModal({
     isOpen,
     onClose,
@@ -132,16 +140,27 @@ export default function AnimalFormModal({
                         {/* Dieta */}
                         <div className="space-y-1">
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                Dieta
+                                Tipo de Dieta *
                             </label>
-                            <input
-                                type="text"
+                            <select
                                 name="diet"
+                                required
                                 value={formData.diet}
-                                onChange={handleChange}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-teal-400"
-                                placeholder="Ej: Carnívoro - 5kg/día"
-                            />
+                                onChange={handleChange} // <-- CORREGIDO: Antes decía handleInputChange
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-teal-400 appearance-none cursor-pointer"
+                            >
+                                <option value="" disabled>
+                                    Selecciona una dieta...
+                                </option>
+                                {dietasDisponibles.map((dieta) => (
+                                    <option
+                                        key={dieta.value}
+                                        value={dieta.value}
+                                    >
+                                        {dieta.label}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         {/* URL Imagen */}

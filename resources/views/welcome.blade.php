@@ -270,5 +270,4 @@
 @push('scripts')
 @viteReactRefresh
 @vite(['resources/js/app.jsx'])
-<script src="{{ asset('js/main.js') }}" defer></script>
 @endpush

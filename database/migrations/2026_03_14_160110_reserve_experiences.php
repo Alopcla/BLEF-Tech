@@ -15,6 +15,9 @@ return new class extends Migration
             // Relación con experiencia
             $table->unsignedBigInteger('experience_id');
 
+            //Relación con el ticket del usuario
+            $table->unsignedBigInteger('ticket_id');
+
             // Datos de Stripe / usuario
             $table->string('email');
             $table->date('reservation_date')->nullable();
@@ -32,6 +35,11 @@ return new class extends Migration
             $table->foreign('experience_id')
                   ->references('id')
                   ->on('experiences')
+                  ->onDelete('cascade');
+
+            $table->foreign('ticket_id')
+                  ->references('id')
+                  ->on('tickets')
                   ->onDelete('cascade');
         });
     }

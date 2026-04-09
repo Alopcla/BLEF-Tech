@@ -63,7 +63,7 @@
 
                     <div class="flex flex-col md:flex-row gap-6 md:gap-10">
                         <div class="relative h-72 md:h-[400px] md:w-2/5 overflow-hidden rounded-[1.5rem] shrink-0">
-                            <img src="{{ $popular->image }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ $popular->name }}">
+                            <img src="{{$popular->image}}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ $popular->name }}">
                             <div class="absolute top-4 left-4 backdrop-blur-md bg-white/10 border border-white/20 text-white text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest">
                                 {{ $popular->type ?? 'Safari' }}
                             </div>
@@ -105,15 +105,19 @@
 
                             <div class="flex gap-4">
                                 @auth
-                                    @if($ticketvalidation)
+                                    {{-- LÓGICA DE TICKETS: @if(es lista y hay más de 1) --}}
+                                    @if(is_iterable($ticketvalidation) && count($ticketvalidation) > 1)
+                                        <button onclick="openTicketSelector('{{ $popular->id }}', '{{ $popular->name }}', '{{ $popular->price }}')" class="flex-[4] bg-[#D9C8A1] text-[#1A2E1A] py-5 rounded-2xl font-black text-sm uppercase tracking-[2px] shadow-xl hover:bg-white transition-all">
+                                            Reservar Ahora
+                                        </button>
+                                    @elseif(is_iterable($ticketvalidation) && count($ticketvalidation) == 1)
                                         <form action="{{ route('payment.process') }}" method="POST" class="flex-[4]">
                                             @csrf
                                             <input type="hidden" name="amount" value="{{ $popular->price }}">
                                             <input type="hidden" name="concepto" value="Reserva: {{ $popular->name }}">
                                             <input type="hidden" name="tipo" value="experiencia">
                                             <input type="hidden" name="meta[experiencia_id]" value="{{ $popular->id }}">
-                                            <input type="hidden" name="meta[nombre]" value="{{ $popular->name }}">
-                                            <input type="hidden" name="meta[fecha]" value="{{ now()->format('Y-m-d') }}">
+                                            <input type="hidden" name="meta[ticket_id]" value="{{ $ticketvalidation->first()->id }}">
                                             <button type="submit" class="w-full bg-[#D9C8A1] text-[#1A2E1A] py-5 rounded-2xl font-black text-sm uppercase tracking-[2px] shadow-xl hover:bg-white transition-all">
                                                 Reservar Ahora
                                             </button>
@@ -123,13 +127,10 @@
                                             <i class="fa-solid fa-ticket"></i> Comprar Entrada Primero
                                         </a>
                                     @endif
-                                @else
-                                    <a href="{{ route('login') }}" class="flex-[4] bg-[#D9C8A1] text-[#1A2E1A] py-5 rounded-2xl font-black text-sm uppercase text-center shadow-xl hover:bg-white transition-all">
-                                        Inicia sesión para reservar
-                                    </a>
                                 @endauth
-                                <a href="{{ route('experienciasInfo', $popular->slug) }}" class="flex-1 border border-[#D9C8A1]/30 rounded-2xl flex items-center justify-center text-[#D9C8A1] hover:bg-[#D9C8A1]/10 transition-all">
-                                    <i class="fa-solid fa-arrow-right"></i>
+
+                                <a href="{{ route('experienciasInfo', $popular->slug) }}" class="{{ Auth::check() ? 'flex-1' : 'flex-grow py-5' }} border border-[#D9C8A1]/30 rounded-2xl flex items-center justify-center text-[#D9C8A1] hover:bg-[#D9C8A1]/10 transition-all font-bold uppercase text-xs tracking-widest gap-2">
+                                    @guest Ver Detalles @endguest <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -148,7 +149,7 @@
                 @endif
 
                 <div class="relative h-64 w-full overflow-hidden rounded-[1.5rem] mb-6">
-                    <img src="{{ $exp->image }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ $exp->name }}">
+                    <img src="{{$exp->image}}" loading="lazy" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ $exp->name }}">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#1A2E1A] via-transparent to-transparent opacity-80"></div>
                     <div class="absolute top-4 left-4 backdrop-blur-md bg-white/10 border border-white/20 text-white text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest">{{ $exp->type ?? 'Safari' }}</div>
                     <div class="absolute bottom-4 right-4 bg-[#D9C8A1] text-[#1A2E1A] px-4 py-1 rounded-lg font-black text-lg shadow-2xl">{{ $exp->price }}€</div>
@@ -184,34 +185,26 @@
 
                     <div class="flex gap-3">
                         @auth
-                            @if($ticketvalidation)
-                                @if($exp->available_spots > 0)
-                                    <form action="{{ route('payment.process') }}" method="POST" class="flex-[3]">
-                                        @csrf
-                                        <input type="hidden" name="amount" value="{{ $exp->price }}">
-                                        <input type="hidden" name="concepto" value="Reserva: {{ $exp->name }}">
-                                        <input type="hidden" name="tipo" value="experiencia">
-                                        <input type="hidden" name="meta[experiencia_id]" value="{{ $exp->id }}">
-                                        <input type="hidden" name="meta[nombre]" value="{{ $exp->name }}">
-                                        <input type="hidden" name="meta[fecha]" value="{{ now()->format('Y-m-d') }}">
-                                        <button type="submit" class="w-full bg-[#D9C8A1] text-[#1A2E1A] py-4 rounded-2xl font-black text-xs uppercase tracking-[1px] hover:bg-white transition-all">
-                                            Reservar
-                                        </button>
-                                    </form>
-                                @else
-                                    <button disabled class="flex-[3] bg-gray-500/20 text-gray-500 py-4 rounded-2xl font-black text-xs uppercase cursor-not-allowed">Sold Out</button>
-                                @endif
+                            @if(is_iterable($ticketvalidation) && count($ticketvalidation) > 1)
+                                <button onclick="openTicketSelector('{{ $exp->id }}', '{{ $exp->name }}', '{{ $exp->price }}')" class="flex-[3] bg-[#D9C8A1] text-[#1A2E1A] py-4 rounded-2xl font-black text-xs uppercase tracking-[1px] hover:bg-white transition-all">Reservar</button>
+                            @elseif(is_iterable($ticketvalidation) && count($ticketvalidation) == 1)
+                                <form action="{{ route('payment.process') }}" method="POST" class="flex-[3]">
+                                    @csrf
+                                    <input type="hidden" name="amount" value="{{ $exp->price }}">
+                                    <input type="hidden" name="concepto" value="Reserva: {{ $exp->name }}">
+                                    <input type="hidden" name="tipo" value="experiencia">
+                                    <input type="hidden" name="meta[experiencia_id]" value="{{ $exp->id }}">
+                                    <input type="hidden" name="meta[ticket_id]" value="{{ $ticketvalidation->first()->id }}">
+                                    <button type="submit" class="w-full bg-[#D9C8A1] text-[#1A2E1A] py-4 rounded-2xl font-black text-xs uppercase tracking-[1px] hover:bg-white transition-all">Reservar</button>
+                                </form>
                             @else
-                                <a href="{{ route('tickets.show') }}" class="flex-[3] bg-orange-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase text-center flex items-center justify-center">
-                                    Comprar Entrada
-                                </a>
+                                <a href="{{ route('tickets.show') }}" class="flex-[3] bg-orange-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase text-center flex items-center justify-center">Comprar Ticket</a>
                             @endif
-                        @else
-                            <a href="{{ route('login') }}" class="flex-[3] bg-[#D9C8A1] text-[#1A2E1A] py-4 rounded-2xl font-black text-xs uppercase text-center">Login</a>
                         @endauth
+                        
+                        <a href="{{ route('experienciasInfo', $exp->slug) }}" class="{{ Auth::check() ? 'flex-1' : 'flex-grow py-4' }} border border-[#D9C8A1]/30 rounded-2xl flex items-center justify-center text-[#D9C8A1] hover:bg-[#D9C8A1]/10 transition-all font-bold uppercase text-[10px] tracking-widest gap-2">
+                            @guest Ver Detalles @endguest <i class="fa-solid fa-arrow-right"></i>
 
-                        <a href="{{ route('experienciasInfo', $exp->slug) }}" class="flex-1 border border-[#D9C8A1]/30 rounded-2xl flex items-center justify-center text-[#D9C8A1] hover:bg-[#D9C8A1]/10 transition-all">
-                            <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
@@ -220,4 +213,74 @@
         </div>
     </main>
 
+
+    {{-- MODAL --}}
+    <div id="ticketModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeTicketModal()"></div>
+        <div class="relative bg-[#1A2E1A] border border-white/10 w-full max-w-md rounded-[2.5rem] p-8">
+            <h2 class="text-2xl font-parkzoo text-white mb-2 fuenteZoo text-center">Selecciona tu entrada</h2>
+            <p class="text-white/30 text-xs text-center mb-6 uppercase tracking-widest">La experiencia se reservará en la fecha del ticket</p>
+            
+            <form action="{{ route('payment.process') }}" method="POST">
+                @csrf
+                <input type="hidden" name="concepto" id="modalConcepto">
+                <input type="hidden" name="tipo" value="experiencia">
+                <input type="hidden" name="meta[experiencia_id]" id="modalExpId">
+                <input type="hidden" name="meta[fecha]" id="modalFecha">
+                <input type="hidden" name="meta[ticket_id]" id="modalTicketId">
+
+                <div class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                    @if(is_iterable($ticketvalidation))
+                        @foreach($ticketvalidation as $ticket)
+                            <label onclick="selectTicket('{{ $ticket->id }}', '{{ $ticket->visit_day->format('Y-m-d') }}')"
+                                class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-[#D9C8A1]/10 hover:border-[#D9C8A1]/30 transition-all">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="_ticket_display" value="{{ $ticket->id }}" class="accent-[#D9C8A1]">
+                                    <div>
+                                        <span class="text-white font-bold block text-sm">{{ $ticket->visit_day->format('d/m/Y') }}</span>
+                                        <span class="text-white/40 text-xs font-mono">{{ $ticket->cod_ticket }}</span>
+                                    </div>
+                                </div>
+                                <span class="text-[#D9C8A1] text-xs font-bold px-3 py-1 bg-[#D9C8A1]/10 rounded-lg">
+                                    {{ $ticket->visit_day->format('D') }}
+                                </span>
+                            </label>
+                        @endforeach
+                    @endif
+                </div>
+
+                <button type="submit" id="modalBtn"
+                    class="w-full mt-8 bg-[#D9C8A1] text-[#1A2E1A] py-4 rounded-xl font-black uppercase shadow-xl hover:bg-white transition-all opacity-50 cursor-not-allowed"
+                    disabled>
+                    Confirmar Reserva
+                </button>
+            </form>
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function openTicketSelector(id, name, price) {
+            document.getElementById('modalExpId').value    = id;
+            document.getElementById('modalConcepto').value = 'Reserva: ' + name;
+            document.getElementById('modalFecha').value    = '';
+            document.getElementById('modalTicketId').value = '';
+            document.getElementById('modalBtn').disabled   = true;
+            document.getElementById('modalBtn').classList.add('opacity-50', 'cursor-not-allowed');
+            document.getElementById('ticketModal').classList.remove('hidden');
+        }
+
+        function selectTicket(ticketId, fecha) {
+            document.getElementById('modalTicketId').value = ticketId;
+            document.getElementById('modalFecha').value    = fecha;
+            document.getElementById('modalBtn').disabled   = false;
+            document.getElementById('modalBtn').classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        function closeTicketModal() {
+            document.getElementById('ticketModal').classList.add('hidden');
+        }
+    </script>
+@endpush
+

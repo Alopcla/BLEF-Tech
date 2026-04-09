@@ -80,7 +80,14 @@
                                 </div>
                                 <div>
                                     <p class="text-white/40 text-[10px] uppercase font-bold tracking-widest">Fecha de Visita</p>
-                                    <p class="text-white font-semibold">{{ \Carbon\Carbon::parse($meta['fecha'])->translatedFormat('d \d\e F, Y') }}</p>
+                                    <p class="text-white font-semibold">
+                                        @php
+                                            // Intentamos obtener la fecha de 'fecha' (entrada) o de 'reservation_date' (base de datos)
+                                            // Si ninguna existe, ponemos la fecha de hoy para que no explote
+                                            $fechaFinal = $meta['fecha'] ?? ($reservation->reservation_date ?? now());
+                                        @endphp
+                                        {{ \Carbon\Carbon::parse($fechaFinal)->translatedFormat('d \d\e F, Y') }}
+                                    </p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4">

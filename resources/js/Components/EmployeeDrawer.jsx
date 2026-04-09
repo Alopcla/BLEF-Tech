@@ -18,6 +18,15 @@ const calcularEdad = (fechaNacimiento) => {
     return edad;
 };
 
+// Calculamos la fecha límite (Hace 18 años exactamente)
+    const getMaxDate18YearsAgo = () => {
+        const today = new Date();
+        today.setFullYear(today.getFullYear() - 18);
+        return today.toISOString().split("T")[0]; // Formato "YYYY-MM-DD"
+    };
+
+    const maxDateAllowed = getMaxDate18YearsAgo();
+    
 export default function EmployeeDrawer({
     isOpen,
     onClose,
@@ -304,6 +313,7 @@ export default function EmployeeDrawer({
                                                 value={editData.birth_date || ""}
                                                 onChange={handleChange}
                                                 className={inputClass}
+                                                max={maxDateAllowed}
                                             />
                                             {editData.birth_date && (
                                                 <span className="text-[10px] bg-slate-200 px-2 py-2 rounded-lg font-black text-slate-500 shrink-0">

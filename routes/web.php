@@ -162,3 +162,5 @@ Route::get('/paypal/success', function () {
     return redirect()->route('payment.show')->with('success', '¡Pago realizado con éxito!');
 })->name('paypal.success');
 
+Route::post('/pago/shop', [PaymentController::class, 'processPayment'])->name('payment.shop');
+

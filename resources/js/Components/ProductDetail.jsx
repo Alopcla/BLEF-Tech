@@ -53,7 +53,7 @@ const ProductDetail = () => {
     }
 
     const hasSizes  = producto.sizes?.length > 0;
-    const hasSpline = producto.id === 9;
+    const hasSpline = producto.spline_url;
 
     return (
         <div className="pd-wrapper">
@@ -69,23 +69,26 @@ const ProductDetail = () => {
 
                     {/* Imagen / Spline */}
                     <div className="pd-image-col">
-                        <div className={`pd-image-box${hasSpline && splineActivo ? " spline-active" : ""}`}>
+                        <div className={`relative w-full h-[500px] rounded-[30px] overflow-hidden ${hasSpline && splineActivo ? 'bg-transparent p-0 shadow-none' 
+                                : 'bg-neutral-900 p-4 border border-neutral-800'}
+                            `}>
 
                             {/* Vista Spline activa */}
                             {hasSpline && splineActivo ? (
-                                <>
+                                    <>
                                     <spline-viewer
-                                        url="https://prod.spline.design/EsYGvTc8LJHw2crp/scene.splinecode"
-                                        className="pd-spline-viewer"
+                                        key={producto.spline_url}
+                                        url={`${producto.spline_url}?v=${Date.now()}`}
                                     />
-                                    <button
-                                        className="pd-spline-toggle active"
-                                        onClick={() => setSplineActivo(false)}
-                                    >
-                                        ✕ Cerrar 3D
-                                    </button>
-                                </>
-                            ) : (
+
+                                        <button
+                                            className="absolute top-4 right-4 z-10 bg-black/70 text-white px-4 py-2 rounded-xl backdrop-blur hover:bg-black"
+                                            onClick={() => setSplineActivo(false)}
+                                        >
+                                            ✕ Cerrar
+                                        </button>
+                                    </>
+                                ) : (
                                 <>
                                     {producto.image
                                         ? <img src={producto.image} alt={producto.name} className="pd-image" />
@@ -140,15 +143,25 @@ const ProductDetail = () => {
                         <div>
                             <p className="pd-section-label">Cantidad</p>
                             <div className="pd-qty-control">
-                                <button className="pd-qty-btn" onClick={() => setQuantity(q => Math.max(1, q - 1))}>−</button>
+                                <button className="pd-qty-btn" onClick={() => setQuantity(q => Math.max(1, Number(q) - 1))}>−</button>
                                 <input
                                     type="number"
                                     min="1"
                                     value={quantity}
-                                    onChange={e => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                                    onChange={e => {
+                                        const val = e.target.value;
+                                        if (val === '') {
+                                            setQuantity('');
+                                        } else {
+                                            setQuantity(Math.max(1, parseInt(val)));
+                                        }
+                                    }}
+                                    onBlur={() => {
+                                        if (quantity === '' || quantity < 1) setQuantity(1);
+                                    }}
                                     className="pd-qty-input"
                                 />
-                                <button className="pd-qty-btn" onClick={() => setQuantity(q => q + 1)}>+</button>
+                                <button className="pd-qty-btn" onClick={() => setQuantity(q => Number(q) + 1)}>+</button>
                             </div>
                         </div>
 
@@ -163,20 +176,31 @@ const ProductDetail = () => {
                             <button className="pd-btn-wish">♡</button>
                         </div>
 
-                        {/* Info cards */}
+                        {/* NUEVAS INFO CARDS (Sin emojis, con SVGs y mejor texto) */}
                         <div className="pd-info-cards">
                             <div className="pd-info-card">
-                                <span className="icon">🚚</span>
+                                <div className="icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="1" y="3" width="15" height="13"></rect>
+                                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                    </svg>
+                                </div>
                                 <div>
-                                    <p className="pd-info-title">Envío rápido</p>
-                                    <p className="pd-info-text">Entrega en 2-3 días</p>
+                                    <p className="pd-info-title">Envío a domicilio</p>
+                                    <p className="pd-info-text">Recíbelo en tu casa en 48/72h</p>
                                 </div>
                             </div>
                             <div className="pd-info-card">
-                                <span className="icon">♻️</span>
+                                <div className="icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                    </svg>
+                                </div>
                                 <div>
-                                    <p className="pd-info-title">Sostenible</p>
-                                    <p className="pd-info-text">Beneficia al zoo</p>
+                                    <p className="pd-info-title">Compra con impacto</p>
+                                    <p className="pd-info-text">El 100% de los beneficios apoyan al Zoo</p>
                                 </div>
                             </div>
                         </div>

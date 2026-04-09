@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tienda — Park Zoo')
+@section('title', 'Tienda')
 
 @section('video', 'false')
 
@@ -14,7 +14,7 @@
 
 @section('content')
 
-    <div id="tienda-root"></div>
+    <div id="tienda-root" data-user-email="{{ auth()->user()?->email ?? '' }}"></div>
 
 @endsection
 

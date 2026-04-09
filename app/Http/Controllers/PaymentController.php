@@ -60,6 +60,14 @@ class PaymentController extends Controller
                     ->firstOrFail();
                 $amount = (float) $experiencia->price;
                 break;
+            case 'shop':
+                $items = $request->meta['items'] ?? [];
+                $amount = 0;
+                foreach ($items as $item) {
+                    $product = DB::table('products')->where('id', $item['id'])->firstOrFail();
+                    $amount += $product->price * $item['quantity'];
+                }
+                break;
 
             default:
                 return back()->with('error', 'Tipo de pago no válido.');
@@ -159,6 +167,48 @@ class PaymentController extends Controller
 
                     $experiencia = DB::table('experiences')->where('id', $meta['experiencia_id'])->first();
                     break;
+                case 'shop':
+                    $yaProcesado = DB::table('orders')
+                        ->where('stripe_session_id', $sessionId)
+                        ->exists();
+
+                    if (!$yaProcesado) {
+                        $items = $meta['items'] ?? [];
+
+                        $orderId = DB::table('orders')->insertGetId([
+                            'user_id'           => auth()->id() ?? null,
+                            'email'             => $email,
+                            'stripe_session_id' => $sessionId,
+                            'total'             => $amount,
+                            'status'            => 'paid',
+                            'created_at'        => now(),
+                            'updated_at'        => now(),
+                        ]);
+
+                        foreach ($items as $item) {
+                            $product = DB::table('products')->where('id', $item['id'])->first();
+                            DB::table('order_items')->insert([
+                                'order_id'   => $orderId,
+                                'product_id' => $item['id'],
+                                'quantity'   => $item['quantity'],
+                                'unit_price' => $product->price,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                            // Descontar stock
+                            DB::table('products')
+                                ->where('id', $item['id'])
+                                ->decrement('stock', $item['quantity']);
+                        }
+                    }
+
+                    $order = DB::table('orders')->where('stripe_session_id', $sessionId)->first();
+                    $orderItems = DB::table('order_items')
+                        ->join('products', 'order_items.product_id', '=', 'products.id')
+                        ->where('order_items.order_id', $order->id)
+                        ->select('products.name', 'products.image', 'order_items.quantity', 'order_items.unit_price')
+                        ->get();
+                    break;
             }
 
             return view('payment.success', [
@@ -168,6 +218,8 @@ class PaymentController extends Controller
                 'amount'      => $amount,
                 'tickets'     => $ticketsParaEmail,
                 'experiencia' => $experiencia,
+                'order'      => $order ?? null,
+                'orderItems' => $orderItems ?? [],
             ]);
 
         } catch (\Exception $e) {

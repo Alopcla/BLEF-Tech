@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const COLOR_CATEGORIA = {
-    peluche:   { bg: 'bg-purple-900/30', text: 'text-purple-300', dot: '#a78bfa' },
-    ropa:      { bg: 'bg-blue-900/30',   text: 'text-blue-300',   dot: '#93c5fd' },
-    accesorio: { bg: 'bg-amber-900/30',  text: 'text-amber-300',  dot: '#fcd34d' },
-    libro:     { bg: 'bg-orange-900/30', text: 'text-orange-300', dot: '#fdba74' },
-    default:   { bg: 'bg-neutral-800',   text: 'text-neutral-400', dot: '#6b7280' },
+    peluche: { bg: 'bg-purple-900/30', text: 'text-purple-300', dot: '#a78bfa' },
+    ropa: { bg: 'bg-blue-900/30', text: 'text-blue-300', dot: '#93c5fd' },
+    accesorio: { bg: 'bg-amber-900/30', text: 'text-amber-300', dot: '#fcd34d' },
+    libro: { bg: 'bg-orange-900/30', text: 'text-orange-300', dot: '#fdba74' },
+    default: { bg: 'bg-neutral-800', text: 'text-neutral-400', dot: '#6b7280' },
 };
 
 const getColor = (categoria) => {
@@ -18,17 +18,18 @@ const getColor = (categoria) => {
     return COLOR_CATEGORIA.default;
 };
 
-const ShopCard = ({ producto }) => {
+const ShopCard = ({ producto, onAgregar }) => {
     const [añadido, setAñadido] = useState(false);
     const navigate = useNavigate();
-    const color   = getColor(producto.category);
+    const color = getColor(producto.category);
     const agotado = producto.stock <= 0;
-    const poco    = producto.stock > 0 && producto.stock <= 10;
+    const poco = producto.stock > 0 && producto.stock <= 10;
     const fallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(producto.name)}&size=500&background=1a1a1a&color=E0D7B6&font-size=0.15&bold=true`;
 
     const handleCarrito = (e) => {
-        e.stopPropagation();
+        e.stopPropagation(); // ← esto evita que navegue al detalle
         if (agotado) return;
+        onAgregar(producto);  // ← añadir esto
         setAñadido(true);
         setTimeout(() => setAñadido(false), 2000);
     };
@@ -69,9 +70,8 @@ const ShopCard = ({ producto }) => {
                         <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: color.dot }} />
                         {producto.category}
                     </span>
-                    <span className={`text-[10px] font-semibold uppercase tracking-wider ${
-                        agotado ? 'text-red-500' : poco ? 'text-yellow-400' : 'text-green-400'
-                    }`}>
+                    <span className={`text-[10px] font-semibold uppercase tracking-wider ${agotado ? 'text-red-500' : poco ? 'text-yellow-400' : 'text-green-400'
+                        }`}>
                         {agotado ? '✕ Sin stock' : poco ? `⚡ Solo ${producto.stock}` : '✓ Disponible'}
                     </span>
                 </div>
@@ -95,13 +95,12 @@ const ShopCard = ({ producto }) => {
                     <button
                         onClick={handleCarrito}
                         disabled={agotado}
-                        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${
-                            agotado
-                                ? 'bg-neutral-800 text-neutral-600 cursor-not-allowed'
-                                : añadido
-                                    ? 'bg-green-700 text-white scale-95'
-                                    : 'bg-[#3A6B35] text-[#E0D7B6] hover:bg-[#E0D7B6] hover:text-[#1a3a1a] hover:scale-105'
-                        }`}
+                        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${agotado
+                            ? 'bg-neutral-800 text-neutral-600 cursor-not-allowed'
+                            : añadido
+                                ? 'bg-green-700 text-white scale-95'
+                                : 'bg-[#3A6B35] text-[#E0D7B6] hover:bg-[#E0D7B6] hover:text-[#1a3a1a] hover:scale-105'
+                            }`}
                     >
                         <i className={`bi ${añadido ? 'bi-check-lg' : agotado ? 'bi-bag-x' : 'bi-bag-plus'}`} />
                         {añadido ? '¡Listo!' : agotado ? 'No disp.' : 'Añadir'}

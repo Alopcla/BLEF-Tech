@@ -21,6 +21,8 @@ Route::get('/products', [ProductController::class, 'index']);
 
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
+Route::post('/shop/checkout', [ProductController::class, 'checkout']);
+
 //Ruta para trabajar el mapa
 use App\Http\Controllers\Api\ZoneController;
 

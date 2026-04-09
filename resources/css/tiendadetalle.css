@@ -3,12 +3,14 @@
    ============================================================ */
 
 /* ── Wrapper principal ── */
+
 .pd-wrapper {
     position: relative;
     width: 100%;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column; 
     background: linear-gradient(135deg, #0a1a0a 0%, #0d2d0d 50%, #051005 100%);
-    overflow: hidden;
     font-family: 'Poppins', sans-serif;
     animation: pdFadeUp 0.5s ease-out;
 }
@@ -26,10 +28,11 @@
 .pd-container {
     position: relative;
     z-index: 1;
+    width: 100%;
     max-width: 1300px;
     margin: 0 auto;
-    padding: 40px 30px;
-    min-height: 100vh;
+    padding: 120px 30px 60px 30px; 
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
     gap: 40px;
@@ -312,37 +315,51 @@
 .pd-info-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 16px;
+    margin-top: 10px;
 }
 
 .pd-info-card {
     display: flex;
-    gap: 12px;
-    padding: 16px;
-    background: rgba(139, 195, 74, 0.06);
-    border: 1px solid rgba(139, 195, 74, 0.18);
-    border-radius: 12px;
-    align-items: flex-start;
+    gap: 14px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.03); /* Fondo más sutil y menos "verde plano" */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Borde más elegante */
+    border-radius: 16px;
+    align-items: center;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.pd-info-card:hover {
+    background: rgba(139, 195, 74, 0.05);
+    border-color: rgba(139, 195, 74, 0.3);
 }
 
 .pd-info-card .icon {
-    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background: rgba(139, 195, 74, 0.1);
+    color: #a8d974;
+    border-radius: 12px;
     flex-shrink: 0;
 }
 
 .pd-info-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: #a8d974;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff; /* Blanco limpio en lugar de verde saturado */
+    letter-spacing: 0.3px;
+    margin: 0 0 4px 0;
 }
 
 .pd-info-text {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.55);
-    margin: 3px 0 0;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+    line-height: 1.4;
 }
 
 /* ── Estados loading / error ── */

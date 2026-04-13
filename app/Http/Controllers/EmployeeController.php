@@ -67,6 +67,7 @@ class EmployeeController extends Controller
             'zone_id' => 'required|integer|exists:zones,id',
         ], [
             // MENSAJE DE ERROR QUE VERÁ REACT
+            'dni.regex' => 'El formato del DNI es incorrecto (ej: 12345678A)',
             'birth_date.before_or_equal' => 'El empleado debe tener al menos 18 años para poder ser registrado.',
             'birth_date.required' => 'La fecha de nacimiento es obligatoria.'
         ]);

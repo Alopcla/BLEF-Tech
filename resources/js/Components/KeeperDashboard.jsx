@@ -40,7 +40,7 @@ export default function KeeperDashboard() {
             });
     }, []);
 
-    // --- FILTROS 100% SEGUROS (Evitan el crash por nulos) ---
+    // --- Evitan la pantalla blanca por nulos ---
     const fedAnimals = useMemo(() => {
         if (!Array.isArray(animals)) return [];
         return animals.filter((animal) => {

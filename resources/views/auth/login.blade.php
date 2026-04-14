@@ -1,187 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - BLR Zoo</title>
-    <link rel="icon" type="image/png" href="{{ asset('favicon.ico') }}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap">
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
-    <!-- Google Sign-In SDK no descomentar hasta configurar OAuth -->
-    <!-- <script src="https://accounts.google.com/gsi/client" defer></script> -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-
 <body>
-    <div class="container-fluid">
-        <div class="row h-100">
-            <div class="col-md-5 izq-column">
-                <div class="form-container">
-                    <a href="{{ url('/') }}" class="volver-index">
-                        <i class="bi bi-arrow-left-circle"></i> Volver al inicio
-                    </a>
-                    <img src="{{ asset('LOGO.PNG') }}" class="logo" alt="Logo BLR Zoo">
-                    <h3>Iniciar Sesión</h3>
-                    <p class="description">
-                        Bienvenido de nuevo. Ingresa tus credenciales para acceder a tu cuenta.
-                    </p>
 
-                    <!-- Mensaje de exito (ej: después de registrarse o recuperar contraseña) -->
-                    @if (session('success'))
-                        <div class="alert alert-success py-2 small">{{ session('success') }}</div>
-                    @endif
+<div class="auth-wrapper">
+    {{-- Columna Izquierda --}}
+    <div class="auth-column-left">
+        
+        <a href="{{ url('/') }}" class="back-home-btn">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Volver al inicio
+        </a>
 
-                    <!-- Mensaje de estado (ej: enlace de recuperación enviado) -->
-                    @if (session('status'))
-                        <div class="alert alert-info py-2 small">{{ session('status') }}</div>
-                    @endif
-
-                    <!-- POST a la ruta login definida en auth.php -->
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <div class="mb-3">
-                            <!-- name="email" → columna 'email' de la tabla users -->
-                            <label for="email" class="form-label">Correo electrónico</label>
-                            <input
-                                type="email"
-                                class="form-control @error('email') is-invalid @enderror"
-                                id="email"
-                                name="email"
-                                value="{{ old('email') }}"
-                                placeholder="correo@ejemplo.com"
-                                autocomplete="email"
-                                required
-                                autofocus
-                            >
-                            @error('email')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <!-- name="password" → columna 'password' de la tabla users -->
-                            <label for="password" class="form-label">Contraseña</label>
-                            <input
-                                type="password"
-                                class="form-control @error('password') is-invalid @enderror"
-                                id="password"
-                                name="password"
-                                placeholder="Tu contraseña"
-                                autocomplete="current-password"
-                                required
-                            >
-                            @error('password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Checkbox "Recuerdame" → rellena remember_token en la tabla users -->
-                        <div class="form-check mb-2">
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                id="remember"
-                                name="remember"
-                                {{ old('remember') ? 'checked' : '' }}
-                            >
-                            <label class="form-check-label small text-muted" for="remember">Recordarme</label>
-                        </div>
-
-                        <div class="forgot-password">
-                            <!-- Ruta 'password.request' → muestra recuperarpassv3.blade.php -->
-                            <a href="{{ route('password.request') }}">¿Has olvidado tu contraseña?</a>
-                        </div>
-
-                        <button type="submit">Continuar</button>
-                    </form>
-
-                    <div class="separador">
-                        <span>o</span>
-                    </div>
-
-                    <!-- GOOGLE OAUTH EN STANDBY - descomentar cuando este configurado
-                    <div class="login-google">
-                        <div id="g_id_onload"
-                             data-client_id="{{ config('services.google.client_id') }}"
-                             data-callback="handleCredentialResponse">
-                        </div>
-                        <div class="g_id_signin"
-                             data-type="standard"
-                             data-size="large"
-                             data-theme="outline"
-                             data-text="signin_with"
-                             data-shape="pill">
-                        </div>
-                    </div>
-                    -->
-
-                    <div class="register-link">
-                        <!-- Ruta 'register' → muestra registerv2.blade.php -->
-                        <a href="{{ route('register') }}">¿No tienes cuenta? Crear una</a>
-                    </div>
-                </div>
-
+        <div class="w-full max-w-sm">
+            <div class="logo-container">
+                <img src="{{ asset('LOGO.PNG') }}" alt="Logo BLR Zoo">
             </div>
 
-            <div class="col-md-7 der-column d-none d-md-flex p-0">
-                <div class="carousel-container">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel"
-                        data-bs-interval="4000">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
-                                class="active"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators"
-                                data-bs-slide-to="1"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators"
-                                data-bs-slide-to="2"></button>
-                        </div>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="{{ asset('fondo.jpg') }}" class="d-block w-100" alt="Imagen 1">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="{{ asset('fondo2.jpg') }}" class="d-block w-100" alt="Imagen 2">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="{{ asset('fondo3.jpg') }}" class="d-block w-100" alt="Imagen 3">
-                            </div>
-                        </div>
-                        <div class="info-overlay">
-                            <h5>BLR Zoo</h5>
-                            <p>
-                                Conecta con la naturaleza. Descubre especies fascinantes y aprende sobre la conservación
-                                de la vida silvestre.
-                            </p>
-                        </div>
-                    </div>
+            <h1 class="auth-title">Inicia sesión</h1>
+            <p class="auth-subtitle">Accede a tu cuenta de BLR Zoo</p>
+
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div class="form-group">
+                    <label class="form-label">Correo electrónico</label>
+                    <input type="email" name="email" class="form-input" placeholder="correo@ejemplo.com" required autofocus>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+                </div>
+
+                <div class="flex items-center justify-between mb-6">
+                    <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                        <input type="checkbox" name="remember" class="accent-green-700"> Recordarme
+                    </label>
+                    <a href="{{ route('password.request') }}" class="text-sm text-green-700 hover:underline">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn-submit">Entrar</button>
+            </form>
+
+            <p class="mt-8 text-center text-sm text-gray-500">
+                ¿Aún no eres parte? <a href="{{ route('register') }}" class="text-green-700 font-semibold hover:underline">Regístrate</a>
+            </p>
         </div>
     </div>
 
-    <!-- GOOGLE OAUTH JS descomentar cuando este configurado
-    <script>
-        function handleCredentialResponse(response) {
-            const form  = document.createElement('form');
-            form.method = 'POST';
-            form.action = '{{ route("auth.google.callback") }}';
-            const csrf  = document.createElement('input');
-            csrf.type   = 'hidden';
-            csrf.name   = '_token';
-            csrf.value  = '{{ csrf_token() }}';
-            form.appendChild(csrf);
-            const cred  = document.createElement('input');
-            cred.type   = 'hidden';
-            cred.name   = 'credential';
-            cred.value  = response.credential;
-            form.appendChild(cred);
-            document.body.appendChild(form);
-            form.submit();
-        }
-    </script>
-    -->
+    {{-- Columna Derecha --}}
+    <div class="auth-column-right">
+        <img src="{{ asset('fondo.jpg') }}" class="auth-image" alt="BLR Zoo">
+        <div class="auth-overlay"></div>
+        <div class="auth-caption">
+            <h2 class="text-3xl font-bold font-playfair mb-2">BLR Zoo</h2>
+            <p class="text-white/80 font-light">Descubre la vida salvaje como nunca antes.</p>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

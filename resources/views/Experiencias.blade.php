@@ -2,285 +2,35 @@
 
 @section('title', 'Experiencias')
 
-{{-- ESTO QUITA EL VIDEO TAMBIÉN AQUÍ --}}
 @section('video', 'false')
 
 @push('styles')
-    {{-- 1. El CSS de tu compañero (no lo toques) --}}
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
-    <style>
-        /* 2. Ponemos un fondo oscuro y profesional para que no sea blanco */
-        body {
-            /* Puedes usar la misma imagen de musgo o una más oscura */
-            background: #141A14 url("/img/zoo_fondo.png") no-repeat fixed center !important;
-            background-size: cover !important;
-            position: relative;
-        }
-
-        /* 3. El filtro oscuro para que se vea igual que en la Tienda */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Un poco más oscuro para que resalten las cards */
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* 4. Limpiamos capas que puedan estar tapando el fondo */
-        #app, main, .main-content, section {
-            background: transparent !important;
-        }
-    </style>
+<link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+<style>
+    body {
+        background: #141A14 url("/img/zoo_fondo.png") no-repeat fixed center !important;
+        background-size: cover !important;
+    }
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: -1;
+        pointer-events: none;
+    }
+</style>
 @endpush
 
 @section('content')
-
-    {{-- Hero --}}
-    <section class="text-center mt-32 px-6">
-        <span class="text-[#D9C8A1] uppercase tracking-[4px] text-xs font-bold">Descubre lo inolvidable</span>
-        <h1 class="text-4xl md:text-5xl font-parkzoo font-bold mt-2 text-white fuenteZoo">Experiencias <span class="text-[#D9C8A1]">Park Zoo</span></h1>
-        <div class="w-16 h-[2px] bg-[#D9C8A1] mx-auto mt-4"></div>
-        <p class="text-gray-400 max-w-xl mx-auto mt-6 italic">
-            Vive momentos únicos y conecta con la esencia de la vida silvestre.
-        </p>
-    </section>
-
-    <main class="max-w-7xl mx-auto mt-16 px-6 mb-20">
-
-        {{-- 1. LA POPULAR --}}
-        @if($popular)
-            <div class="mb-16">
-                <div class="group relative bg-[#1A2E1A]/40 backdrop-blur-md rounded-[2rem] border border-white/5 p-3 md:p-4 transition-all duration-500 hover:bg-[#1A2E1A]/80 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-
-                    <div class="absolute -top-3 -right-3 z-20 bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-xl rotate-12 uppercase tracking-tighter">
-                        Popular 🔥
-                    </div>
-
-                    <div class="flex flex-col md:flex-row gap-6 md:gap-10">
-                        <div class="relative h-72 md:h-[400px] md:w-2/5 overflow-hidden rounded-[1.5rem] shrink-0">
-                            <img src="{{$popular->image}}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ $popular->name }}">
-                            <div class="absolute top-4 left-4 backdrop-blur-md bg-white/10 border border-white/20 text-white text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest">
-                                {{ $popular->type ?? 'Safari' }}
-                            </div>
-                        </div>
-
-                        <div class="flex-grow flex flex-col justify-center px-4 py-2 md:py-6 md:pr-6">
-                            <div class="flex justify-between items-start mb-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-2 h-2 rounded-full bg-[#D9C8A1] animate-pulse"></div>
-                                    <h3 class="text-3xl md:text-5xl font-parkzoo font-bold text-white leading-tight fuenteZoo">{{ $popular->name }}</h3>
-                                </div>
-                                <div class="bg-[#D9C8A1] text-[#1A2E1A] px-5 py-2 rounded-xl font-black text-xl shadow-2xl shrink-0">
-                                    {{ $popular->price }}€
-                                </div>
-                            </div>
-
-                            <p class="text-gray-400 text-base md:text-lg mb-8 font-medium italic">"{{ $popular->description }}"</p>
-
-                            <div class="grid grid-cols-3 gap-4 py-6 border-y border-white/10 mb-8">
-                                <div class="text-center border-r border-white/5">
-                                    <span class="block text-[10px] uppercase text-white/30 font-bold tracking-widest mb-1">Tiempo</span>
-                                    <span class="text-white text-sm md:text-base font-bold">{{ $popular->duration_min }}'</span>
-                                </div>
-                                <div class="text-center border-r border-white/5">
-                                    <span class="block text-[10px] uppercase text-white/30 font-bold tracking-widest mb-1">Disponibles</span>
-                                    <div class="flex items-center justify-center gap-2">
-                                        <span class="relative flex h-2 w-2">
-                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ $popular->available_spots < 3 ? 'bg-orange-400' : 'bg-green-400' }} opacity-75"></span>
-                                            <span class="relative inline-flex rounded-full h-2 w-2 {{ $popular->available_spots < 3 ? 'bg-orange-500' : 'bg-green-500' }}"></span>
-                                        </span>
-                                        <span class="{{ $popular->available_spots < 3 ? 'text-orange-400' : 'text-[#D9C8A1]' }} text-sm md:text-base font-black">{{ $popular->available_spots }}</span>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <span class="block text-[10px] uppercase text-white/30 font-bold tracking-widest mb-1">Capacidad</span>
-                                    <span class="text-white text-sm md:text-base font-bold">{{ $popular->capacity }} <i class="fa-solid fa-users text-[#D9C8A1] ml-1"></i></span>
-                                </div>
-                            </div>
-
-                            <div class="flex gap-4">
-                                @auth
-                                    {{-- LÓGICA DE TICKETS: @if(es lista y hay más de 1) --}}
-                                    @if(is_iterable($ticketvalidation) && count($ticketvalidation) > 1)
-                                        <button onclick="openTicketSelector('{{ $popular->id }}', '{{ $popular->name }}', '{{ $popular->price }}')" class="flex-[4] bg-[#D9C8A1] text-[#1A2E1A] py-5 rounded-2xl font-black text-sm uppercase tracking-[2px] shadow-xl hover:bg-white transition-all">
-                                            Reservar Ahora
-                                        </button>
-                                    @elseif(is_iterable($ticketvalidation) && count($ticketvalidation) == 1)
-                                        <form action="{{ route('payment.process') }}" method="POST" class="flex-[4]">
-                                            @csrf
-                                            <input type="hidden" name="amount" value="{{ $popular->price }}">
-                                            <input type="hidden" name="concepto" value="Reserva: {{ $popular->name }}">
-                                            <input type="hidden" name="tipo" value="experiencia">
-                                            <input type="hidden" name="meta[experiencia_id]" value="{{ $popular->id }}">
-                                            <input type="hidden" name="meta[ticket_id]" value="{{ $ticketvalidation->first()->id }}">
-                                            <button type="submit" class="w-full bg-[#D9C8A1] text-[#1A2E1A] py-5 rounded-2xl font-black text-sm uppercase tracking-[2px] shadow-xl hover:bg-white transition-all">
-                                                Reservar Ahora
-                                            </button>
-                                        </form>
-                                    @else
-                                        <a href="{{ route('tickets.show') }}" class="flex-[4] bg-orange-600 text-white py-5 rounded-2xl font-black text-sm uppercase text-center shadow-xl hover:bg-orange-700 transition-all flex items-center justify-center gap-2">
-                                            <i class="fa-solid fa-ticket"></i> Comprar Entrada Primero
-                                        </a>
-                                    @endif
-                                @endauth
-
-                                <a href="{{ route('experienciasInfo', $popular->slug) }}" class="{{ Auth::check() ? 'flex-1' : 'flex-grow py-5' }} border border-[#D9C8A1]/30 rounded-2xl flex items-center justify-center text-[#D9C8A1] hover:bg-[#D9C8A1]/10 transition-all font-bold uppercase text-xs tracking-widest gap-2">
-                                    @guest Ver Detalles @endguest <i class="fa-solid fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        {{-- 2. GRID PARA EL RESTO --}}
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            @foreach($experiencias->skip(1) as $exp)
-            <div class="group relative bg-[#1A2E1A]/40 backdrop-blur-md rounded-[2rem] border border-white/5 p-3 pb-6 transition-all duration-500 hover:bg-[#1A2E1A]/80 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:-translate-y-2">
-
-                @if($exp->available_spots <= 0)
-                    <div class="absolute -top-3 -right-3 z-20 bg-red-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-xl rotate-12 uppercase tracking-tighter">Sold Out</div>
-                @endif
-
-                <div class="relative h-64 w-full overflow-hidden rounded-[1.5rem] mb-6">
-                    <img src="{{$exp->image}}" loading="lazy" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="{{ $exp->name }}">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#1A2E1A] via-transparent to-transparent opacity-80"></div>
-                    <div class="absolute top-4 left-4 backdrop-blur-md bg-white/10 border border-white/20 text-white text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest">{{ $exp->type ?? 'Safari' }}</div>
-                    <div class="absolute bottom-4 right-4 bg-[#D9C8A1] text-[#1A2E1A] px-4 py-1 rounded-lg font-black text-lg shadow-2xl">{{ $exp->price }}€</div>
-                </div>
-
-                <div class="px-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <div class="w-2 h-2 rounded-full bg-[#D9C8A1] animate-pulse"></div>
-                        <h3 class="text-2xl font-parkzoo font-bold text-white leading-tight fuenteZoo">{{ $exp->name }}</h3>
-                    </div>
-                    <p class="text-gray-400 text-sm line-clamp-2 mb-6 font-medium leading-relaxed italic">"{{ $exp->description }}"</p>
-
-                    <div class="grid grid-cols-3 gap-2 py-4 border-t border-white/10 mb-6">
-                        <div class="text-center border-r border-white/5">
-                            <span class="block text-[8px] uppercase text-white/30 font-bold mb-1">Tiempo</span>
-                            <span class="text-white text-[11px] font-bold">{{ $exp->duration_min }}'</span>
-                        </div>
-                        <div class="text-center border-r border-white/5">
-                            <span class="block text-[8px] uppercase text-white/30 font-bold mb-1">Libres</span>
-                            <div class="flex items-center justify-center gap-1.5">
-                                <span class="relative flex h-1.5 w-1.5">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ $exp->available_spots < 3 ? 'bg-orange-400' : 'bg-green-400' }} opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 {{ $exp->available_spots < 3 ? 'bg-orange-500' : 'bg-green-500' }}"></span>
-                                </span>
-                                <span class="{{ $exp->available_spots < 3 ? 'text-orange-400' : 'text-[#D9C8A1]' }} text-[11px] font-black">{{ $exp->available_spots }}</span>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <span class="block text-[8px] uppercase text-white/30 font-bold mb-1">Máximo</span>
-                            <span class="text-white text-[11px] font-bold">{{ $exp->capacity }} <i class="fa-solid fa-users text-[9px] text-[#D9C8A1]"></i></span>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-3">
-                        @auth
-                            @if(is_iterable($ticketvalidation) && count($ticketvalidation) > 1)
-                                <button onclick="openTicketSelector('{{ $exp->id }}', '{{ $exp->name }}', '{{ $exp->price }}')" class="flex-[3] bg-[#D9C8A1] text-[#1A2E1A] py-4 rounded-2xl font-black text-xs uppercase tracking-[1px] hover:bg-white transition-all">Reservar</button>
-                            @elseif(is_iterable($ticketvalidation) && count($ticketvalidation) == 1)
-                                <form action="{{ route('payment.process') }}" method="POST" class="flex-[3]">
-                                    @csrf
-                                    <input type="hidden" name="amount" value="{{ $exp->price }}">
-                                    <input type="hidden" name="concepto" value="Reserva: {{ $exp->name }}">
-                                    <input type="hidden" name="tipo" value="experiencia">
-                                    <input type="hidden" name="meta[experiencia_id]" value="{{ $exp->id }}">
-                                    <input type="hidden" name="meta[ticket_id]" value="{{ $ticketvalidation->first()->id }}">
-                                    <button type="submit" class="w-full bg-[#D9C8A1] text-[#1A2E1A] py-4 rounded-2xl font-black text-xs uppercase tracking-[1px] hover:bg-white transition-all">Reservar</button>
-                                </form>
-                            @else
-                                <a href="{{ route('tickets.show') }}" class="flex-[3] bg-orange-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase text-center flex items-center justify-center">Comprar Ticket</a>
-                            @endif
-                        @endauth
-                        
-                        <a href="{{ route('experienciasInfo', $exp->slug) }}" class="{{ Auth::check() ? 'flex-1' : 'flex-grow py-4' }} border border-[#D9C8A1]/30 rounded-2xl flex items-center justify-center text-[#D9C8A1] hover:bg-[#D9C8A1]/10 transition-all font-bold uppercase text-[10px] tracking-widest gap-2">
-                            @guest Ver Detalles @endguest <i class="fa-solid fa-arrow-right"></i>
-
-                        </a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </main>
-
-
-    {{-- MODAL --}}
-    <div id="ticketModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center px-4">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeTicketModal()"></div>
-        <div class="relative bg-[#1A2E1A] border border-white/10 w-full max-w-md rounded-[2.5rem] p-8">
-            <h2 class="text-2xl font-parkzoo text-white mb-2 fuenteZoo text-center">Selecciona tu entrada</h2>
-            <p class="text-white/30 text-xs text-center mb-6 uppercase tracking-widest">La experiencia se reservará en la fecha del ticket</p>
-            
-            <form action="{{ route('payment.process') }}" method="POST">
-                @csrf
-                <input type="hidden" name="concepto" id="modalConcepto">
-                <input type="hidden" name="tipo" value="experiencia">
-                <input type="hidden" name="meta[experiencia_id]" id="modalExpId">
-                <input type="hidden" name="meta[fecha]" id="modalFecha">
-                <input type="hidden" name="meta[ticket_id]" id="modalTicketId">
-
-                <div class="space-y-3 max-h-60 overflow-y-auto pr-2">
-                    @if(is_iterable($ticketvalidation))
-                        @foreach($ticketvalidation as $ticket)
-                            <label onclick="selectTicket('{{ $ticket->id }}', '{{ $ticket->visit_day->format('Y-m-d') }}')"
-                                class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-[#D9C8A1]/10 hover:border-[#D9C8A1]/30 transition-all">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="_ticket_display" value="{{ $ticket->id }}" class="accent-[#D9C8A1]">
-                                    <div>
-                                        <span class="text-white font-bold block text-sm">{{ $ticket->visit_day->format('d/m/Y') }}</span>
-                                        <span class="text-white/40 text-xs font-mono">{{ $ticket->cod_ticket }}</span>
-                                    </div>
-                                </div>
-                                <span class="text-[#D9C8A1] text-xs font-bold px-3 py-1 bg-[#D9C8A1]/10 rounded-lg">
-                                    {{ $ticket->visit_day->format('D') }}
-                                </span>
-                            </label>
-                        @endforeach
-                    @endif
-                </div>
-
-                <button type="submit" id="modalBtn"
-                    class="w-full mt-8 bg-[#D9C8A1] text-[#1A2E1A] py-4 rounded-xl font-black uppercase shadow-xl hover:bg-white transition-all opacity-50 cursor-not-allowed"
-                    disabled>
-                    Confirmar Reserva
-                </button>
-            </form>
-        </div>
+    <div id="experiencias-root"
+         data-auth="{{ Auth::check() ? 'true' : 'false' }}"
+         data-email="{{ Auth::user()->email ?? '' }}">
     </div>
 @endsection
 
 @push('scripts')
-    <script>
-        function openTicketSelector(id, name, price) {
-            document.getElementById('modalExpId').value    = id;
-            document.getElementById('modalConcepto').value = 'Reserva: ' + name;
-            document.getElementById('modalFecha').value    = '';
-            document.getElementById('modalTicketId').value = '';
-            document.getElementById('modalBtn').disabled   = true;
-            document.getElementById('modalBtn').classList.add('opacity-50', 'cursor-not-allowed');
-            document.getElementById('ticketModal').classList.remove('hidden');
-        }
-
-        function selectTicket(ticketId, fecha) {
-            document.getElementById('modalTicketId').value = ticketId;
-            document.getElementById('modalFecha').value    = fecha;
-            document.getElementById('modalBtn').disabled   = false;
-            document.getElementById('modalBtn').classList.remove('opacity-50', 'cursor-not-allowed');
-        }
-
-        function closeTicketModal() {
-            document.getElementById('ticketModal').classList.add('hidden');
-        }
-    </script>
+    @viteReactRefresh
+    @vite(['resources/js/app.jsx'])
 @endpush
-

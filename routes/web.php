@@ -3,7 +3,7 @@
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ExperienciaController;
+use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\KeeperController;
@@ -23,23 +23,9 @@ use Illuminate\Http\Request;
 Route::get('/', function () { return view('welcome'); });
 Route::get('/animales', function () { return view('animales'); })->name('animales');
 Route::get('/tienda', function () { return view('tienda'); })->name('tienda');
-Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
-Route::get('/experiencias/{slug}', [ExperienciaController::class, 'MostrarInfo'])->name('experienciasInfo');
+Route::get('/experiencias', [ExperienceController::class, 'index'])->name('VistaExperiencias');
+Route::get('/experiencias/{slug}', [ExperienceController::class, 'MostrarInfo'])->name('experienciasInfo');
 
-Route::get('/api/tickets-by-email', function (Request $request) {
-    $tickets = \App\Models\Ticket::where('email', $request->query('email'))
-        ->where('status', 'paid')
-        ->where('visit_day', '>=', now()->format('Y-m-d'))
-        ->get()
-        ->map(fn($t) => [
-            'id'                  => $t->id,
-            'cod_ticket'          => $t->cod_ticket,
-            'visit_day'           => $t->visit_day->format('Y-m-d'), 
-            'visit_day_formatted' => $t->visit_day->format('d/m/Y'),
-        ]);
-
-    return response()->json(['tickets' => $tickets]);
-});
 
 Route::get('/mapa', function () { return view('mapa'); })->name('mapa.index');
 

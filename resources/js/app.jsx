@@ -9,6 +9,8 @@ import AdminDashboard from "./Components/AdminDashboard";
 import DoctorDashboard from "./Components/DoctorDashboard";
 import KeeperDashboard from "./Components/KeeperDashboard";
 import GuideDashboard from './Components/GuideDashboard';
+import ExperienciasPage from './Components/Experience';
+import ExperienceInfo from "./Components/ExperienceInfo";
 
 // Lógica para la Galería de Animales
 const animalContainer = document.getElementById("pagina-animales-root");
@@ -63,4 +65,28 @@ const guideRootEl = document.getElementById('guide-dashboard-root');
 if (guideRootEl) {
     // Usamos el createRoot que ya deberías tener importado arriba en tu app.jsx
     createRoot(guideRootEl).render(<GuideDashboard />);
+}
+
+const experienciasContainer = document.getElementById('experiencias-root');
+if (experienciasContainer) {
+    const isAuth   = experienciasContainer.dataset.auth === 'true';
+    const userEmail = experienciasContainer.dataset.email || '';
+    createRoot(experienciasContainer).render(
+        <ExperienciasPage isAuth={isAuth} userEmail={userEmail} />
+    );
+}
+
+const reservaContainer = document.getElementById("reserva-root");
+if (reservaContainer) {
+    const { auth, email, expId, expName, available } = reservaContainer.dataset;
+
+    createRoot(reservaContainer).render(
+        <ExperienceInfo
+            isAuth={auth === "true"}
+            userEmail={email || ""}
+            expId={expId}
+            expName={expName}
+            available={parseInt(available)}
+        />
+    );
 }

@@ -20,11 +20,16 @@ class GoogleController extends Controller
 
         $user = User::updateOrCreate(
             ['email' => $googleUser->getEmail()],
-            ['name' => $googleUser->getName(), 'google_id' => $googleUser->getId(), 'password' => bcrypt(str()->random(24))]
+            [
+                'name'              => $googleUser->getName(),
+                'google_id'         => $googleUser->getId(),
+                'password'          => bcrypt(str()->random(24)),
+                'email_verified_at' => now(), // 👈 Google ya verificó el email, lo marcamos directamente
+            ]
         );
 
         Auth::login($user);
 
-        return redirect()->route('dashboard');
+        return redirect('/')->with('success', '¡Bienvenido, ' . $user->name . '! Has iniciado sesión correctamente.');
     }
 }

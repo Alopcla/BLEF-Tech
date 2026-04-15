@@ -13,6 +13,7 @@ class ReserveExperience extends Model
 
     protected $fillable = [
         'experience_id',
+        'ticket_id',
         'email',
         'reservation_date',
         'price',

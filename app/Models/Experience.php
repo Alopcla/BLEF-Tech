@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Employee;
 
 class Experience extends Model
 {
@@ -18,7 +19,8 @@ class Experience extends Model
         'duration_min',
         'price',
         'capacity',
-        'image'
+        'image',
+        'guide_dni',
     ];
 
     // Relación N:1 -> Una experiencia pertenece a una zona

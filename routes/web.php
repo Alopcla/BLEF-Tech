@@ -3,7 +3,7 @@
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ExperienciaController;
+use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\KeeperController;
@@ -12,6 +12,9 @@ use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TicketMail;
 
 
 /*
@@ -23,23 +26,9 @@ use Illuminate\Http\Request;
 Route::get('/', function () { return view('welcome'); });
 Route::get('/animales', function () { return view('animales'); })->name('animales');
 Route::get('/tienda', function () { return view('tienda'); })->name('tienda');
-Route::get('/experiencias', [ExperienciaController::class, 'index'])->name('VistaExperiencias');
-Route::get('/experiencias/{slug}', [ExperienciaController::class, 'MostrarInfo'])->name('experienciasInfo');
+Route::get('/experiencias', [ExperienceController::class, 'index'])->name('VistaExperiencias');
+Route::get('/experiencias/{slug}', [ExperienceController::class, 'MostrarInfo'])->name('experienciasInfo');
 
-Route::get('/api/tickets-by-email', function (Request $request) {
-    $tickets = \App\Models\Ticket::where('email', $request->query('email'))
-        ->where('status', 'paid')
-        ->where('visit_day', '>=', now()->format('Y-m-d'))
-        ->get()
-        ->map(fn($t) => [
-            'id'                  => $t->id,
-            'cod_ticket'          => $t->cod_ticket,
-            'visit_day'           => $t->visit_day->format('Y-m-d'), 
-            'visit_day_formatted' => $t->visit_day->format('d/m/Y'),
-        ]);
-
-    return response()->json(['tickets' => $tickets]);
-});
 
 Route::get('/mapa', function () { return view('mapa'); })->name('mapa.index');
 
@@ -91,6 +80,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/buscar', [PaymentController::class, 'buscarTickets'])->name('buscar');
             Route::post('/reenviar', [PaymentController::class, 'reenviarTickets'])->name('reenviar');
             Route::delete('/cancelar/{fecha}/{email}', [PaymentController::class, 'cancelarCompra'])->name('cancelar');
+
+            Route::delete('/cancelar-pedido', [PaymentController::class, 'cancelarPedido'])
+                ->name('cancelar.pedido');
         });
     });
 
@@ -163,4 +155,3 @@ Route::get('/paypal/success', function () {
 })->name('paypal.success');
 
 Route::post('/pago/shop', [PaymentController::class, 'processPayment'])->name('payment.shop');
-

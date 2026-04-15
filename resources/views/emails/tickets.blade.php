@@ -129,7 +129,7 @@
                 <tbody>
                     @foreach($tickets as $ticket)
                     <tr>
-                        <td style="font-weight: bold;">#{{ $ticket['id'] }}</td>
+                        <td style="font-weight: bold;">{{ $ticket['cod'] }}</td>
                         <td class="fecha-destacada">{{ $ticket['day_used'] }}</td>
                         <td>{{ $ticket['date'] }}</td>
                         <td>{{ number_format($ticket['price'], 2) }} €</td>

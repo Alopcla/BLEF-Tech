@@ -1,5 +1,15 @@
 @extends('layouts.app')
 
+@php
+    $tituloTipo = match($tipo) {
+        'shop'        => 'compra',
+        'experiencia' => 'experiencia',
+        default       => 'entradas',
+    };
+@endphp
+
+@section('title', 'Confirmación de ' . $tituloTipo)
+
 @section('content')
 {{-- Forzamos el fondo oscuro en toda la página --}}
 <style>
@@ -106,6 +116,55 @@
                     </div>
                 </div>
 
+            @elseif($tipo === 'shop')
+                {{-- VISTA SHOP --}}
+                <div class="p-8 md:p-12">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Tu Pedido</h2>
+                            <p class="text-white/40 text-sm">Resumen de los productos comprados</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-3xl font-black text-[#D9C8A1]">{{ number_format($amount, 2) }}€</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        @foreach($orderItems as $item)
+                            <div class="relative bg-white/[0.03] border border-white/10 rounded-2xl p-5 flex items-center justify-between hover:bg-white/[0.07] transition-all duration-300">
+                                <div class="flex items-center gap-4">
+                                    @if($item->image)
+                                        <img src="{{ $item->image }}" alt="{{ $item->name }}"
+                                            class="w-14 h-14 rounded-xl object-contain bg-neutral-900">
+                                    @else
+                                        <div class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                                            <i class="fa-solid fa-box text-[#D9C8A1] text-xl"></i>
+                                        </div>
+                                    @endif
+                                    <div>
+                                        <p class="text-white font-bold text-base">{{ $item->name }}</p>
+                                        <p class="text-white/40 text-xs mt-0.5">
+                                            {{ $item->quantity }} × {{ number_format($item->unit_price, 2) }}€
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[#D9C8A1] font-black text-lg">
+                                        {{ number_format($item->unit_price * $item->quantity, 2) }}€
+                                    </p>
+                                    <p class="text-green-400 text-xs font-bold mt-0.5">Pagado</p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    {{-- Total --}}
+                    <div class="mt-6 pt-6 border-t border-white/10 flex justify-between items-center">
+                        <span class="text-white/60 text-sm uppercase tracking-widest font-bold">Total</span>
+                        <span class="text-2xl font-black text-[#D9C8A1]">{{ number_format($amount, 2) }}€</span>
+                    </div>
+                </div>
+
             @else
                 {{-- VISTA TICKETS --}}
                 <div class="p-8 md:p-12">
@@ -162,9 +221,27 @@
                 <i class="fa-solid fa-house group-hover:-translate-y-1 transition-transform"></i>
                 <span>Volver al Inicio</span>
             </a>
-            <a href="{{ route('VistaExperiencias') }}" class="flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-[2px] hover:bg-white/10 transition-all">
-                <i class="fa-solid fa-leaf"></i>
-                <span>Explorar más</span>
+            @php
+                $explorarRuta  = match($tipo) {
+                    'shop'        => route('tienda'),
+                    'experiencia' => route('VistaExperiencias'),
+                    default       => route('tickets.show'),
+                };
+                $explorarIcono = match($tipo) {
+                    'shop'        => 'fa-bag-shopping',
+                    'experiencia' => 'fa-leaf',
+                    default       => 'fa-ticket',
+                };
+                $explorarTexto = match($tipo) {
+                    'shop'        => 'Ver tienda',
+                    'experiencia' => 'Ver experiencias',
+                    default       => 'Ver tickets',
+                };
+            @endphp
+
+            <a href="{{ $explorarRuta }}" class="flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-[2px] hover:bg-white/10 transition-all">
+                <i class="fa-solid {{ $explorarIcono }}"></i>
+                <span>{{ $explorarTexto }}</span>
             </a>
         </div>
 

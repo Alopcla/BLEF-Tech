@@ -6,140 +6,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrarse - BLR Zoo</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.ico') }}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap">
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row h-100">
-            <div class="col-md-5 izq-column">
-                <div class="form-container form-register">
-                    <a href="{{ url('/') }}" class="volver-index">
-                        <i class="bi bi-arrow-left-circle"></i> Volver al inicio
-                    </a>
-                    <img src="{{ asset('LOGO.PNG') }}" class="logo" alt="Logo BLR Zoo">
-                    <h3>Registrarse</h3>
-                    <p class="description">
-                        Crea tu cuenta y comienza a disfrutar de todas las ventajas de BLR Zoo.
-                    </p>
+    <div class="auth-wrapper">
+        
+        {{-- Columna Izquierda (Formulario) --}}
+        <div class="auth-column-left">
+            
+            {{-- Botón Volver --}}
+            <a href="{{ url('/') }}" class="back-home-btn">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Volver al inicio
+            </a>
 
-                    <!-- POST a la ruta 'register' → RegisteredUserController@store en auth.php -->
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
+            <div class="w-full max-w-md px-4">
+                {{-- Logo --}}
+                <div class="logo-container">
+                    <img src="{{ asset('LOGO.PNG') }}" alt="Logo BLR Zoo">
+                </div>
 
-                        <div class="mb-2">
-                            <!-- name="name" → columna 'name' de la tabla users -->
-                            <label for="name" class="form-label">Nombre completo</label>
-                            <input
-                                type="text"
-                                class="form-control @error('name') is-invalid @enderror"
-                                id="name"
-                                name="name"
-                                value="{{ old('name') }}"
-                                placeholder="Nombre y apellidos"
-                                autocomplete="name"
-                                required
-                                autofocus
-                            >
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                <h1 class="auth-title">Crear cuenta</h1>
+                <p class="auth-subtitle">Únete a la comunidad de BLR Zoo y ayuda a la conservación.</p>
 
-                        <div class="mb-2">
-                            <!-- name="email" → columna 'email' de la tabla users (UNIQUE) -->
-                            <label for="email" class="form-label">Correo electrónico</label>
-                            <input
-                                type="email"
-                                class="form-control @error('email') is-invalid @enderror"
-                                id="email"
-                                name="email"
-                                value="{{ old('email') }}"
-                                placeholder="correo@ejemplo.com"
-                                autocomplete="email"
-                                required
-                            >
-                            @error('email')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
 
-                        <div class="mb-2">
-                            <!-- name="password" → columna 'password' de la tabla users (hashea en el controller) -->
+                    {{-- Nombre --}}
+                    <div class="form-group">
+                        <label for="name" class="form-label">Nombre completo</label>
+                        <input type="text" id="name" name="name" class="form-input @error('name') is-invalid @enderror" 
+                               value="{{ old('name') }}" placeholder="Tu nombre" required autofocus>
+                        @error('name')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Email --}}
+                    <div class="form-group">
+                        <label for="email" class="form-label">Correo electrónico</label>
+                        <input type="email" id="email" name="email" class="form-input @error('email') is-invalid @enderror" 
+                               value="{{ old('email') }}" placeholder="correo@ejemplo.com" required>
+                        @error('email')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Grid para Contraseñas (Dos columnas en pantallas grandes) --}}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="form-group mb-0">
                             <label for="password" class="form-label">Contraseña</label>
-                            <input
-                                type="password"
-                                class="form-control @error('password') is-invalid @enderror"
-                                id="password"
-                                name="password"
-                                placeholder="Mínimo 8 caracteres"
-                                autocomplete="new-password"
-                                required
-                            >
-                            @error('password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <input type="password" id="password" name="password" class="form-input @error('password') is-invalid @enderror" 
+                                   placeholder="••••••••" required>
                         </div>
-
-                        <div class="mb-3">
-                            <!-- name="password_confirmation" laravel valida que coincide con password -->
-                            <label for="password_confirmation" class="form-label">Confirmar contraseña</label>
-                            <input
-                                type="password"
-                                class="form-control"
-                                id="password_confirmation"
-                                name="password_confirmation"
-                                placeholder="Repite la contraseña"
-                                autocomplete="new-password"
-                                required
-                            >
+                        <div class="form-group mb-0">
+                            <label for="password_confirmation" class="form-label">Confirmar</label>
+                            <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" 
+                                   placeholder="••••••••" required>
                         </div>
-
-                        <button type="submit">Crear cuenta</button>
-                    </form>
-
-                    <div class="login-link">
-                        <!-- Ruta 'login' → muestra loginv2.blade.php -->
-                        <a href="{{ route('login') }}">¿Ya tienes cuenta? Inicia sesión</a>
                     </div>
-                </div>
+                    @error('password')
+                        <p class="text-red-500 text-xs mb-4">{{ $message }}</p>
+                    @enderror
+
+                    <button type="submit" class="btn-submit mt-2">Crear mi cuenta</button>
+                </form>
+
+                <p class="mt-8 text-center text-sm text-gray-500">
+                    ¿Ya tienes una cuenta? <a href="{{ route('login') }}" class="text-green-700 font-semibold hover:underline">Inicia sesión</a>
+                </p>
             </div>
+        </div>
 
-            <div class="col-md-7 der-column d-none d-md-flex p-0">
-                <div class="carousel-container">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel"
-                        data-bs-interval="4000">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
-                                class="active"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators"
-                                data-bs-slide-to="1"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators"
-                                data-bs-slide-to="2"></button>
-                        </div>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="{{ asset('fondo.jpg') }}" class="d-block w-100" alt="Imagen 1">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="{{ asset('fondo2.jpg') }}" class="d-block w-100" alt="Imagen 2">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="{{ asset('fondo3.jpg') }}" class="d-block w-100" alt="Imagen 3">
-                            </div>
-                        </div>
-                        <div class="info-overlay">
-                            <h5>BLR Zoo</h5>
-                            <p>
-                                Conecta con la naturaleza. Descubre especies fascinantes y aprende sobre la conservación
-                                de la vida silvestre.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+        {{-- Columna Derecha (Imagen/Carrusel) --}}
+        <div class="auth-column-right">
+            {{-- Usamos una sola imagen para mantener la limpieza, o puedes reinsertar el carrusel aquí --}}
+            <img src="{{ asset('fondo2.jpg') }}" class="auth-image" alt="BLR Zoo">
+            <div class="auth-overlay"></div>
+            <div class="auth-caption">
+                <h2 class="text-3xl font-bold font-playfair mb-2 italic">"La naturaleza no es un lugar que visitar, es el hogar."</h2>
+                <p class="text-white/80 font-light">Sé parte del cambio en BLR Zoo.</p>
             </div>
         </div>
     </div>

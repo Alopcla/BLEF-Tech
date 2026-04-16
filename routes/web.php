@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TicketMail;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +80,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/buscar', [PaymentController::class, 'buscarTickets'])->name('buscar');
             Route::post('/reenviar', [PaymentController::class, 'reenviarTickets'])->name('reenviar');
             Route::delete('/cancelar/{fecha}/{email}', [PaymentController::class, 'cancelarCompra'])->name('cancelar');
+
+            Route::delete('/cancelar-pedido', [PaymentController::class, 'cancelarPedido'])
+                ->name('cancelar.pedido');
         });
     });
 
@@ -149,4 +155,3 @@ Route::get('/paypal/success', function () {
 })->name('paypal.success');
 
 Route::post('/pago/shop', [PaymentController::class, 'processPayment'])->name('payment.shop');
-

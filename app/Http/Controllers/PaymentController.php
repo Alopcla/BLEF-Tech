@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\TicketMail;
 use App\Services\StripeService;
 use Stripe\Stripe;
+use Stripe\Refund;
 use Stripe\Checkout\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str; // Necesario para generar códigos únicos
@@ -16,7 +17,7 @@ class PaymentController extends Controller
 {
     public function showForm()
     {
-        $fecha = now()->addDay()->format('Y-m-d');
+        $fecha = now()->format('Y-m-d');
         return view('payment.form', compact('fecha'));
     }
 
@@ -142,8 +143,8 @@ class PaymentController extends Controller
                                 'price'    => $precioIndividual,
                             ];
                         }
-                        Mail::to($email)->send(new TicketMail($ticketsParaEmail));
                     }
+                    Mail::to($email)->send(new TicketMail($ticketsParaEmail));
                     break;
 
                 case 'experiencia':
@@ -235,8 +236,10 @@ class PaymentController extends Controller
 
         $tickets = DB::table('tickets')
             ->where('email', $request->email)
-            ->where('visit_day', $request->fecha) // Corregido a visit_day
-            ->get();
+            ->where('visit_day', $request->fecha)
+            ->orderBy('stripe_session_id')
+            ->get()
+            ->groupBy('stripe_session_id');
 
         return view('admin.reclamaciones', [
             'tickets' => $tickets,
@@ -245,14 +248,64 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function cancelarCompra($fecha, $email)
+    public function cancelarPedido(Request $request)
     {
-        DB::table('tickets')
-            ->where('email', $email)
-            ->where('visit_day', $fecha) // Corregido a visit_day
-            ->delete();
+        // 1. Obtener y validar el ID de sesión
+        $session = $request->input('session_id');
 
-        return redirect()->route('reclamaciones.index')->with('success', 'Tickets eliminados.');
+        if (!$session) {
+            return back()->with('error', 'ID de sesión no proporcionado.');
+        }
+
+        // 2. Buscar tickets y verificar si ya están cancelados
+        $tickets = DB::table('tickets')
+            ->where('stripe_session_id', $session)
+            ->get();
+
+        if ($tickets->isEmpty()) {
+            return back()->with('error', 'No se encontró ningún ticket asociado a este pedido.');
+        }
+
+        // Si el primer ticket ya está cancelado, detenemos el proceso
+        if ($tickets->first()->status === 'cancelled') {
+            return back()->with('error', 'Este pedido ya ha sido cancelado y reembolsado anteriormente.');
+        }
+
+        // 3. Configurar Stripe
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        try {
+            // 4. Iniciar transacción para asegurar consistencia de datos
+            return DB::transaction(function () use ($session) {
+                
+                // Recuperar la sesión de Stripe
+                $stripeSession = Session::retrieve($session);
+
+                // 5. Procesar Reembolso si existe un pago
+                if (!empty($stripeSession->payment_intent)) {
+                    Refund::create([
+                        'payment_intent' => $stripeSession->payment_intent,
+                    ]);
+                }
+
+                // 6. Actualizar estado en la Base de Datos
+                DB::table('tickets')
+                    ->where('stripe_session_id', $session)
+                    ->update([
+                        'status' => 'cancelled',
+                        'updated_at' => now(),
+                    ]);
+
+                return back()->with('success', 'Éxito: El dinero ha sido devuelto y los tickets marcados como cancelados.');
+            });
+
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            // Error específico de la API de Stripe
+            return back()->with('error', 'Error de Stripe: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            // Error general de Laravel o Base de Datos
+            return back()->with('error', 'Error en el sistema: ' . $e->getMessage());
+        }
     }
 
     public function reenviarTickets(Request $request)

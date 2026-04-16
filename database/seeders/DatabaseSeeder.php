@@ -26,7 +26,6 @@ class DatabaseSeeder extends Seeder
 
                 // 2. LUEGO LOS DATOS FALSOS QUE DEPENDEN DE ESA ESTRUCTURA
             EmployeeSeeder::class,
-            EmployeeTelephoneSeeder::class,
             AnimalSeeder::class,
             SuppliersSeeder::class,
             ProductsSeeder::class,

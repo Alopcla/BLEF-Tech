@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('category', 100)->nullable();  // ← añadido
             $table->string('image', 500)->nullable();     // ← añadido
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->text('spline_url')->nullable();
             $table->timestamps();
         });
     }

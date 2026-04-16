@@ -37,7 +37,8 @@ class CoreTeamSeeder extends Seeder
             ]);
 
             $emp1->telephones()->create([
-                'telephone' => '676767676'
+                'telephone' => '676767676',
+                'order' => 1
             ]);
 
             /*****************************************
@@ -58,7 +59,8 @@ class CoreTeamSeeder extends Seeder
             ]);
 
             $emp2->telephones()->create([
-                'telephone' => '121212121'
+                'telephone' => '121212121',
+                'order' => 1
             ]);
 
             /*****************************************
@@ -79,7 +81,8 @@ class CoreTeamSeeder extends Seeder
             ]);
 
             $emp3->telephones()->create([
-                'telephone' => '696969696'
+                'telephone' => '696969696',
+                'order' => 1
             ]);
 
             /*****************************************
@@ -100,7 +103,8 @@ class CoreTeamSeeder extends Seeder
             ]);
 
             $emp4->telephones()->create([
-                'telephone' => '012345678'
+                'telephone' => '012345678',
+                'order' => 1
             ]);
         });
     }

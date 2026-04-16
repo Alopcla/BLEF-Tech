@@ -27,8 +27,14 @@ return new class extends Migration
             $table->string('image')->nullable();
             // Campo 'curiosidad'... Informacion relevante del animal.
             $table->string('curiosity')->nullable();
-            // Campo 'dieta'... Ejemplo: Carnivoro - 5kg/dia
+            // Campo 'dieta'... Ejemplo: Carnivoro
             $table->string('diet')->nullable();
+            // Campo 'racion de comida' del animal
+            $table->string('food_ration')->nullable();
+            // Campo 'fecha alimentado' al animal
+            $table->timestamp('last_fed_date')->nullable();
+            // Campo 'alimentado por' un empleado
+            $table->string('last_fed_by')->nullable();
 
             // Crea dos columnas, fecha de creacion y fecha de actualizacion.
             $table->timestamps();

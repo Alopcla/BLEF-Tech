@@ -37,7 +37,7 @@ class CheckPosition
 
         // Se compara el rol del empleado con el rol que exige la ruta
         if ($employee->position !== $role) {
-            abort(403, 'Acceso denegado. Tu puesto de '.$employee->postition.' no tiene permisos para esta área del zoológico.');
+            abort(403, 'Acceso denegado. Tu puesto de '.$employee->position.' no tiene permisos para esta área del zoológico.');
         }
 
         // Si todo esta correcto, se le abre la puerta para que continue

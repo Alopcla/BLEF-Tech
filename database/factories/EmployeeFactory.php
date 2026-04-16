@@ -52,4 +52,17 @@ class EmployeeFactory extends Factory
             'zone_id' => Zone::inRandomOrder()->value('id'),
         ];
     }
+
+    /**
+     * Indica que el empleado debe tener un teléfono al ser creado.
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (Employee $employee) {
+            $employee->telephones()->create([
+                'telephone' => $this->faker->unique()->numerify('+34#########'),
+                'order' => 1,
+            ]);
+        });
+    }
 }

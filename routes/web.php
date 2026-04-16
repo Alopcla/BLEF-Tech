@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\AlertController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\VerifyCodeController;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Mail;
@@ -56,6 +57,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             default         => view('dashboard'),
         };
     })->name('dashboard');
+
+    //Verificar email
+    Route::post('verify-code', [VerifyCodeController::class, 'store'])
+    ->name('verification.code');
 
     // 2. Perfil de usuario
     Route::controller(ProfileController::class)->group(function () {

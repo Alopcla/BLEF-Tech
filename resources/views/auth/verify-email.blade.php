@@ -23,8 +23,8 @@
                     <img src="{{ asset('LOGO.PNG') }}" alt="Logo BLR Zoo">
                 </div>
 
-                <h1 class="auth-title">Verifica tu cuenta</h1>
-                <p class="auth-subtitle">¡Gracias por unirte! Antes de empezar, confirma tu email haciendo clic en el enlace que te acabamos de enviar.</p>
+                <h1 class="auth-title">Introduce el código</h1>
+                <p class="auth-subtitle">Te hemos enviado un código de 6 dígitos a tu correo. Introdúcelo para continuar.</p>
 
                 {{-- Mensaje de reenvío exitoso --}}
                 @if (session('status') == 'verification-link-sent')
@@ -37,18 +37,32 @@
                 @endif
 
                 <div class="space-y-4">
-                    {{-- Formulario Reenviar Email --}}
+                    {{-- Errores --}}
+                    @if ($errors->any())
+                        <p class="text-red-500 text-sm text-center">{{ $errors->first() }}</p>
+                    @endif
+
+                    {{-- Formulario código --}}
+                    <form method="POST" action="{{ route('verification.code') }}">
+                        @csrf
+                        <input type="text" name="code" maxlength="6"
+                            class="form-input text-center text-2xl tracking-[1rem] font-bold mb-4"
+                            placeholder="······" autofocus required>
+                        <button type="submit" class="btn-submit">Verificar</button>
+                    </form>
+
+                    {{-- Reenviar --}}
                     <form method="POST" action="{{ route('verification.send') }}">
                         @csrf
-                        <button type="submit" class="btn-submit">
-                            Reenviar correo de verificación
+                        <button type="submit" class="text-sm text-stone-400 hover:text-emerald-400 transition-colors underline underline-offset-4">
+                            Reenviar código
                         </button>
                     </form>
 
-                    {{-- Botón Cerrar Sesión (discreto) --}}
+                    {{-- Logout --}}
                     <form method="POST" action="{{ route('logout') }}" class="text-center">
                         @csrf
-                        <button type="submit" class="text-sm text-stone-400 hover:text-red-600 transition-colors underline decoration-stone-200 underline-offset-4">
+                        <button type="submit" class="text-sm text-stone-400 hover:text-red-600 transition-colors underline underline-offset-4">
                             Cerrar sesión
                         </button>
                     </form>

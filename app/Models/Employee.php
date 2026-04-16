@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-/** Necesario este import de abajo, para poder conectar Modelo con Factory. */
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Employee extends Model
+class Employee extends Authenticatable
 {
     /** Siempre se introduce dentro de la clase del modelo. */
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     /**
      * Variables para que Laravel, a la hora de realizar una consulta,
@@ -33,6 +33,7 @@ class Employee extends Model
         'name',
         'surname',
         'email',
+        'password',
         'birth_date',
         'address',
         'province',
@@ -50,16 +51,17 @@ class Employee extends Model
         /** Estas dos columnas son creadas mediante... $table->timestamps()
          * en la Migracion.
          */
-        'created_at',
-        'updated_at'
+        'password',
+        'remember_token',
     ];
 
     /**
-     * Summary of casts: Propiedad para transformar la fecha de String a objeto Date.
+     * Summary of casts: Propiedad para transformar la fecha de String a objeto Date y la contraseña sea encriptada.
      * @var array
      */
     protected $casts = [
         'birth_date' => 'date',
+        'password' => 'hashed',
     ];
 
     /**

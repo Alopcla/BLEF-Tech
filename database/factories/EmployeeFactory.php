@@ -5,6 +5,8 @@ namespace Database\Factories;
 use App\Models\Employee;
 use App\Models\Zone;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
+
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employee>
@@ -42,6 +44,7 @@ class EmployeeFactory extends Factory
             'name' => $this->faker->firstName(),
             'surname' => $this->faker->lastName(),
             'birth_date' => $this->faker->dateTimeBetween('-60 years', '-18 years')->format('Y-m-d'),
+            'password' => Hash::make('password'),
             'email' => $this->faker->unique()->safeEmail(),
             'address' => $this->faker->streetAddress(),
             'province' => $this->faker->state(),

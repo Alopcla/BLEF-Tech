@@ -22,11 +22,6 @@ class CoreTeamSeeder extends Seeder
             /*****************************************
              *      DATOS DE ALEJANDRO LOPEZ       *
              *****************************************/
-            $user1 = User::create([
-                'name' => 'Alejandro',
-                'email' => 'alopcla297@g.educaand.es',
-                'password' => Hash::make('12345678')
-            ]);
 
             $emp1 = Employee::create([
                 'dni' => '12345678A',
@@ -38,6 +33,7 @@ class CoreTeamSeeder extends Seeder
                 'address' => 'Sede Principal',
                 'province' => 'Sevilla',
                 'position' => 'Administrador',
+                'password' => Hash::make('12345678')
             ]);
 
             $emp1->telephones()->create([
@@ -47,11 +43,6 @@ class CoreTeamSeeder extends Seeder
             /*****************************************
              *      DATOS DE ALEJANDRO BEIROA       *
              *****************************************/
-            $user2 = User::create([
-                'name' => 'Alejandro',
-                'email' => 'abeiper042@g.educaand.es',
-                'password' => Hash::make('12345678')
-            ]);
 
             $emp2 = Employee::create([
                 'dni' => '87654321B',
@@ -63,6 +54,7 @@ class CoreTeamSeeder extends Seeder
                 'address' => 'Sede Principal',
                 'province' => 'Sevilla',
                 'position' => 'Administrador',
+                'password' => Hash::make('12345678')
             ]);
 
             $emp2->telephones()->create([
@@ -72,11 +64,6 @@ class CoreTeamSeeder extends Seeder
             /*****************************************
              *      DATOS DE GONZALO FALCON      *
              *****************************************/
-            $user3 = User::create([
-                'name' => 'Gonzalo',
-                'email' => 'gfalbas005@g.educaand.es',
-                'password' => Hash::make('12345678')
-            ]);
 
             $emp3 = Employee::create([
                 'dni' => '01234567C',
@@ -88,6 +75,7 @@ class CoreTeamSeeder extends Seeder
                 'address' => 'Sede Principal',
                 'province' => 'Sevilla',
                 'position' => 'Administrador',
+                'password' => Hash::make('12345678')
             ]);
 
             $emp3->telephones()->create([
@@ -97,11 +85,6 @@ class CoreTeamSeeder extends Seeder
             /*****************************************
              *      DATOS DE OTHMANE RASFI      *
              *****************************************/
-            $user4 = User::create([
-                'name' => 'Othmane',
-                'email' => 'oraselq824@g.educaand.es',
-                'password' => Hash::make('12345678')
-            ]);
 
             $emp4 = Employee::create([
                 'dni' => '7654321D',
@@ -113,6 +96,7 @@ class CoreTeamSeeder extends Seeder
                 'address' => 'Sede Principal',
                 'province' => 'Sevilla',
                 'position' => 'Administrador',
+                'password' => Hash::make('12345678')
             ]);
 
             $emp4->telephones()->create([

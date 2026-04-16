@@ -73,19 +73,14 @@ class EmployeeController extends Controller
         ]);
 
         try {
-            return DB::transaction(function () use ($request, $validated) {
-                // Crear Usuario
-                User::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->dni),
-                ]);
-
-                // Crear Empleado
+            return DB::transaction(function () use ($request) {
+                // 1. Creamos al empleado directamente (La contraseña será su DNI)
                 $employeeData = $request->except('telephone');
+                $employeeData['password'] = Hash::make($request->dni); // <--- CONTRASEÑA
+
                 $employee = Employee::create($employeeData);
 
-                // Crear Teléfono
+                // 2. Creamos su teléfono
                 $employee->telephones()->create([
                     'telephone' => $request->telephone
                 ]);
@@ -107,26 +102,18 @@ class EmployeeController extends Controller
 
         if ($employee) {
             try {
-                return DB::transaction(function () use ($employee) {
-                    $user = User::where('email', $employee->email)->first();
-
+                DB::transaction(function () use ($employee) {
                     $employee->telephones()->delete();
-
-                    if ($user) {
-                        $user->delete();
-                    }
-
-                    $employee->delete();
-
-                    return response()->json(['status' => 'ok', 'message' => 'Empleado eliminado correctamente']);
+                    $employee->delete(); // Al borrar esto, se acabó. No hay que buscar en Users.
                 });
+                return response()->json(['status' => 'ok', 'message' => 'Empleado eliminado correctamente']);
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Error al eliminar: ' . $e->getMessage()], 500);
             }
         }
-
         return response()->json(['error' => 'Empleado no encontrado'], 404);
     }
+
 
     /**
      * EDITAR: Función para cargar la vista
@@ -141,6 +128,7 @@ class EmployeeController extends Controller
         return view('employees-edit', compact('employee', 'zones'));
     }
 
+
     /**
      * ACTUALIZAR: Función para actualizar los datos de un empleado
      * @param Request $request
@@ -149,41 +137,27 @@ class EmployeeController extends Controller
     public function update(Request $request, $dni)
     {
         $employee = Employee::where('dni', $dni)->firstOrFail();
-
-        // Calculamos de nuevo la fecha de hace 18 años para la edición
         $fechaLimite = now()->subYears(18)->toDateString();
 
-        // 1. Validación Corregida (¡Faltaba la fecha de nacimiento aquí!)
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'surname' => 'required|string',
-
-            // CANDADO AL EDITAR
             'birth_date' => 'required|date|before_or_equal:' . $fechaLimite,
-
             'address' => 'required|string',
             'province' => 'required|string',
             'position' => 'required|string',
             'zone_id' => 'nullable|integer|exists:zones,id',
             'telephones' => 'array',
         ], [
-            // MENSAJE DE ERROR QUE VERÁ REACT AL EDITAR
-            'birth_date.before_or_equal' => 'El empleado debe tener al menos 18 años. Revisa la fecha.',
-            'birth_date.required' => 'La fecha de nacimiento no puede quedar en blanco.'
+            'birth_date.before_or_equal' => 'El empleado debe tener al menos 18 años.',
         ]);
 
         try {
             DB::transaction(function () use ($request, $employee) {
-                // A) Actualizar datos básicos del empleado (Añadido 'birth_date')
+                // Actualizamos sus datos (Sin tocar la tabla users porque ya no hace falta)
                 $employee->update($request->only(['name', 'surname', 'birth_date', 'address', 'province', 'position', 'zone_id']));
 
-                // B) Sincronizar nombre en la tabla Users
-                $user = User::where('email', $employee->email)->first();
-                if ($user) {
-                    $user->update(['name' => $request->name]);
-                }
-
-                // C) Sincronizar Teléfonos
+                // Actualizamos teléfonos
                 if ($request->has('telephones')) {
                     $employee->telephones()->delete();
                     foreach ($request->telephones as $tel) {

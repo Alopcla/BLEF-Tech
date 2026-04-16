@@ -33,6 +33,10 @@ return new class extends Migration {
             $table->string('province');
             // Campo 'cargo'. El cargo que ocupa el empleado.
             $table->string('position');
+            // Campo de contraseña, sea la contrasela DNI para cuando se cree un empleado o la contrasela de Admin
+            $table->string('password');
+            // Campo para la funcion 'Recuerdame'
+            $table->rememberToken();
 
             $table->timestamps();
 
@@ -54,4 +58,3 @@ return new class extends Migration {
         Schema::dropIfExists('employees');
     }
 };
-    

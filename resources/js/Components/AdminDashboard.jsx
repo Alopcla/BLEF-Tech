@@ -34,13 +34,6 @@ const roleStyles = {
         icon: "fa-map-signs",
         colorValue: "orange",
     },
-    Mantenimiento: {
-        bg: "bg-stone-100",
-        text: "text-stone-800",
-        border: "border-stone-500",
-        icon: "fa-tools",
-        colorValue: "stone",
-    },
 };
 
 export default function AdminDashboard() {
@@ -131,7 +124,6 @@ export default function AdminDashboard() {
         "Médico",
         "Cuidador",
         "Guía",
-        "Mantenimiento",
     ];
 
     return (
@@ -292,8 +284,7 @@ export default function AdminDashboard() {
                                     key={employee.dni}
                                     employee={employee}
                                     style={
-                                        roleStyles[employee.position] ||
-                                        roleStyles["Mantenimiento"]
+                                        roleStyles[employee.position]
                                     }
                                     onOpenDetails={(emp) => {
                                         setSelectedEmployee(emp);

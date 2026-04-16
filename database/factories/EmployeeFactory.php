@@ -45,7 +45,7 @@ class EmployeeFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'address' => $this->faker->streetAddress(),
             'province' => $this->faker->state(),
-            'position' => $this->faker->randomElement(['Cuidador', 'Médico', 'Mantenimiento', 'Guía']),
+            'position' => $this->faker->randomElement(['Cuidador', 'Médico', 'Guía']),
             'zone_id' => Zone::inRandomOrder()->value('id'),
         ];
     }

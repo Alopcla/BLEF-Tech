@@ -70,7 +70,6 @@ export default function EmployeeFormModal({ isOpen, onClose, zones, onSave }) {
                             <option value="Médico">Médico</option>
                             <option value="Cuidador">Cuidador</option>
                             <option value="Guía">Guía</option>
-                            <option value="Mantenimiento">Mantenimiento</option>
                         </select>
                     </div>
                     <div className="space-y-1">

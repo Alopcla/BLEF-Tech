@@ -51,4 +51,9 @@ class ReserveExperience extends Model
     {
         return $query->where('status', 'pending');
     }
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class);
+    }
 }

@@ -409,10 +409,6 @@ export default function ExperienciasPage({ isAuth, userEmail }) {
     const [modalTickets, setModalTickets] = useState({ open: false, exp: null });
     const [modalEmail, setModalEmail] = useState({ open: false, exp: null });
 
-        // 👇 AQUÍ
-    console.log("EMAIL:", userEmail);
-    console.log("TICKETS:", userTickets);
-
     useEffect(() => {
         fetch('/api/experiencias')
             .then(r => r.json())

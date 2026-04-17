@@ -37,6 +37,10 @@ Route::get('/mapa', function () { return view('mapa'); })->name('mapa.index');
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 
+Route::get('/compras', function () {
+    return view('myorders');
+});
+
 require __DIR__ . '/auth.php';
 
 /*

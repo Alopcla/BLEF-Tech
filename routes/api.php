@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ExperienceApiController;
+use App\Http\Controllers\Api\OrdersApiController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -51,3 +52,6 @@ Route::get('/tickets-by-email', function (Request $request) {
 use App\Http\Controllers\Api\ZoneController;
 
 Route::get('/zones/tipo/{type}', [ZoneController::class, 'getZoneInfo']);
+
+// Ruta de compras
+Route::get('/mis-compras', [OrdersApiController::class, 'index']);

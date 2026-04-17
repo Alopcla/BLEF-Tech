@@ -11,6 +11,7 @@ import KeeperDashboard from "./Components/KeeperDashboard";
 import GuideDashboard from './Components/GuideDashboard';
 import ExperienciasPage from './Components/Experience';
 import ExperienceInfo from "./Components/ExperienceInfo";
+import MyOrders from "./Components/MyOrders";
 
 // Lógica para la Galería de Animales
 const animalContainer = document.getElementById("pagina-animales-root");
@@ -88,5 +89,15 @@ if (reservaContainer) {
             expName={expName}
             available={parseInt(available)}
         />
+    );
+}
+
+const root = document.getElementById("myorders-root");
+if (root) {
+    const auth = root.dataset.auth === "true";
+    const email = root.dataset.email;
+
+    createRoot(root).render(
+        <MyOrders auth={auth} initialEmail={email} />
     );
 }

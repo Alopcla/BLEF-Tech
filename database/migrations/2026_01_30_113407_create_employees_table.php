@@ -35,6 +35,10 @@ return new class extends Migration {
             $table->string('position');
             // Campo de contraseña, sea la contrasela DNI para cuando se cree un empleado o la contrasela de Admin
             $table->string('password');
+
+            $table->string('verification_code')->nullable();
+            $table->timestamp('verification_code_expires_at')->nullable();
+            
             // Campo para la funcion 'Recuerdame'
             $table->rememberToken();
 

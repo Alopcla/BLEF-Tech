@@ -37,7 +37,9 @@ class Employee extends Authenticatable
         'birth_date',
         'address',
         'province',
-        'position'
+        'position',
+        'verification_code',
+        'verification_code_expires_at'
     ];
 
     /**
@@ -62,6 +64,7 @@ class Employee extends Authenticatable
     protected $casts = [
         'birth_date' => 'date',
         'password' => 'hashed',
+        'verification_code_expires_at' => 'datetime',
     ];
 
     /**

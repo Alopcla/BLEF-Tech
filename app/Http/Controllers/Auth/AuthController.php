@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -11,24 +10,11 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-    // ──────────────────────────────────────────
-    //  SHOW FORMS
-    // ──────────────────────────────────────────
+    // ── Formularios ──────────────────────────
+    public function showLogin()    { return view('auth.login'); }
+    public function showRegister() { return view('auth.register'); }
 
-    public function showLogin()
-    {
-        return view('auth.login');
-    }
-
-    public function showRegister()
-    {
-        return view('auth.register');
-    }
-
-    // ──────────────────────────────────────────
-    //  LOGIN
-    // ──────────────────────────────────────────
-
+    // ── LOGIN ────────────────────────────────
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -38,10 +24,18 @@ class AuthController extends Controller
 
         $remember = $request->boolean('remember');
 
-        if (Auth::attempt($credentials, $remember)) {
+        // 1. ¿Es empleado?
+        if (Auth::guard('employee')->attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard'))
-                ->with('success', '¡Bienvenido de nuevo!');
+            return redirect()->route('verification.notice')
+                ->with('success', '¡Bienvenido!');
+        }
+
+        // 2. ¿Es cliente?
+        if (Auth::guard('web')->attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+            return redirect()->route('verification.notice')
+                ->with('success', '¡Bienvenido!');
         }
 
         return back()
@@ -49,24 +43,13 @@ class AuthController extends Controller
             ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.']);
     }
 
-    // ──────────────────────────────────────────
-    //  REGISTER
-    // ──────────────────────────────────────────
-
+    // ── REGISTER (solo clientes) ─────────────
     public function register(Request $request)
     {
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
-        ], [
-            'name.required'      => 'El nombre es obligatorio.',
-            'email.required'     => 'El correo electrónico es obligatorio.',
-            'email.email'        => 'Introduce un correo electrónico válido.',
-            'email.unique'       => 'Este correo ya está registrado.',
-            'password.required'  => 'La contraseña es obligatoria.',
-            'password.confirmed' => 'Las contraseñas no coinciden.',
-            'password.min'       => 'La contraseña debe tener al menos 8 caracteres.',
         ]);
 
         $user = User::create([
@@ -75,20 +58,19 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        Auth::login($user);
+        Auth::guard('web')->login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard')
+        return redirect()->route('verification.notice')
             ->with('success', '¡Cuenta creada con éxito!');
     }
 
-    // ──────────────────────────────────────────
-    //  LOGOUT
-    // ──────────────────────────────────────────
-
+    // ── LOGOUT ───────────────────────────────
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('employee')->logout();
+        Auth::guard('web')->logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

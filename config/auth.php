@@ -36,9 +36,13 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
+        'web' => [                          // Para clientes (users)
+            'driver'   => 'session',
             'provider' => 'users',
+        ],
+        'employee' => [                     // Para empleados y admins
+            'driver'   => 'session',
+            'provider' => 'employees',
         ],
     ],
 
@@ -63,7 +67,12 @@ return [
         'users' => [
             'driver' => 'eloquent',
             // Antes se apuntaba a Users, ahora a Employees para los inicios de sesion
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\User::class,
+        ],
+
+        'employees' => [
+            'driver' => 'eloquent',
+            'model'  => App\Models\Employee::class,
         ],
 
         // 'users' => [

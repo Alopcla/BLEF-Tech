@@ -34,6 +34,6 @@ class VerifyCodeController extends Controller
             'email_verified_at'            => now(),
         ]);
 
-        return redirect('/')->with('success', '¡Bienvenido a BLR Zoo, ' . $user->name . '! 🎉');
+        return redirect('/')->with('success', '¡Bienvenido a BLR Zoo, ' . $user->name);
     }
 }

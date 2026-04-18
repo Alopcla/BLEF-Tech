@@ -23,8 +23,8 @@ class CheckPosition
     public function handle(Request $request, Closure $next, string $role): Response
     {
         // Se verifica si hay alguien que haya iniciado sesion
-        if (!Auth::check()) {
-            return redirect('\login');
+        if (!Auth::guard('employee')->check()) {
+            return redirect('/login');
         }
 
         // Obtenemos el empleado que ha iniciacio sesion
@@ -35,12 +35,13 @@ class CheckPosition
             return $next($request);
         }
 
-        // Se compara el rol del empleado con el rol que exige la ruta
-        if ($employee->position !== $role) {
-            abort(403, 'Acceso denegado. Tu puesto de '.$employee->position.' no tiene permisos para esta área del zoológico.');
+        // Soporte para múltiples roles: position:Médico,Administrador
+        $allowedRoles = explode(',', $role);
+
+        if (!in_array($employee->position, $allowedRoles)) {
+            abort(403, 'Acceso denegado. Tu puesto de ' . $employee->position . ' no tiene permisos para esta área del zoológico.');
         }
 
-        // Si todo esta correcto, se le abre la puerta para que continue
         return $next($request);
 
     }

@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->string('dni')->primary();
             // Campo 'zona_id' donde el empleado trabaja en una zona especifica.
             $table->foreignId('zone_id')->constrained('zones')->onDelete('restrict');
-
             $table->string('name');
             $table->string('surname');
             /** Columna para la fecha de nacimiento. Mas adelante en el Modelo,

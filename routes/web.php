@@ -60,11 +60,24 @@ require __DIR__ . '/auth.php';
 | RUTAS PROTEGIDAS (USUARIOS LOGUEADOS)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'verified'])->group(function () {
+// ── CLIENTES ──────────────────────────────────────────
+Route::middleware(['auth:web'])->group(function () {
+    Route::get('/compras', function () {
+        return view('myorders');
+    })->name('compras');
 
-    // 1. Redirección inicial según puesto
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile', 'edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+        Route::delete('/profile', 'destroy')->name('profile.destroy');
+    });
+});
+
+// ── EMPLEADOS (todos los puestos) ─────────────────────
+Route::middleware(['auth:employee'])->group(function () {
+
     Route::get('/dashboard', function () {
-        $employee = Auth::user();
+        $employee = Auth::guard('employee')->user();
         return match ($employee->position) {
             'Administrador' => redirect()->route('employees.index'),
             'Médico'        => redirect()->route('medico.dashboard'),
@@ -74,24 +87,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         };
     })->name('dashboard');
 
-    //Verificar email
     Route::post('verify-code', [VerifyCodeController::class, 'store'])
         ->name('verification.code');
 
-    // 2. Perfil de usuario
-    Route::controller(ProfileController::class)->group(function () {
-        Route::get('/profile', 'edit')->name('profile.edit');
-        Route::patch('/profile', 'update')->name('profile.update');
-        Route::delete('/profile', 'destroy')->name('profile.destroy');
-    });
-
-    // ----------------------------------------------------
-    // PANEL ADMINISTRADOR (Solo Admin)
-    // ----------------------------------------------------
+    // PANEL ADMINISTRADOR
     Route::middleware(['position:Administrador'])->group(function () {
-        Route::get('/empleados', function () {
-            return view('admin-react');
-        })->name('employees.index');
+        Route::get('/empleados', fn() => view('admin-react'))->name('employees.index');
         Route::get('/api/empleados', [EmployeeController::class, 'index']);
         Route::post('/registrar-nuevo-empleado', [EmployeeController::class, 'store'])->name('employees.store');
         Route::get('/empleados/{encrypted_dni}/editar', [EmployeeController::class, 'edit'])->name('employees.edit');
@@ -103,51 +104,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/buscar', [PaymentController::class, 'buscarTickets'])->name('buscar');
             Route::post('/reenviar', [PaymentController::class, 'reenviarTickets'])->name('reenviar');
             Route::delete('/cancelar/{fecha}/{email}', [PaymentController::class, 'cancelarCompra'])->name('cancelar');
-
-            Route::delete('/cancelar-pedido', [PaymentController::class, 'cancelarPedido'])
-                ->name('cancelar.pedido');
+            Route::delete('/cancelar-pedido', [PaymentController::class, 'cancelarPedido'])->name('cancelar.pedido');
         });
     });
 
-    // ----------------------------------------------------
-    // PANEL MÉDICO (Acceso: Médico y Admin)
-    // ----------------------------------------------------
+    // PANEL MÉDICO
     Route::middleware(['position:Médico,Administrador'])->group(function () {
-        Route::get('/medico/dashboard', function () {
-            return view('medico-react');
-        })->name('medico.dashboard');
+        Route::get('/medico/dashboard', fn() => view('medico-react'))->name('medico.dashboard');
         Route::get('/api/medico/datos', [MedicalRecordController::class, 'getDoctorData']);
         Route::post('/api/medico/historial', [MedicalRecordController::class, 'storeRecord']);
         Route::post('/api/medico/animal', [\App\Http\Controllers\Api\AnimalController::class, 'store']);
         Route::delete('/api/medico/animal/{id}', [MedicalRecordController::class, 'destroyAnimal']);
     });
 
-    // ----------------------------------------------------
-    // PANEL CUIDADOR / KEEPER (Acceso: Cuidador y Admin)
-    // ----------------------------------------------------
+    // PANEL CUIDADOR
     Route::middleware(['position:Cuidador,Administrador'])->group(function () {
-        Route::get('/cuidador/dashboard', function () {
-            return view('keeper-react');
-        })->name('cuidador.dashboard');
+        Route::get('/cuidador/dashboard', fn() => view('keeper-react'))->name('cuidador.dashboard');
         Route::get('/api/keeper/data', [KeeperController::class, 'getKeeperData']);
         Route::post('/api/keeper/feed', [KeeperController::class, 'feedAnimal']);
     });
 
-    // ----------------------------------------------------
-    // PANEL GUÍA (Acceso: Guía y Admin)
-    // ----------------------------------------------------
+    // PANEL GUÍA
     Route::middleware(['position:Guía,Administrador'])->group(function () {
-        Route::get('/guia/dashboard', function () {
-            return view('guide-react');
-        })->name('guia.dashboard');
-
+        Route::get('/guia/dashboard', fn() => view('guide-react'))->name('guia.dashboard');
         Route::get('/api/guide/data', [App\Http\Controllers\GuideController::class, 'getGuideData']);
         Route::post('/api/guide/complete', [App\Http\Controllers\GuideController::class, 'completeExperience']);
     });
 
-    // ----------------------------------------------------
-    // ALERTAS MAPA (Del compañero)
-    // ----------------------------------------------------
+    // ALERTAS
     Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.index');
     Route::post('/alerts', [AlertController::class, 'store'])->name('alerts.store');
     Route::delete('/alerts/{id}', [AlertController::class, 'destroy'])->name('alerts.destroy');

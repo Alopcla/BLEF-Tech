@@ -6,36 +6,36 @@ const MapaZoologic = () => {
     const [mousePos, setMousePos] = useState({ x: 0, y: 0, quadrantX: 'right', quadrantY: 'bottom' });
     const containerRef = useRef(null);
 
-    // IDs exactos según tu tabla de Supabase
+    // IDs exactos según la tabla de Supabase
     const zonas = [
-        { id: 'Edificio', top: '75%', left: '20%', nombre: 'BLEF-Tech' },
+        { id: 'Edificio', top: '75%', left: '20%', nombre: 'BLEF-Tech' },// top y left son % para que sea responsive
         { id: 'Terrestre', top: '60%', left: '55%', nombre: 'Sabana / Terrestre' },
         { id: 'Acuático', top: '65%', left: '85%', nombre: 'Charca / Acuático' },
         { id: 'Aviario', top: '25%', left: '38%', nombre: 'Aviario' },
         { id: 'Reptilario', top: '22%', left: '55%', nombre: 'Reptilario' },
         { id: 'Trepadores y Terrestres', top: '25%', left: '75%', nombre: 'Jungla' },
     ];
-
+    // Metodo asincrono que comunica con el back mediante las id en bdd
     const manejarHover = async (id) => {
         try {
-            const response = await axios.get(`/api/zones/tipo/${encodeURIComponent(id)}`);
-            setInfoZona(response.data);
-        } catch (error) {
+            const response = await axios.get(`/api/zones/tipo/${encodeURIComponent(id)}`);// axios conecta las id por zonas
+            setInfoZona(response.data); // encodeURIComponent asegura que las id sean validas aun con caracteres especiales
+        } catch (error) {// Si la petición es correcta setInfoZona(response.data) hace que react renderice el popup
             console.error("Error al obtener datos de la zona:", error);
         }
     };
-
+    // metodo que controla la logica espacial y se ejecuta cuando el raton se mueve por el contenedor
     const manejarMovimientoMouse = (e) => {
         if (!containerRef.current) return;
 
-        const rect = containerRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
+        const rect = containerRef.current.getBoundingClientRect();// Referencia al DOM para obtener el tamaño de la ventana y del mapa
+        const x = e.clientX - rect.left;// Calcula las coordenadas en base a la distancia en pixeles desde la esquina superior izquierda del mapa (responsive)
         const y = e.clientY - rect.top;
 
-        const quadrantX = x > rect.width / 2 ? 'left' : 'right';
-        const quadrantY = y > rect.height / 2 ? 'top' : 'bottom';
+        const quadrantX = x > rect.width / 2 ? 'left' : 'right';// Marca eje x central, si el raton está por encima el popup sale a la izquerda, si no a la derecha
+        const quadrantY = y > rect.height / 2 ? 'top' : 'bottom';// Lo mismo para y pero arriba y abajo
 
-        setMousePos({ x, y, quadrantX, quadrantY });
+        setMousePos({ x, y, quadrantX, quadrantY }); // Guarda los 4 valores anteriores para que el popup siga al raton de forma fluida
     };
 
     return (
@@ -101,8 +101,8 @@ const MapaZoologic = () => {
                                         <div
                                             key={i}
                                             className={`p-2 rounded-xl border-l-4 shadow-sm animate-pulse ${evento.level === 'peligro' ? 'bg-red-50 border-red-500 text-red-900' :
-                                                    evento.level === 'alerta' ? 'bg-amber-50 border-amber-500 text-amber-900' :
-                                                        'bg-green-50 border-green-500 text-green-900'
+                                                evento.level === 'alerta' ? 'bg-amber-50 border-amber-500 text-amber-900' :
+                                                    'bg-green-50 border-green-500 text-green-900'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-2 mb-0.5">

@@ -1,6 +1,6 @@
 <div class="mt-16 bg-[#1A2E1A] border-t-2 border-[#D9C8A1]/20 py-10 px-6">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-        
+
         <div class="flex items-center gap-4">
             <img src="{{ asset('LOGO.PNG') }}" class="w-12 brightness-110" alt="Park Zoo">
             <div class="h-8 w-[1px] bg-[#D9C8A1]/20 hidden md:block"></div>
@@ -11,9 +11,9 @@
         </div>
 
         <nav class="flex gap-6 text-sm font-semibold text-[#D9C8A1]/80">
-            <a href="#" class="hover:text-white transition-colors">Animales</a>
-            <a href="#" class="hover:text-white transition-colors">Tickets</a>
-            <a href="#" class="hover:text-white transition-colors">Contacto</a>
+            <a href="{{ route('animales') }}" class="hover:text-white transition-colors">Animales</a>
+            <a href="{{ route('tickets.show') }}" class="hover:text-white transition-colors">Tickets</a>
+            <a href="{{ route('contacto') }}" class="hover:text-white transition-colors">Contacto</a>
             <a href="{{route('mapa.index')}}" class="hover:text-white transition-colors">Mapa</a>
         </nav>
 

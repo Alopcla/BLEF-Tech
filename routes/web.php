@@ -24,14 +24,26 @@ use App\Mail\TicketMail;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () { return view('welcome'); });
-Route::get('/animales', function () { return view('animales'); })->name('animales');
-Route::get('/tienda', function () { return view('tienda'); })->name('tienda');
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/animales', function () {
+    return view('animales');
+})->name('animales');
+Route::get('/tienda', function () {
+    return view('tienda');
+})->name('tienda');
 Route::get('/experiencias', [ExperienceController::class, 'index'])->name('VistaExperiencias');
 Route::get('/experiencias/{slug}', [ExperienceController::class, 'MostrarInfo'])->name('experienciasInfo');
 
 
-Route::get('/mapa', function () { return view('mapa'); })->name('mapa.index');
+Route::get('/mapa', function () {
+    return view('mapa');
+})->name('mapa.index');
+
+Route::get('/contacto', function () {
+    return view('contact');
+})->name('contacto');
 
 // Autenticación Google
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
@@ -60,7 +72,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //Verificar email
     Route::post('verify-code', [VerifyCodeController::class, 'store'])
-    ->name('verification.code');
+        ->name('verification.code');
 
     // 2. Perfil de usuario
     Route::controller(ProfileController::class)->group(function () {
@@ -73,7 +85,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // PANEL ADMINISTRADOR (Solo Admin)
     // ----------------------------------------------------
     Route::middleware(['position:Administrador'])->group(function () {
-        Route::get('/empleados', function () { return view('admin-react'); })->name('employees.index');
+        Route::get('/empleados', function () {
+            return view('admin-react');
+        })->name('employees.index');
         Route::get('/api/empleados', [EmployeeController::class, 'index']);
         Route::post('/registrar-nuevo-empleado', [EmployeeController::class, 'store'])->name('employees.store');
         Route::get('/empleados/{encrypted_dni}/editar', [EmployeeController::class, 'edit'])->name('employees.edit');
@@ -95,7 +109,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // PANEL MÉDICO (Acceso: Médico y Admin)
     // ----------------------------------------------------
     Route::middleware(['position:Médico,Administrador'])->group(function () {
-        Route::get('/medico/dashboard', function () { return view('medico-react'); })->name('medico.dashboard');
+        Route::get('/medico/dashboard', function () {
+            return view('medico-react');
+        })->name('medico.dashboard');
         Route::get('/api/medico/datos', [MedicalRecordController::class, 'getDoctorData']);
         Route::post('/api/medico/historial', [MedicalRecordController::class, 'storeRecord']);
         Route::post('/api/medico/animal', [\App\Http\Controllers\Api\AnimalController::class, 'store']);
@@ -106,7 +122,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // PANEL CUIDADOR / KEEPER (Acceso: Cuidador y Admin)
     // ----------------------------------------------------
     Route::middleware(['position:Cuidador,Administrador'])->group(function () {
-        Route::get('/cuidador/dashboard', function () { return view('keeper-react'); })->name('cuidador.dashboard');
+        Route::get('/cuidador/dashboard', function () {
+            return view('keeper-react');
+        })->name('cuidador.dashboard');
         Route::get('/api/keeper/data', [KeeperController::class, 'getKeeperData']);
         Route::post('/api/keeper/feed', [KeeperController::class, 'feedAnimal']);
     });
@@ -129,7 +147,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.index');
     Route::post('/alerts', [AlertController::class, 'store'])->name('alerts.store');
     Route::delete('/alerts/{id}', [AlertController::class, 'destroy'])->name('alerts.destroy');
-
 });
 
 /*

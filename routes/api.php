@@ -54,4 +54,4 @@ use App\Http\Controllers\Api\ZoneController;
 Route::get('/zones/tipo/{type}', [ZoneController::class, 'getZoneInfo']);
 
 // Ruta de compras
-Route::get('/mis-compras', [OrdersApiController::class, 'index']);
+Route::get('/compras', [OrdersApiController::class, 'index']);

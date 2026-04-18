@@ -63,7 +63,7 @@ return [
         'users' => [
             'driver' => 'eloquent',
             // Antes se apuntaba a Users, ahora a Employees para los inicios de sesion
-            'model' => env('AUTH_MODEL', App\Models\Employee::class),
+            'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
         // 'users' => [

@@ -10,15 +10,31 @@ export default function MyOrders({ auth, initialEmail }) {
 
     const fetchData = async (customEmail = null) => {
         setLoading(true);
+
         try {
-            let url = "/api/mis-compras";
-            if (!auth) url += `?email=${customEmail || email}`;
+            let url = "/api/compras";
+
+            const finalEmail = customEmail || email;
+
+            if (!finalEmail) {
+                console.log("No email provided");
+                return;
+            }
+
+            url += `?email=${finalEmail}`;
+
             const res = await fetch(url);
+
             const json = await res.json();
+
+            console.log("RESPUESTA API:", json);
+
             setData(json);
+
         } catch (error) {
             console.error("Error cargando compras:", error);
         }
+
         setLoading(false);
     };
 

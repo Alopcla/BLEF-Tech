@@ -3,6 +3,10 @@
         
         <div class="absolute -top-10 -left-10 w-20 h-20 bg-green-500/20 blur-3xl rounded-full"></div>
 
+        @php
+            $authUser = Auth::guard('employee')->user() ?? Auth::guard('web')->user();
+        @endphp
+
         <a href="/" class="relative z-10 transition-transform hover:scale-110 duration-300">
             <img src="{{ asset('LOGO.PNG') }}" class="w-12 md:w-14 drop-shadow-[0_0_8px_rgba(217,200,161,0.5)]" alt="Park Zoo">
         </a>
@@ -36,7 +40,7 @@
         </nav>
 
         <div class="hidden md:flex items-center gap-3 relative z-10">
-            @auth
+            @if($authUser)
                 <a href="{{ route('dashboard') }}" class="text-[#D9C8A1] hover:text-white transition-colors p-2">
                     <i class="fa-solid fa-circle-user text-2xl"></i>
                 </a>
@@ -45,7 +49,7 @@
                     <span>Iniciar Sesión</span>
                     <i class="fa-solid fa-arrow-right-to-bracket transition-transform group-hover:translate-x-1"></i>
                 </a>
-            @endauth
+            @endif
         </div>
 
         <button class="lg:hidden text-[#D9C8A1] p-2 hover:bg-white/10 rounded-lg transition-colors relative z-[110]" id="menu-toggle">
@@ -53,7 +57,6 @@
         </button>
     </div>
 
-    {{-- El menú móvil sí se mantiene fijo para que funcione correctamente al abrirse --}}
     <div id="mobile-menu" class="fixed inset-0 bg-[#1A2E1A]/95 backdrop-blur-2xl z-[90] translate-x-full transition-transform duration-500 ease-in-out lg:hidden">
         <div class="flex flex-col h-full pt-32 px-10 pb-12">
             <button id="menu-close" class="absolute top-8 right-8 w-10 h-10 flex items-center justify-center rounded-full border border-[#D9C8A1]/20 text-[#D9C8A1] hover:bg-[#D9C8A1]/10 transition-all duration-300">
@@ -72,11 +75,19 @@
             </nav>
 
             <div class="mt-auto">
-                <a href="{{ route('login') }}" 
-                class="flex items-center justify-between p-4 border border-[#D9C8A1]/20 rounded-2xl text-[#D9C8A1] hover:bg-white/5 transition-all duration-300 mb-6">
-                    <span class="font-bold tracking-wide">Iniciar Sesión</span>
-                    <i class="fa-solid fa-arrow-right-to-bracket opacity-50"></i>
-                </a>
+                @if($authUser)
+                    <a href="{{ route('dashboard') }}"
+                        class="flex items-center justify-between p-4 border border-[#D9C8A1]/20 rounded-2xl text-[#D9C8A1] hover:bg-white/5 transition-all duration-300 mb-6">
+                        <span class="font-bold tracking-wide">Mi cuenta</span>
+                        <i class="fa-solid fa-circle-user opacity-50"></i>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}"
+                        class="flex items-center justify-between p-4 border border-[#D9C8A1]/20 rounded-2xl text-[#D9C8A1] hover:bg-white/5 transition-all duration-300 mb-6">
+                        <span class="font-bold tracking-wide">Iniciar Sesión</span>
+                        <i class="fa-solid fa-arrow-right-to-bracket opacity-50"></i>
+                    </a>
+                @endif
                 <a href="{{ route('payment.show') }}" class="w-full py-5 bg-gradient-to-r from-[#F2C94C] to-[#F2994A] text-[#1A2E1A] rounded-2xl font-black text-center block text-lg uppercase tracking-widest shadow-xl">
                     Tickets
                 </a>

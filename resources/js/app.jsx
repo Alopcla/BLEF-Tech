@@ -1,8 +1,7 @@
 import "./bootstrap";
 import React from "react";
-import { createRoot } from "react-dom/client"; // Importamos createRoot directamente
+import { createRoot } from "react-dom/client";
 
-// Importación de componentes
 import AnimalGallery from "./Components/AnimalGallery";
 import MapaZoologic from "./Components/MapaZoologic";
 import AdminDashboard from "./Components/AdminDashboard";
@@ -13,74 +12,42 @@ import ExperienciasPage from './Components/Experience';
 import ExperienceInfo from "./Components/ExperienceInfo";
 import MyOrders from "./Components/MyOrders";
 
-// Lógica para la Galería de Animales
-const animalContainer = document.getElementById("pagina-animales-root");
-if (animalContainer) {
-    const root = createRoot(animalContainer);
-    root.render(<AnimalGallery />);
-}
+const mount = (id, component) => {
+    const el = document.getElementById(id);
+    if (el) createRoot(el).render(component);
+};
 
-// Lógica para el Mapa del Zoo
-const mapaContainer = document.getElementById("react-mapa");
-if (mapaContainer) {
-    // IMPORTANTE: Usamos 'createRoot' directamente, NO 'ReactDOM.createRoot'
-    const root = createRoot(mapaContainer);
-    root.render(
-        <React.StrictMode>
-            <MapaZoologic />
-        </React.StrictMode>,
-    );
-}
+// Animales
+mount("pagina-animales-root", <AnimalGallery />);
 
-// Buscamos el contenedor en animales.blade.php
-const container = document.getElementById("pagina-animales-root");
+// Mapa
+mount("react-mapa", <React.StrictMode><MapaZoologic /></React.StrictMode>);
 
-// Si el contenedor existe (es decir, si estamos en la ruta /animales)
-if (container) {
-    const root = createRoot(container);
-    // 3. Renderizamos la galería directamente. ¡Sin rodeos ni eventos de clic!
-    root.render(<AnimalGallery />);
-}
+// Admin
+mount("admin-dashboard-root", <AdminDashboard />);
 
-// Buscamos la "caja vacía" que dejamos en el Blade
-const adminElement = document.getElementById("admin-dashboard-root");
-// Si la encontramos (es decir, si estamos en la ruta /empleados), pintamos el panel de React
-if (adminElement) {
-    const root = createRoot(adminElement);
-    root.render(<AdminDashboard />);
-}
+// Médico
+mount("doctor-dashboard-root", <DoctorDashboard />);
 
-// --- PANEL DE MÉDICO ---
-const doctorRootEl = document.getElementById("doctor-dashboard-root");
-if (doctorRootEl) {
-    createRoot(doctorRootEl).render(<DoctorDashboard />);
-}
+// Cuidador
+mount("keeper-dashboard-root", <KeeperDashboard />);
 
-// --- PANEL DE CUIDADOR (KEEPER) ---
-const keeperRootEl = document.getElementById("keeper-dashboard-root");
-if (keeperRootEl) {
-    createRoot(keeperRootEl).render(<KeeperDashboard />);
-}
+// Guía
+mount("guide-dashboard-root", <GuideDashboard />);
 
-const guideRootEl = document.getElementById('guide-dashboard-root');
-if (guideRootEl) {
-    // Usamos el createRoot que ya deberías tener importado arriba en tu app.jsx
-    createRoot(guideRootEl).render(<GuideDashboard />);
-}
-
+// Experiencias
 const experienciasContainer = document.getElementById('experiencias-root');
 if (experienciasContainer) {
-    const isAuth   = experienciasContainer.dataset.auth === 'true';
-    const userEmail = experienciasContainer.dataset.email || '';
-    createRoot(experienciasContainer).render(
-        <ExperienciasPage isAuth={isAuth} userEmail={userEmail} />
+    const { auth, email } = experienciasContainer.dataset;
+    mount("experiencias-root", 
+        <ExperienciasPage isAuth={auth === 'true'} userEmail={email || ''} />
     );
 }
 
+// Detalle experiencia
 const reservaContainer = document.getElementById("reserva-root");
 if (reservaContainer) {
     const { auth, email, expId, expName, available } = reservaContainer.dataset;
-
     createRoot(reservaContainer).render(
         <ExperienceInfo
             isAuth={auth === "true"}
@@ -92,12 +59,11 @@ if (reservaContainer) {
     );
 }
 
-const root = document.getElementById("myorders-root");
-if (root) {
-    const auth = root.dataset.auth === "true";
-    const email = root.dataset.email;
-
-    createRoot(root).render(
-        <MyOrders auth={auth} initialEmail={email} />
+// Mis pedidos
+const ordersContainer = document.getElementById("myorders-root");
+if (ordersContainer) {
+    const { auth, email } = ordersContainer.dataset;
+    createRoot(ordersContainer).render(
+        <MyOrders auth={auth === "true"} initialEmail={email} />
     );
 }

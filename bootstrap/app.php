@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'position' => \App\Http\Middleware\CheckPosition::class,
         ]);
+
+        $middleware->redirectGuestsTo(fn() => route('login'));
+        $middleware->redirectUsersTo(fn(Request $request) => 
+            Auth::guard('employee')->check() ? route('dashboard') : route('welcome')
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

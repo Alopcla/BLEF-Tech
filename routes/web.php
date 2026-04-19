@@ -26,7 +26,7 @@ use App\Mail\TicketMail;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 Route::get('/animales', function () {
     return view('animales');
 })->name('animales');

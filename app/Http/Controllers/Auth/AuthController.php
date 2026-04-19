@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerificationCodeMail;
 use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
@@ -27,15 +29,17 @@ class AuthController extends Controller
         // 1. ¿Es empleado?
         if (Auth::guard('employee')->attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            return redirect()->route('verification.notice')
-                ->with('success', '¡Bienvenido!');
+            $user = Auth::guard('employee')->user();
+            $this->enviarCodigoVerificacion($user);
+            return redirect()->route('verification.notice');
         }
 
         // 2. ¿Es cliente?
         if (Auth::guard('web')->attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            return redirect()->route('verification.notice')
-                ->with('success', '¡Bienvenido!');
+            $user = Auth::guard('web')->user();
+            $this->enviarCodigoVerificacion($user);
+            return redirect()->route('verification.notice');
         }
 
         return back()
@@ -52,17 +56,21 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
         ]);
 
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
+            'name'                         => $request->name,
+            'email'                        => $request->email,
+            'password'                     => Hash::make($request->password),
+            'verification_code'            => $code,
+            'verification_code_expires_at' => now()->addMinutes(10),
         ]);
 
         Auth::guard('web')->login($user);
-        $request->session()->regenerate();
+        $request->session()->regenerate(); // ← esto faltaba
+        Mail::to($user->email)->send(new VerificationCodeMail($code));
 
-        return redirect()->route('verification.notice')
-            ->with('success', '¡Cuenta creada con éxito!');
+        return redirect()->route('verification.notice');
     }
 
     // ── LOGOUT ───────────────────────────────
@@ -70,11 +78,30 @@ class AuthController extends Controller
     {
         Auth::guard('employee')->logout();
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        return redirect()->route('login');
+    }
 
-        return redirect()->route('login')
-            ->with('success', 'Sesión cerrada correctamente.');
+    // ── HELPER: Generar y enviar código ──────
+    private function enviarCodigoVerificacion($user): void
+    {
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $user->update([
+            'verification_code'            => $code,
+            'verification_code_expires_at' => now()->addMinutes(10),
+        ]);
+        Mail::to($user->email)->send(new VerificationCodeMail($code));
+    }
+
+    public function reenviarCodigo(Request $request)
+    {
+        $user = Auth::guard('employee')->check()
+            ? Auth::guard('employee')->user()
+            : $request->user();
+
+        $this->enviarCodigoVerificacion($user);
+
+        return back()->with('status', 'verification-link-sent');
     }
 }

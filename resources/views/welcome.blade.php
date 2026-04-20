@@ -301,9 +301,9 @@
     </a>
 
     <a href="{{ route('compras') }}" 
-       class="group relative flex items-center bg-gradient-to-r from-[#F2C94C] to-[#F2994A] text-[#1A2E1A] 
+       class="group relative flex items-center bg-gradient-to-r from-[#2D5A27] to-[#1e3d1a] text-[#D9C8A1] 
               rounded-l-2xl shadow-[-5px_5px_15px_rgba(0,0,0,0.3)] 
-              w-16 hover:w-48 h-16 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden border-y border-l border-[#F2C94C]/50">
+              w-16 hover:w-48 h-16 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden">
         
         {{-- Contenedor del icono (ancho fijo para que no se mueva) --}}
         <div class="min-w-[4rem] h-full flex items-center justify-center z-10">

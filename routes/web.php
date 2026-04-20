@@ -51,7 +51,7 @@ Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name
 
 Route::get('/compras', function () {
     return view('myorders');
-});
+})->name('compras');
 
 require __DIR__ . '/auth.php';
 
@@ -62,9 +62,6 @@ require __DIR__ . '/auth.php';
 */
 // ── CLIENTES ──────────────────────────────────────────
 Route::middleware(['auth:web'])->group(function () {
-    Route::get('/compras', function () {
-        return view('myorders');
-    })->name('compras');
 
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'edit')->name('profile.edit');

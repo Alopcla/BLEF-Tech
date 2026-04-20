@@ -165,3 +165,5 @@ Route::get('/paypal/success', function () {
 })->name('paypal.success');
 
 Route::post('/pago/shop', [PaymentController::class, 'processPayment'])->name('payment.shop');
+
+Route::get('/pago/error', [PaymentController::class, 'paymentError'])->name('payment.error');

@@ -73,6 +73,7 @@ class ProductController extends Controller
                 'concepto' => $concepto,
                 'tipo'     => 'shop',
                 'meta'     => ['items' => $request->items],
+                'return_url' => route('tienda'),
             ]);
 
             return response()->json(['url' => $session->url]);

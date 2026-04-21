@@ -85,6 +85,7 @@ class ExperienceApiController extends Controller
                     'ticket_id'      => $request->ticket_id,
                     'fecha'          => $request->fecha,
                 ],
+                'return_url' => route('VistaExperiencias'),
             ]);
 
             return response()->json(['url' => $session->url]);

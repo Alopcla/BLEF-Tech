@@ -1,4 +1,4 @@
-<div class="mt-16 bg-[#1A2E1A] border-t-2 border-[#D9C8A1]/20 py-10 px-6">
+<div class="relative z-10 pt-16 bg-[#1A2E1A] border-t-2 border-[#D9C8A1]/20 py-10 px-6">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
 
         <div class="flex items-center gap-4">

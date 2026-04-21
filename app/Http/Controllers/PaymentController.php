@@ -30,17 +30,15 @@ class PaymentController extends Controller
         ]);
 
         if ($request->tipo === 'ticket') {
-            $fecha = $request->meta['dia'];
+            $fecha    = $request->meta['dia'];
             $cantidad = (int) $request->meta['cantidad'];
 
-            // CAMBIO: Ahora contamos filas en lugar de sumar columna cantidad
-            $vendidos = DB::table('tickets')
+            $vendidos    = DB::table('tickets')
                 ->where('visit_day', $fecha)
                 ->where('status', 'paid')
                 ->count();
 
-            $capacidad = 100; // Ajusta tu capacidad máxima aquí
-            $disponibles = max(0, $capacidad - $vendidos);
+            $disponibles = max(0, 100 - $vendidos);
 
             if ($cantidad > $disponibles) {
                 return back()->with('error', 'No hay entradas suficientes para esta fecha.');
@@ -61,8 +59,9 @@ class PaymentController extends Controller
                     ->firstOrFail();
                 $amount = (float) $experiencia->price;
                 break;
+
             case 'shop':
-                $items = $request->meta['items'] ?? [];
+                $items  = $request->meta['items'] ?? [];
                 $amount = 0;
                 foreach ($items as $item) {
                     $product = DB::table('products')->where('id', $item['id'])->firstOrFail();
@@ -77,12 +76,13 @@ class PaymentController extends Controller
         try {
             $stripe  = new StripeService();
             $session = $stripe->createCheckoutSession([
-                'email'       => $email,
-                'amount'      => $amount,
-                'concepto'    => $request->concepto,
-                'description' => null,
-                'tipo'        => $request->tipo,
-                'meta'        => $request->meta ?? [],
+                'email'      => $email,
+                'amount'     => $amount,
+                'concepto'   => $request->concepto,
+                'description'=> null,
+                'tipo'       => $request->tipo,
+                'meta'       => $request->meta ?? [],
+                'return_url' => route('payment.show') ,
             ]);
 
             return redirect()->away($session->url);
@@ -228,7 +228,13 @@ class PaymentController extends Controller
         }
     }
 
-    // --- MÉTODOS DE ADMINISTRACIÓN CORREGIDOS (visit_day) ---
+    public function paymentError(Request $request)
+    {
+        $returnUrl = $request->query('return', route('payment.show'));
+        return redirect($returnUrl)->with('error', 'El pago ha sido cancelado.');
+    }
+
+    // --- MÉTODOS DE ADMINISTRACIÓN---
 
     public function buscarTickets(Request $request)
     {

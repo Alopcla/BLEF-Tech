@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Animal;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class AnimalController extends Controller
 {
@@ -30,12 +31,11 @@ class AnimalController extends Controller
             'common_name' => 'required|string|max:255',
             'species' => 'required|string|max:255',
             'birth_date' => 'required|date|before_or_equal:' . date('Y-m-d'),
-            'diet' => 'required|in:Carnívoro,Herbívoro,Omnívoro,Insectívoro,Piscívoro',
-
-            // CAMPOS QUE FALTABAN:
-            'food_ration' => 'required|string|max:255', // Ahora sí se validará y guardará
-            'curiosity' => 'nullable|string',         // Marcado como nullable para que no sea obligatorio
-            'image' => 'nullable|string',
+            'diet' => 'required|string',
+            'food_ration' => 'required|string|max:255',
+            'curiosity' => 'nullable|string',
+            // Permitimos tanto archivo como string (por si viene una URL de fallback)
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // 2. SI FALLA: Devolvemos error 422
@@ -49,8 +49,15 @@ class AnimalController extends Controller
 
         // 3. SI PASA: Registramos
         try {
-            // Ahora $validator->validated() incluirá food_ration y curiosity
-            $animal = Animal::create($validator->validated());
+            $data = $validator->validated();
+
+            // Manejo de la subida de imagen
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('animals', 'public');
+                $data['image'] = $path;
+            }
+
+            $animal = Animal::create($data);
 
             return response()->json([
                 'status' => 'success',

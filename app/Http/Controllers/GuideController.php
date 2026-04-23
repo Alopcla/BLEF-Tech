@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Experience;
+use App\Models\Zone;
 use Illuminate\Support\Facades\Auth;
 
 class GuideController extends Controller
@@ -30,7 +31,8 @@ class GuideController extends Controller
 
         return response()->json([
             'guide' => $employee,
-            'experiencias' => $experiencias
+            'experiencias' => $experiencias,
+            'zones' => Zone::all()
         ]);
     }
 }

@@ -314,14 +314,18 @@ function EmailModal({ isOpen, onClose, expId, expName }) {
 }
 
 /* ===================== MAIN ===================== */
-export default function ExperienceInfo({ isAuth, userEmail, expId, expName }) {
+export default function ExperienceInfo({ isAuth, userEmail, expId, expName, available }) {
     const [modalTickets, setModalTickets] = useState(false);
     const [modalEmail, setModalEmail] = useState(false);
     const [userTickets, setUserTickets] = useState(null);
     const [ticketsLoading, setTicketsLoading] = useState(true);
     const hasTickets = userTickets?.length > 0;
+    const spots = Number(available);
 
     const handleReservar = () => {
+
+        if (spots <= 0) return;
+
         if (!isAuth) {
             setModalEmail(true);
             return;
@@ -329,7 +333,6 @@ export default function ExperienceInfo({ isAuth, userEmail, expId, expName }) {
 
         if (ticketsLoading) return;
 
-        // Usuario logueado
         if (hasTickets) {
             setModalTickets(true);
         } else {
@@ -338,34 +341,45 @@ export default function ExperienceInfo({ isAuth, userEmail, expId, expName }) {
     };
 
     useEffect(() => {
-        if (isAuth && userEmail) {
-            setTicketsLoading(true);
-
-            fetch(`/api/tickets-by-email?email=${encodeURIComponent(userEmail)}`)
-                .then(r => r.json())
-                .then(data => {
-                    setUserTickets(data.tickets ?? []);
-                })
-                .catch(() => {
-                    setUserTickets([]);
-                })
-                .finally(() => {
-                    setTicketsLoading(false);
-                });
+        if (!isAuth || !userEmail) {
+            setTicketsLoading(false);
+            setUserTickets([]);
+            return;
         }
+
+        setTicketsLoading(true);
+
+        fetch(`/api/tickets-by-email?email=${encodeURIComponent(userEmail)}`)
+            .then(r => r.json())
+            .then(data => {
+                setUserTickets(data.tickets ?? []);
+            })
+            .catch(() => {
+                setUserTickets([]);
+            })
+            .finally(() => {
+                setTicketsLoading(false);
+            });
     }, [isAuth, userEmail]);
 
     return (
         <>
             <button
                 onClick={handleReservar}
-                className="bg-gradient-to-r from-[#F2C94C] via-[#D9C8A1] to-[#F2994A] text-[#1A2E1A] px-6 py-3 rounded-xl font-black shadow-xl"
+                disabled={spots <= 0 || ticketsLoading}
+                className={`px-6 py-3 rounded-xl font-black shadow-xl transition-all ${
+                    spots <= 0
+                        ? "bg-red-600 text-white cursor-not-allowed"
+                        : "bg-gradient-to-r from-[#F2C94C] via-[#D9C8A1] to-[#F2994A] text-[#1A2E1A]"
+                }`}
             >
                 {ticketsLoading
                     ? "Cargando..."
-                    : isAuth && !hasTickets
-                        ? "Comprar tickets"
-                        : "Reservar"}
+                    : spots <= 0
+                        ? "Sold Out"
+                        : isAuth && !hasTickets
+                            ? "Comprar tickets"
+                            : "Reservar"}
             </button>
 
             <TicketModal

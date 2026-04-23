@@ -99,4 +99,82 @@ class ExperienceApiController extends Controller
         $experiencias = Experience::where('slug', $slug)->firstOrFail();
         return view('experienciasInfo', compact('experiencias'));
     }
+
+    public function guideData(Request $request)
+    {
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'guide' => $request->user(),
+                'experiencias' => Experience::with('zone')->get(),
+                'zones' => \App\Models\Zone::all(),
+            ]
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'zone_id' => 'required|exists:zones,id',
+            'name' => 'required|string',
+            'slug' => 'required|string',
+            'description' => 'nullable|string',
+            'details' => 'nullable|string',
+            'duration_min' => 'required|integer',
+            'price' => 'required|numeric',
+            'capacity' => 'required|integer',
+            'image' => 'nullable|string',
+        ]);
+
+        $experience = Experience::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'experience' => $experience
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $experience = Experience::find($id);
+
+        if (!$experience) {
+            return response()->json(['error' => 'No encontrada'], 404);
+        }
+
+        $validated = $request->validate([
+            'zone_id' => 'required|exists:zones,id',
+            'name' => 'required|string',
+            'slug' => 'required|string',
+            'description' => 'nullable|string',
+            'details' => 'nullable|string',
+            'duration_min' => 'required|integer',
+            'price' => 'required|numeric',
+            'capacity' => 'required|integer',
+            'image' => 'nullable|string',
+        ]);
+
+        $experience->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'experience' => $experience
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $experience = Experience::find($id);
+
+        if (!$experience) {
+            return response()->json(['error' => 'No encontrada'], 404);
+        }
+
+        $experience->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Experiencia eliminada'
+        ]);
+    }
 }

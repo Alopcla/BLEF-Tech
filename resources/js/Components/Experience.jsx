@@ -278,7 +278,19 @@ function ExperienciaCard({ exp, isPopular, isAuth, userTickets, ticketsLoading, 
     const botonReserva = () => {
         if (!isAuth) return null;
 
-        // mientras carga NO mostramos comprar
+        // 👇 SOLD OUT GLOBAL
+        if (exp.available_spots <= 0) {
+            return (
+                <div
+                    className={`${
+                        isPopular ? 'flex-[4] py-5 text-sm' : 'flex-[3] py-4 text-xs'
+                    } bg-red-500 text-white rounded-2xl font-black uppercase tracking-[1px] flex items-center justify-center`}
+                >
+                    Sold Out
+                </div>
+            );
+        }
+
         if (ticketsLoading) {
             return (
                 <div className="flex-[3] py-4 text-xs bg-white/10 text-white/40 rounded-2xl flex items-center justify-center">
@@ -299,7 +311,7 @@ function ExperienciaCard({ exp, isPopular, isAuth, userTickets, ticketsLoading, 
         return (
             <button onClick={handleReservar}
                 className={`${isPopular ? 'flex-[4] py-5 text-sm' : 'flex-[3] py-4 text-xs'} bg-[#D9C8A1] text-[#1A2E1A] rounded-2xl font-black uppercase tracking-[1px] hover:bg-white transition-all`}>
-                {'Reservar'}
+                Reservar
             </button>
         );
     };

@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\KeeperController;
 use App\Http\Controllers\Api\AlertController;
+use App\Http\Controllers\Api\ExperienceApiController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -126,6 +127,9 @@ Route::middleware(['auth:employee'])->group(function () {
         Route::get('/guia/dashboard', fn() => view('guide-react'))->name('guia.dashboard');
         Route::get('/api/guide/data', [App\Http\Controllers\GuideController::class, 'getGuideData']);
         Route::post('/api/guide/complete', [App\Http\Controllers\GuideController::class, 'completeExperience']);
+        Route::post('/api/guide/experience', [ExperienceApiController::class, 'store']);
+        Route::put('/api/guide/experience/{id}', [ExperienceApiController::class, 'update']);
+        Route::delete('/api/guide/experience/{id}', [ExperienceApiController::class, 'destroy']);
     });
 
     // ALERTAS

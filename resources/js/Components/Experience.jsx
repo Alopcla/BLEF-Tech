@@ -270,13 +270,34 @@ function EmailModal({ isOpen, onClose, expId, expName }) {
     );
 }
 
-function ExperienciaCard({ exp, isPopular, isAuth, userTickets, onReservar }) {
+function ExperienciaCard({ exp, isPopular, isAuth, userTickets, ticketsLoading, onReservar }) {
     const spots = exp.available_spots ?? 0;
 
     const handleReservar = () => onReservar(exp);
 
     const botonReserva = () => {
         if (!isAuth) return null;
+
+        // 👇 SOLD OUT GLOBAL
+        if (exp.available_spots <= 0) {
+            return (
+                <div
+                    className={`${
+                        isPopular ? 'flex-[4] py-5 text-sm' : 'flex-[3] py-4 text-xs'
+                    } bg-red-500 text-white rounded-2xl font-black uppercase tracking-[1px] flex items-center justify-center`}
+                >
+                    Sold Out
+                </div>
+            );
+        }
+
+        if (ticketsLoading) {
+            return (
+                <div className="flex-[3] py-4 text-xs bg-white/10 text-white/40 rounded-2xl flex items-center justify-center">
+                    Cargando...
+                </div>
+            );
+        }
 
         if (userTickets.length === 0) {
             return (
@@ -290,7 +311,7 @@ function ExperienciaCard({ exp, isPopular, isAuth, userTickets, onReservar }) {
         return (
             <button onClick={handleReservar}
                 className={`${isPopular ? 'flex-[4] py-5 text-sm' : 'flex-[3] py-4 text-xs'} bg-[#D9C8A1] text-[#1A2E1A] rounded-2xl font-black uppercase tracking-[1px] hover:bg-white transition-all`}>
-                {isPopular ? 'Reservar Ahora' : 'Reservar'}
+                Reservar
             </button>
         );
     };
@@ -408,6 +429,7 @@ export default function ExperienciasPage({ isAuth, userEmail }) {
     const [loading, setLoading] = useState(true);
     const [modalTickets, setModalTickets] = useState({ open: false, exp: null });
     const [modalEmail, setModalEmail] = useState({ open: false, exp: null });
+    const [ticketsLoading, setTicketsLoading] = useState(true);
 
     useEffect(() => {
         fetch('/api/experiencias')
@@ -418,10 +440,21 @@ export default function ExperienciasPage({ isAuth, userEmail }) {
 
     useEffect(() => {
         if (isAuth && userEmail) {
+            setTicketsLoading(true); // 👈 empieza carga
+
             fetch(`/api/tickets-by-email?email=${encodeURIComponent(userEmail)}`)
                 .then(r => r.json())
-                .then(data => setUserTickets(data.tickets ?? []))
-                .catch(() => {});
+                .then(data => {
+                    setUserTickets(data.tickets ?? []);
+                })
+                .catch(() => {
+                    setUserTickets([]);
+                })
+                .finally(() => {
+                    setTicketsLoading(false); // 👈 TERMINA carga (esto te faltaba)
+                });
+        } else {
+            setTicketsLoading(false); // 👈 importante si no está logeado
         }
     }, [isAuth, userEmail]);
 
@@ -465,6 +498,7 @@ export default function ExperienciasPage({ isAuth, userEmail }) {
                         isPopular={true}
                         isAuth={isAuth}
                         userTickets={userTickets}
+                        ticketsLoading={ticketsLoading}
                         onReservar={handleReservar}
                     />
                 )}
@@ -477,6 +511,7 @@ export default function ExperienciasPage({ isAuth, userEmail }) {
                             isPopular={false}
                             isAuth={isAuth}
                             userTickets={userTickets}
+                            ticketsLoading={ticketsLoading}
                             onReservar={handleReservar}
                         />
                     ))}

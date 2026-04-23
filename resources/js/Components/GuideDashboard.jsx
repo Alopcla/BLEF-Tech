@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from "react";
 import NavigationModules from "./NavigationModules";
+import ExperienceFormModal from "./ExperienceFormModal";
 
 export default function GuideDashboard() {
     const [experiencias, setExperiencias] = useState([]);
     const [guideInfo, setGuideInfo] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isExperienceOpen, setIsExperienceOpen] = useState(false);
+    const [zones, setZones] = useState([]);
+    const [editingExp, setEditingExp] = useState(null);
 
     useEffect(() => {
         fetch("/api/guide/data")
             .then((res) => res.json())
             .then((data) => {
+                console.log(data);
                 setGuideInfo(data.guide);
                 // Ahora recogemos 'experiencias', no 'reservations'
                 setExperiencias(data.experiencias || []);
+                setZones(data.zones || []);
                 setIsLoading(false);
             })
             .catch((err) => {
@@ -79,6 +85,16 @@ export default function GuideDashboard() {
             <main className="max-w-[1600px] mx-auto px-6 mt-8 flex flex-col lg:flex-row gap-8">
                 {/* COLUMNA IZQUIERDA */}
                 <aside className="w-full lg:w-1/3 xl:w-1/4 flex flex-col gap-6">
+                    <button
+                        onClick={() => {
+                            setEditingExp(null);
+                            setIsExperienceOpen(true);
+                        }}
+                        className="w-full bg-orange-500 hover:bg-orange-600 text-white px-5 py-4 rounded-2xl font-black shadow-md transition-all flex justify-center items-center gap-3"
+                    >
+                        <i className="fa-solid fa-plus"></i>
+                        NUEVA EXPERIENCIA
+                    </button>
                     <div className="bg-white px-5 py-4 rounded-3xl shadow-sm border border-slate-200 flex items-center gap-4">
                         <div className="w-12 h-12 bg-orange-50 text-orange-500 rounded-xl flex items-center justify-center font-black text-xl">
                             <i className="fa-solid fa-user-tie"></i>
@@ -114,10 +130,44 @@ export default function GuideDashboard() {
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {experiencias.map((exp) => (
-                                    <div
-                                        key={exp.id}
-                                        className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
-                                    >
+                                        <div
+                                            key={exp.id}
+                                            className="relative bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
+                                        >
+                                        {/* BOTONES ARRIBA DERECHA */}
+                                        <div className="absolute top-4 right-4 flex gap-2">
+
+                                            <button
+                                                onClick={() => {
+                                                    setEditingExp(exp);
+                                                    setIsExperienceOpen(true);
+                                                }}
+                                                className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm"
+                                            >
+                                                <i className="fa-solid fa-pen"></i>
+                                            </button>
+
+                                            <button
+                                                onClick={() => {
+                                                    if (confirm("¿Eliminar experiencia?")) {
+                                                        fetch(`/api/guide/experience/${exp.id}`, {
+                                                            method: "DELETE",
+                                                            headers: {
+                                                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content,
+                                                            },
+                                                        }).then(() => {
+                                                            setExperiencias((prev) =>
+                                                                prev.filter((e) => e.id !== exp.id)
+                                                            );
+                                                        });
+                                                    }
+                                                }}
+                                                className="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-500 text-sm"
+                                            >
+                                                <i className="fa-solid fa-trash"></i>
+                                            </button>
+
+                                        </div>
                                         {/* --- ETIQUETA DE UBICACIÓN --- */}
                                         <div className="mb-3 inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded-lg border border-slate-200">
                                             <i className="fa-solid fa-map-location-dot text-slate-400"></i>
@@ -148,6 +198,57 @@ export default function GuideDashboard() {
                     )}
                 </section>
             </main>
+
+            {isExperienceOpen && (
+                <ExperienceFormModal
+                    isOpen={isExperienceOpen}
+                    onClose={() => setIsExperienceOpen(false)}
+                    zones={zones}
+                    initialData={editingExp}
+                    onSave={async (data) => {
+                        try {
+                            const isEdit = !!editingExp;
+
+                            const url = isEdit
+                                ? `/api/guide/experience/${editingExp.id}`
+                                : "/api/guide/experience";
+
+                            const method = isEdit ? "PUT" : "POST";
+
+                            const res = await fetch(url, {
+                                method,
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN":
+                                        document.querySelector('meta[name="csrf-token"]')?.content,
+                                },
+                                body: JSON.stringify(data),
+                            });
+
+                            if (!res.ok) {
+                                const err = await res.json();
+                                alert(err.message || "Error guardando experiencia");
+                                return;
+                            }
+
+                            const saved = await res.json();
+
+                            setExperiencias((prev) =>
+                                isEdit
+                                    ? prev.map((e) => (e.id === saved.id ? saved : e))
+                                    : [...prev, saved]
+                            );
+
+                            setIsExperienceOpen(false);
+                            setEditingExp(null);
+
+                            window.location.reload();
+                        } catch (e) {
+                            alert("Error de conexión");
+                        }
+                    }}
+                />
+            )}
         </div>
     );
 }

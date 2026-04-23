@@ -13,6 +13,8 @@ use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\VerifyCodeController;
+use App\Http\Controllers\Api\OrderVerificationController;
+use App\Http\Controllers\Api\OrdersApiController;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Mail;
@@ -53,6 +55,13 @@ Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name
 Route::get('/compras', function () {
     return view('myorders');
 })->name('compras');
+
+// Ruta API de compras
+Route::get('/api/compras', [App\Http\Controllers\Api\OrdersApiController::class, 'index']);
+
+// Verificación de identidad para página de compras (sin auth)
+Route::post('/api/compras/send-code',   [OrderVerificationController::class, 'sendCode']);
+Route::post('/api/compras/verify-code', [OrderVerificationController::class, 'verifyCode']);
 
 require __DIR__ . '/auth.php';
 

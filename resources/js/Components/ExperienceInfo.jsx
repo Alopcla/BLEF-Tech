@@ -134,6 +134,7 @@ function EmailModal({ isOpen, onClose, expId, expName }) {
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [noTickets, setNoTickets] = useState(false);
 
     if (!isOpen) return null;
 
@@ -142,6 +143,7 @@ function EmailModal({ isOpen, onClose, expId, expName }) {
 
         setLoading(true);
         setError('');
+        setNoTickets(false); // reseteamos estado antes de comprobar
 
         try {
             const res = await fetch(`/api/tickets-by-email?email=${encodeURIComponent(email)}`);
@@ -149,6 +151,7 @@ function EmailModal({ isOpen, onClose, expId, expName }) {
 
             if (!data.tickets?.length) {
                 setError('No hay entradas para este email.');
+                setNoTickets(true); // marcamos que NO tiene tickets (para mostrar botón)
             } else {
                 setTickets(data.tickets);
                 setStep('tickets');
@@ -237,9 +240,21 @@ function EmailModal({ isOpen, onClose, expId, expName }) {
                         />
 
                         {error && (
-                            <p className="text-red-400 text-xs text-center mt-4">
-                                {error}
-                            </p>
+                            <>
+                                <p className="text-red-400 text-xs text-center mt-4">
+                                    {error}
+                                </p>
+
+                                {/* si no tiene tickets mostramos botón para comprar */}
+                                {noTickets && (
+                                    <button
+                                        onClick={() => window.location.href = "/pago"}
+                                        className="mt-4 w-full border border-[#D9C8A1]/30 text-[#D9C8A1] py-3 rounded-xl text-xs font-bold uppercase hover:bg-[#D9C8A1]/10 transition"
+                                    >
+                                        Comprar tickets
+                                    </button>
+                                )}
+                            </>
                         )}
 
                         <button
@@ -302,19 +317,41 @@ function EmailModal({ isOpen, onClose, expId, expName }) {
 export default function ExperienceInfo({ isAuth, userEmail, expId, expName }) {
     const [modalTickets, setModalTickets] = useState(false);
     const [modalEmail, setModalEmail] = useState(false);
-    const [userTickets, setUserTickets] = useState([]);
+    const [userTickets, setUserTickets] = useState(null);
+    const [ticketsLoading, setTicketsLoading] = useState(true);
+    const hasTickets = userTickets?.length > 0;
 
     const handleReservar = () => {
-        if (isAuth) setModalTickets(true);
-        else setModalEmail(true);
+        if (!isAuth) {
+            setModalEmail(true);
+            return;
+        }
+
+        if (ticketsLoading) return;
+
+        // Usuario logueado
+        if (hasTickets) {
+            setModalTickets(true);
+        } else {
+            window.location.href = "/pago";
+        }
     };
 
     useEffect(() => {
         if (isAuth && userEmail) {
+            setTicketsLoading(true);
+
             fetch(`/api/tickets-by-email?email=${encodeURIComponent(userEmail)}`)
                 .then(r => r.json())
-                .then(data => setUserTickets(data.tickets ?? []))
-                .catch(() => {});
+                .then(data => {
+                    setUserTickets(data.tickets ?? []);
+                })
+                .catch(() => {
+                    setUserTickets([]);
+                })
+                .finally(() => {
+                    setTicketsLoading(false);
+                });
         }
     }, [isAuth, userEmail]);
 
@@ -324,7 +361,11 @@ export default function ExperienceInfo({ isAuth, userEmail, expId, expName }) {
                 onClick={handleReservar}
                 className="bg-gradient-to-r from-[#F2C94C] via-[#D9C8A1] to-[#F2994A] text-[#1A2E1A] px-6 py-3 rounded-xl font-black shadow-xl"
             >
-                Reservar
+                {ticketsLoading
+                    ? "Cargando..."
+                    : isAuth && !hasTickets
+                        ? "Comprar tickets"
+                        : "Reservar"}
             </button>
 
             <TicketModal

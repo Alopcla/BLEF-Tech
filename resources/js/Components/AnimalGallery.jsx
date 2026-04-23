@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import AnimalCard from "./AnimalCard";
 
 const AnimalGallery = () => {
-    // Estados originales
     const [animales, setAnimales] = useState([]);
     const [cargando, setCargando] = useState(true);
 
-    // ESTADOS: Para el buscador y los filtros
     const [busqueda, setBusqueda] = useState("");
     const [filtroDieta, setFiltroDieta] = useState("Todos");
 
@@ -23,7 +21,6 @@ const AnimalGallery = () => {
             });
     }, []);
 
-    // LÓGICA DE FILTRADO
     const animalesFiltrados = animales.filter((animal) => {
         const nombre = animal.common_name || "";
         const especie = animal.species || "";
@@ -51,7 +48,6 @@ const AnimalGallery = () => {
         "Insectívoro",
     ];
 
-    // Función auxiliar para contar cuántos animales hay en cada categoría
     const contarAnimalesPorDieta = (dieta) => {
         if (dieta === "Todos") return animales.length;
         return animales.filter((a) => (a.diet || "").toLowerCase() === dieta.toLowerCase()).length;
@@ -73,13 +69,14 @@ const AnimalGallery = () => {
                 </p>
             </section>
 
-            {/* CONTENEDOR PRINCIPAL: Flexbox para dividir en Barra Lateral y Cuadrícula */}
-            <div className="container mx-auto px-4 max-w-7xl flex flex-col md:flex-row gap-8 items-start">
+            {/* CONTENEDOR PRINCIPAL: Flexbox estricto. Columna en móvil, Fila en PC */}
+            <div className="container mx-auto px-4 max-w-7xl flex flex-col lg:flex-row gap-8 items-start">
 
                 {/* ==========================================
                     BARRA LATERAL IZQUIERDA (FILTROS)
+                    La clave aquí es "static lg:sticky". En móvil fluye normal, en PC se pega.
                     ========================================== */}
-                <aside className="w-full md:w-1/4 shrink-0 bg-[#141A14]/90 backdrop-blur-md p-6 rounded-[2rem] border border-white/5 shadow-2xl sticky top-24">
+                <aside className="w-full lg:w-80 shrink-0 bg-[#141A14]/90 backdrop-blur-md p-6 rounded-[2rem] border border-white/5 shadow-2xl z-30 static lg:sticky lg:top-24">
 
                     {/* Sección Buscar */}
                     <div className="mb-8">
@@ -112,7 +109,7 @@ const AnimalGallery = () => {
                                     onClick={() => setFiltroDieta(dieta)}
                                     className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                                         filtroDieta === dieta
-                                            ? "bg-[#386641] text-white shadow-lg" // Color verde estilo captura
+                                            ? "bg-[#386641] text-white shadow-lg"
                                             : "text-neutral-400 hover:bg-white/5 hover:text-white"
                                     }`}
                                 >
@@ -120,8 +117,6 @@ const AnimalGallery = () => {
                                         <i className={`bi ${filtroDieta === dieta ? 'bi-grid-fill' : 'bi-dash'}`}></i>
                                         <span>{dieta}</span>
                                     </div>
-
-                                    {/* Insignia con el número de animales */}
                                     <span className="bg-[#1A221A] text-neutral-500 text-[10px] px-2.5 py-1 rounded-full font-bold shadow-inner">
                                         {contarAnimalesPorDieta(dieta)}
                                     </span>
@@ -133,8 +128,9 @@ const AnimalGallery = () => {
 
                 {/* ==========================================
                     CUADRÍCULA DERECHA (ANIMALES)
+                    flex-1 asegura que ocupe el resto del espacio disponible sin desbordar
                     ========================================== */}
-                <main className="w-full md:w-3/4">
+                <main className="w-full flex-1 min-w-0">
                     {cargando ? (
                         <p className="text-center text-2xl text-white font-bold animate-pulse mt-12">
                             Cargando animales...
@@ -159,7 +155,7 @@ const AnimalGallery = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                             {animalesFiltrados.map((animal) => (
                                 <AnimalCard key={animal.id} animal={animal} />
                             ))}

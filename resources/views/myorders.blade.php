@@ -78,7 +78,7 @@
     {{-- He añadido una min-height para que no salte el layout al cargar React --}}
     <div id="myorders-root"
          class="min-h-[400px]"
-         data-auth="{{ Auth::check() ? 'true' : 'false' }}"
+         data-auth="{{ Auth::guard('web')->check() ? 'true' : 'false' }}"
          data-email="{{ Auth::user()->email ?? '' }}">
          {{-- Loader opcional mientras carga React --}}
          <div class="flex justify-center items-center h-64">

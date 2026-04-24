@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Zoo Rules | Blef-Tech')
+@section('title', 'Normas del zoo')
 
 @push('styles')
     {{-- Reutilizamos el mismo CSS para mantener la estética --}}

@@ -11,12 +11,12 @@ class ExperienceController extends Controller
 {
     public function index()
     {
-        return view('experiencias');
+        return view('experience.experiencias');
     }
 
     public function MostrarInfo($slug)
     {
         $experiencias = Experience::where('slug', $slug)->firstOrFail();
-        return view('experienciasInfo', compact('experiencias'));
+        return view('experience.experienciasInfo', compact('experiencias'));
     }
 }

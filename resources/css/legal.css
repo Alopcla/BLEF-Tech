@@ -1,0 +1,93 @@
+/* Paleta de colores y variables para fácil edición */
+:root {
+    --bg-dark: #0a0a0a;
+    --emerald-blef: #34d399;
+    --amber-blef: #fbbf24;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+/* Base del cuerpo */
+body.legal-page {
+    background-color: var(--bg-dark) !important;
+}
+
+/* Contenedor tipo cristal (Glassmorphism) */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 2rem;
+}
+
+/* Tipografías y textos legales */
+.legal-content h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--amber-blef);
+    font-size: 1.875rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+}
+
+.legal-content p, 
+.legal-content li {
+    font-family: 'Outfit', sans-serif;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+    font-weight: 300;
+}
+
+.legal-content strong {
+    color: var(--emerald-blef);
+    font-weight: 500;
+}
+
+/* Efecto de texto degradado */
+.gradient-text {
+    background: linear-gradient(to right, var(--emerald-blef), var(--amber-blef));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Ajustes de fuentes generales */
+.font-bebas { font-family: 'Bebas Neue', sans-serif; }
+.font-outfit { font-family: 'Outfit', sans-serif; }
+
+/* Estilos para el banner de notas académicas/TFG */
+.tfg-note {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+}
+
+.tfg-note-amber {
+    background-color: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    color: var(--amber-blef);
+}
+
+.tfg-note-emerald {
+    background-color: rgba(52, 211, 153, 0.1);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    color: var(--emerald-blef);
+}
+
+/* Botones personalizados */
+.btn-blef-outline {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+}
+
+.btn-blef-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}

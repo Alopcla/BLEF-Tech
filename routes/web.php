@@ -39,6 +39,10 @@ Route::get('/tienda', function () {
 Route::get('/experiencias', [ExperienceController::class, 'index'])->name('VistaExperiencias');
 Route::get('/experiencias/{slug}', [ExperienceController::class, 'MostrarInfo'])->name('experienciasInfo');
 
+Route::view('/privacidad', 'legal.privacy')->name('privacy');
+Route::view('/aviso-legal', 'legal.legal-notice')->name('legal-notice');
+Route::view('/normas-del-zoo', 'legal.rules')->name('zoo-rules');
+Route::view('/terminos-y-condiciones', 'legal.terms')->name('terms');
 
 Route::get('/mapa', function () {
     return view('mapa');

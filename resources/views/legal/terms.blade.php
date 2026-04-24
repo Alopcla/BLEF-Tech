@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Terms & Conditions | Blef-Tech')
+@section('title', 'Términos y condiciones')
 
 @push('styles')
     {{-- Mantenemos la consistencia con tu CSS de legales --}}

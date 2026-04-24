@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Legal Notice | Blef-Tech')
+@section('title', 'Aviso legal')
 
 @push('styles')
     @vite(['resources/css/legal.css'])

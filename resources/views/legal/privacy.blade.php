@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Privacy Policy | Blef-Tech')
+@section('title', 'Política de privacidad')
 
 @push('styles')
     @vite(['resources/css/legal.css'])

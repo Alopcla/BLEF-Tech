@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NavigationModules from "./NavigationModules";
-import ExperienceFormModal from "./ExperienceFormModal";
+import GuideFormModal from "./GuideFormModal";
 
 export default function GuideDashboard() {
     const [experiencias, setExperiencias] = useState([]);
@@ -200,7 +200,7 @@ export default function GuideDashboard() {
             </main>
 
             {isExperienceOpen && (
-                <ExperienceFormModal
+                <GuideFormModal
                     isOpen={isExperienceOpen}
                     onClose={() => setIsExperienceOpen(false)}
                     zones={zones}

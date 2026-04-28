@@ -4,6 +4,22 @@
 
 @section('video', 'true')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+
+<style>
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(0.8) sepia(50%) saturate(500%) hue-rotate(10deg);
+        cursor: pointer;
+    }
+    /* Estilo preventivo para botón deshabilitado */
+    button:disabled {
+        cursor: not-allowed !important;
+        pointer-events: none;
+    }
+</style>
+@endpush
+
 @section('content')
 
 {{-- Espaciador para el header --}}
@@ -124,19 +140,6 @@
         </form>
     </div>
 </div>
-
-<style>
-    input[type="date"]::-webkit-calendar-picker-indicator {
-        filter: invert(0.8) sepia(50%) saturate(500%) hue-rotate(10deg);
-        cursor: pointer;
-    }
-    /* Estilo preventivo para botón deshabilitado */
-    button:disabled {
-        cursor: not-allowed !important;
-        pointer-events: none;
-    }
-</style>
-
 @endsection
 
 @push('scripts')

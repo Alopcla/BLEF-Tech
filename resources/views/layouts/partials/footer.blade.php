@@ -16,7 +16,7 @@
             {{-- Navegación compacta --}}
             <nav style="font-family: 'Outfit', sans-serif;" class="flex gap-5 text-xs font-medium text-[#D9C8A1]/70">
                 <a href="{{ route('animales') }}" class="hover:text-white transition-colors">Animales</a>
-                <a href="{{ route('tickets.show') }}" class="hover:text-white transition-colors">Tickets</a>
+                <a href="{{ route('payment.show') }}" class="hover:text-white transition-colors">Tickets</a>
                 <a href="{{ route('contacto') }}" class="hover:text-white transition-colors">Contacto</a>
                 <a href="{{ route('mapa.index') }}" class="hover:text-white transition-colors">Mapa</a>
             </nav>

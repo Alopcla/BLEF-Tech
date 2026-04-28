@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Mapa Interactivo | Blef-Tech')
+@section('title', 'Mapa Interactivo | BLR-Zoo')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/styles.css') }}">

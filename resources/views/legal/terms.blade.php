@@ -27,7 +27,7 @@
         <div class="glass-card p-8 md:p-16 shadow-2xl">
             <div class="legal-content">
                 <p class="text-lg">
-                    Bienvenido a <strong>Blef-Tech Zoo</strong>. Al acceder a nuestra web y utilizar nuestros servicios de compra, aceptas los presentes términos. Este documento regula la relación entre el usuario y nuestra plataforma de gestión biotecnológica.
+                    Bienvenido a <strong>BLR-Zoo Zoo</strong>. Al acceder a nuestra web y utilizar nuestros servicios de compra, aceptas los presentes términos. Este documento regula la relación entre el usuario y nuestra plataforma de gestión biotecnológica.
                 </p>
 
                 <h3>1. Compra de Tickets y Acceso</h3>
@@ -42,7 +42,7 @@
 
                 <h3>2. Tienda Online (E-commerce)</h3>
                 <p>
-                    Al comprar productos en la <strong>Tienda Blef-Tech</strong>:
+                    Al comprar productos en la <strong>Tienda BLR ZOO</strong>:
                 </p>
                 <ul class="list-disc pl-6 space-y-2 font-outfit">
                     <li>Los precios incluyen los impuestos aplicables según la normativa vigente (simulada).</li>
@@ -56,7 +56,7 @@
                 </p>
                 <ul class="list-disc pl-6 space-y-2 font-outfit">
                     <li>Es requisito indispensable poseer un ticket de entrada general para el mismo día de la experiencia.</li>
-                    <li>Blef-Tech se reserva el derecho de cancelar o reprogramar experiencias por motivos de bienestar animal sin previo aviso.</li>
+                    <li>BLR Zoo se reserva el derecho de cancelar o reprogramar experiencias por motivos de bienestar animal sin previo aviso.</li>
                 </ul>
 
                 <h3>4. Uso de la Plataforma</h3>

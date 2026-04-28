@@ -8,7 +8,7 @@
             <div class="flex items-center gap-3">
                 <img src="{{ asset('LOGO.PNG') }}" class="w-10 brightness-110" alt="Park Zoo">
                 <div>
-                    <h4 class="font-parkzoo text-base font-bold text-[#D9C8A1] leading-none uppercase tracking-tight">BLR-ZOO</h4>
+                    <h4 class="font-parkzoo text-base font-bold text-[#D9C8A1] leading-none uppercase tracking-tight">BLR-Zoo</h4>
                     <p class="text-[9px] text-[#D9C8A1]/50 uppercase tracking-widest">Explora lo salvaje</p>
                 </div>
             </div>
@@ -39,7 +39,7 @@
             </div>
 
             <p style="font-family: 'Outfit', sans-serif;" class="text-[9px] text-[#D9C8A1]/30">
-                © {{ date('Y') }} BLEF-TECH ZOO. TFG Académico.
+                © {{ date('Y') }} BLR-Zoo ZOO. TFG Académico.
             </p>
         </div>
 

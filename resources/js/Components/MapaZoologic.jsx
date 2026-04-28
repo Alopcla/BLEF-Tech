@@ -8,7 +8,7 @@ const MapaZoologic = () => {
 
     // IDs exactos según la tabla de Supabase
     const zonas = [
-        { id: 'Edificio', top: '75%', left: '20%', nombre: 'BLEF-Tech' },// top y left son % para que sea responsive
+        { id: 'Edificio', top: '75%', left: '20%', nombre: 'BLR-Zoo' },// top y left son % para que sea responsive
         { id: 'Terrestre', top: '60%', left: '55%', nombre: 'Sabana / Terrestre' },
         { id: 'Acuático', top: '65%', left: '85%', nombre: 'Charca / Acuático' },
         { id: 'Aviario', top: '25%', left: '38%', nombre: 'Aviario' },

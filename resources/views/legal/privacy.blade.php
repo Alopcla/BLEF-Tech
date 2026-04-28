@@ -30,12 +30,12 @@
         <div class="glass-card p-8 md:p-16 shadow-2xl">
             <div class="legal-content">
                 <p class="text-lg">
-                    En <strong>Blef-Tech Zoo</strong>, la protección de tus datos es tan prioritaria como el bienestar de nuestras especies. Este documento detalla cómo tratamos la información personal que recopilas a través de nuestra plataforma de gestión de entradas, tienda y experiencias.
+                    En <strong>BLR-Zoo Zoo</strong>, la protección de tus datos es tan prioritaria como el bienestar de nuestras especies. Este documento detalla cómo tratamos la información personal que recopilas a través de nuestra plataforma de gestión de entradas, tienda y experiencias.
                 </p>
 
                 <h3>1. Responsable del Tratamiento</h3>
                 <p>
-                    El responsable de los datos recogidos en este sitio web es <strong>Blef-Tech Conservation Group S.A.</strong>, con domicilio social en Autovía de la Naturaleza, Km 45, y correo electrónico de contacto: <strong>privacidad@blr-zoo.com</strong>.
+                    El responsable de los datos recogidos en este sitio web es <strong>BLR-Zoo Conservation Group S.A.</strong>, con domicilio social en Autovía de la Naturaleza, Km 45, y correo electrónico de contacto: <strong>privacidad@blr-zoo.com</strong>.
                 </p>
 
                 <h3>2. Datos que Recopilamos</h3>
@@ -69,7 +69,7 @@
                 <div class="tfg-note tfg-note-emerald mt-12">
                     <p class="text-sm m-0">
                         <i class="fa-solid fa-circle-info mr-2"></i> 
-                        <strong>Aviso Académico:</strong> Esta página ha sido generada con fines ilustrativos para la defensa del TFG. Blef-Tech no es una entidad comercial real.
+                        <strong>Aviso Académico:</strong> Esta página ha sido generada con fines ilustrativos para la defensa del TFG. BLR-Zoo no es una entidad comercial real.
                     </p>
                 </div>
             </div>

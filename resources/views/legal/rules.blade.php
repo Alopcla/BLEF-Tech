@@ -27,7 +27,7 @@
         <div class="glass-card p-8 md:p-16 shadow-2xl">
             <div class="legal-content">
                 <p class="text-lg">
-                    Para garantizar una experiencia segura y educativa en <strong>Blef-Tech Zoo</strong>, todos los visitantes deben cumplir con el siguiente código de conducta. El incumplimiento de estas normas puede suponer la anulación de tus <strong>tickets</strong> sin derecho a reembolso.
+                    Para garantizar una experiencia segura y educativa en <strong>BLR-Zoo Zoo</strong>, todos los visitantes deben cumplir con el siguiente código de conducta. El incumplimiento de estas normas puede suponer la anulación de tus <strong>tickets</strong> sin derecho a reembolso.
                 </p>
 
                 <h3>1. Respeto a los Animales</h3>
@@ -40,7 +40,7 @@
                     <li>Utilizar flash al tomar fotografías, ya que puede estresar a las especies sensibles.</li>
                 </ul>
 
-                <h3>2. Normas para "Experiencias Blef-Tech"</h3>
+                <h3>2. Normas para "Experiencias BLR-Zoo"</h3>
                 <p>
                     Si has adquirido una <strong>Experiencia</strong> mediante nuestra plataforma digital, recuerda:
                 </p>
@@ -57,7 +57,7 @@
 
                 <h3>4. Objetos Prohibidos</h3>
                 <p>
-                    No se permite el acceso con drones, punteros láser o cualquier objeto que pueda interferir con el comportamiento natural de los animales o los sistemas de Blef-Tech.
+                    No se permite el acceso con drones, punteros láser o cualquier objeto que pueda interferir con el comportamiento natural de los animales o los sistemas de BLR-Zoo.
                 </p>
 
                 <div class="tfg-note tfg-note-emerald mt-12">

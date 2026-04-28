@@ -20,7 +20,7 @@ class ZoneSeeder extends Seeder
             'ecosystem_id' => 1,
             'type' => 'Edificio',
             'dimensions_m2' => 100,
-            'description' => 'Ubicación de la empresa de BLEF-Tech'
+            'description' => 'Ubicación de la empresa de BLR-Zoo'
         ]);
 
 

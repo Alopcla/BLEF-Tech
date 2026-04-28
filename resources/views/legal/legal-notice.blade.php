@@ -35,7 +35,7 @@
 
                 <h3>1. Identidad del Titular</h3>
                 <p>
-                    El titular del desarrollo y responsable de los contenidos de este proyecto es el alumno de Grado [Tu Nombre/Estudiante]. La plataforma <strong>Blef-Tech Zoo</strong> es una creación intelectual con fines puramente educativos y de demostración técnica.
+                    El titular del desarrollo y responsable de los contenidos de este proyecto es el alumno de Grado [Tu Nombre/Estudiante]. La plataforma <strong>BLR-Zoo Zoo</strong> es una creación intelectual con fines puramente educativos y de demostración técnica.
                 </p>
 
                 <h3>2. Propiedad Intelectual y Uso</h3>
@@ -44,7 +44,7 @@
                 </p>
                 <ul class="list-disc pl-6 space-y-2">
                     <li><strong>Catálogo de Animales:</strong> Las imágenes y descripciones de las especies se utilizan bajo licencias Creative Commons para fines ilustrativos.</li>
-                    <li><strong>Marcas:</strong> La marca "Blef-Tech" es ficticia y cualquier parecido con empresas reales es pura coincidencia.</li>
+                    <li><strong>Marcas:</strong> La marca "BLR-Zoo" es ficticia y cualquier parecido con empresas reales es pura coincidencia.</li>
                 </ul>
 
                 <h3>3. Exclusión de Responsabilidad</h3>

@@ -2,7 +2,6 @@
 
 @section('title', 'Animales')
 
-{{-- PASO 1: Desactivamos el video del layout principal --}}
 @section('video', 'false')
 
 @push('styles')
@@ -13,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
     <style>
-    /* 1. Tu fondo de musgo */
+    /* 1. Fondo de imagen */
     body {
         background: #141A14 url("/img/zoo_fondo.png") no-repeat fixed center !important;
         background-size: cover !important;

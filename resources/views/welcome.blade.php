@@ -23,8 +23,8 @@
         font-family: 'Park zoo';
     }
 
-    /* * SOBRESCRIBIMOS EL VIDEO SOLO PARA ESTA VISTA 
-     * Lo hacemos absoluto, limitamos su altura y le damos un degradado 
+    /* * SOBRESCRIBIMOS EL VIDEO SOLO PARA ESTA VISTA
+     * Lo hacemos absoluto, limitamos su altura y le damos un degradado
      * para que se fusione con el fondo oscuro de las cards.
      */
     .video-background {
@@ -41,7 +41,7 @@
 
     /* Fondo sólido para evitar el transparente global y dar soporte a las cards */
     body {
-        background-color: #0a0a0a !important; 
+        background-color: #0a0a0a !important;
     }
 
     .barra-tiempo {
@@ -105,9 +105,9 @@
 
 {{-- 2. SECCIÓN DE CONTENIDO (Fondo oscuro que solapa el final del video) --}}
 <div class="relative bg-[#0a0a0a] z-20 border-t border-white/5 pt-16 pb-24 shadow-[0_-20px_50px_rgba(0,0,0,0.8)]">
-    
+
     <div class="px-4 sm:px-6 max-w-7xl mx-auto space-y-16">
-        
+
         {{-- Fila de iconos / Información --}}
         <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-[2rem] p-8 shadow-xl">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -277,59 +277,57 @@
     </div>
 </div>
 
-{{-- ========================================== --}}
-{{-- 3. WIDGETS FLOTANTES (LATERALES)           --}}
-{{-- ========================================== --}}
+
 {{-- ========================================== --}}
 {{-- 3. WIDGETS FLOTANTES (LATERALES)           --}}
 {{-- ========================================== --}}
 <div class="fixed bottom-24 right-0 flex flex-col items-end gap-3 z-50">
 
     {{-- Botón Mapa (Nuevo) --}}
-    <a href="{{ route('mapa.index') }}" 
-       class="group relative flex items-center bg-gradient-to-r from-[#3b82f6] to-[#1d4ed8] text-white 
-              rounded-l-2xl shadow-[-5px_5px_15px_rgba(0,0,0,0.3)] 
+    <a href="{{ route('mapa.index') }}"
+       class="group relative flex items-center bg-gradient-to-r from-[#3b82f6] to-[#1d4ed8] text-white
+              rounded-l-2xl shadow-[-5px_5px_15px_rgba(0,0,0,0.3)]
               w-16 hover:w-40 h-16 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden border-y border-l border-blue-400/30">
-        
+
         {{-- Contenedor del icono --}}
         <div class="min-w-[4rem] h-full flex items-center justify-center z-10">
             <i class="fa-solid fa-map-location-dot text-2xl group-hover:scale-110 transition-transform duration-300 drop-shadow-sm"></i>
         </div>
-        
+
         {{-- Texto oculto por defecto --}}
-        <span style="font-family: 'Outfit', sans-serif;" 
+        <span style="font-family: 'Outfit', sans-serif;"
               class="absolute left-16 font-bold text-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 uppercase tracking-wide">
             Ver Mapa
         </span>
     </a>
 
     {{-- Botón Tickets --}}
-    <a href="{{ route('tickets.show') }}" 
-       class="group relative flex items-center bg-gradient-to-r from-[#F2C94C] to-[#F2994A] text-[#1A2E1A] 
-              rounded-l-2xl shadow-[-5px_5px_15px_rgba(0,0,0,0.3)] 
+    <a href="{{ route('tickets.show') }}"
+       class="group relative flex items-center bg-gradient-to-r from-[#F2C94C] to-[#F2994A] text-[#1A2E1A]
+              rounded-l-2xl shadow-[-5px_5px_15px_rgba(0,0,0,0.3)]
               w-16 hover:w-40 h-16 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden border-y border-l border-[#F2C94C]/50">
-        
+
         <div class="min-w-[4rem] h-full flex items-center justify-center z-10">
             <i class="fa-solid fa-ticket text-2xl -rotate-45 group-hover:rotate-0 transition-transform duration-300 drop-shadow-sm"></i>
         </div>
-        
-        <span style="font-family: 'Outfit', sans-serif;" 
+
+        <span style="font-family: 'Outfit', sans-serif;"
               class="absolute left-16 font-bold text-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 uppercase tracking-wide">
             Tickets
         </span>
     </a>
 
     {{-- Botón Mis Compras --}}
-    <a href="{{ route('compras') }}" 
-       class="group relative flex items-center bg-gradient-to-r from-[#2D5A27] to-[#1e3d1a] text-[#D9C8A1] 
-              rounded-l-2xl shadow-[-5px_5px_15px_rgba(0,0,0,0.3)] 
+    <a href="{{ route('compras') }}"
+       class="group relative flex items-center bg-gradient-to-r from-[#2D5A27] to-[#1e3d1a] text-[#D9C8A1]
+              rounded-l-2xl shadow-[-5px_5px_15px_rgba(0,0,0,0.3)]
               w-16 hover:w-48 h-16 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden">
-        
+
         <div class="min-w-[4rem] h-full flex items-center justify-center z-10">
             <i class="fa-solid fa-bag-shopping text-2xl drop-shadow-sm"></i>
         </div>
-        
-        <span style="font-family: 'Outfit', sans-serif;" 
+
+        <span style="font-family: 'Outfit', sans-serif;"
               class="absolute left-16 font-bold text-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
             Mis Compras
         </span>

@@ -1,6 +1,6 @@
 <div class="relative z-10 bg-[#1A2E1A] border-t border-[#D9C8A1]/20 py-6 px-6">
     <div class="max-w-6xl mx-auto">
-        
+
         {{-- Fila Principal: Logo, Nav y Redes --}}
         <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
 
@@ -8,7 +8,7 @@
             <div class="flex items-center gap-3">
                 <img src="{{ asset('LOGO.PNG') }}" class="w-10 brightness-110" alt="Park Zoo">
                 <div>
-                    <h4 class="font-parkzoo text-base font-bold text-[#D9C8A1] leading-none uppercase tracking-tight">BLEF-TECH</h4>
+                    <h4 class="font-parkzoo text-base font-bold text-[#D9C8A1] leading-none uppercase tracking-tight">BLR-ZOO</h4>
                     <p class="text-[9px] text-[#D9C8A1]/50 uppercase tracking-widest">Explora lo salvaje</p>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                 <a href="{{ route('zoo-rules') }}" class="hover:text-white transition-colors">Normas Zoo</a>
                 <a href="{{ route('terms') }}" class="hover:text-white transition-colors">Terminos y Condiciones</a>
             </div>
-            
+
             <p style="font-family: 'Outfit', sans-serif;" class="text-[9px] text-[#D9C8A1]/30">
                 © {{ date('Y') }} BLEF-TECH ZOO. TFG Académico.
             </p>

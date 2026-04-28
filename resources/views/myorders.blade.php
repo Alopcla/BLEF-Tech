@@ -62,7 +62,7 @@
             </span>
         </div>
 
-        <h1 class="font-parkzoo text-5xl lg:text-7xl text-white mt-2 leading-none">
+        <h1 class="font-parkzoo text-5xl lg:text-7xl text-white mt-2 leading-none fuenteZoo">
             Mi <span class="text-[#D9C8A1] drop-shadow-[0_0_15px_rgba(217,200,161,0.3)]">Historial</span>
         </h1>
 

@@ -155,7 +155,7 @@ class PaymentController extends Controller
                     if (!$yaProcesadoExp) {
                         DB::table('reserve_experiences')->insert([
                             'experience_id'    => $meta['experiencia_id'],
-                            'ticket_id'        => $meta['ticket_id'] ?? null, // GUARDAMOS EL ID DEL TICKET SELECCIONADO
+                            'ticket_id'        => $meta['ticket_id'], // GUARDAMOS EL ID DEL TICKET SELECCIONADO
                             'email'            => $email,
                             'reservation_date' => $meta['fecha'] ?? now(),
                             'price'            => $amount,

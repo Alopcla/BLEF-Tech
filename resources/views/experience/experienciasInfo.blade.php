@@ -63,7 +63,7 @@
                 </p>
             </div>
 
-            {{-- 🔥 BLOQUE REACT --}}
+            {{-- BLOQUE REACT --}}
             <div class="mt-12 pt-8 border-t border-white/5">
                 <div id="reserva-root"
                      data-auth="{{ auth()->check() ? 'true' : 'false' }}"

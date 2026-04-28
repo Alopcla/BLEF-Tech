@@ -304,7 +304,7 @@
     </a>
 
     {{-- Botón Tickets --}}
-    <a href="{{ route('tickets.show') }}" 
+    <a href="{{ route('payment.show') }}" 
        class="group relative flex items-center bg-gradient-to-r from-[#F2C94C] to-[#F2994A] text-[#1A2E1A] 
               rounded-l-2xl shadow-[-5px_5px_15px_rgba(0,0,0,0.3)] 
               w-16 hover:w-40 h-16 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden border-y border-l border-[#F2C94C]/50">

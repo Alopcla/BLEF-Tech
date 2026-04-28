@@ -153,7 +153,6 @@ Route::middleware(['auth:employee'])->group(function () {
 
 // 1. Rutas de Tickets (Gestión de disponibilidad y vista de reserva)
 Route::controller(TicketController::class)->group(function () {
-    Route::get('/tickets', 'showTickets')->name('tickets.show');
     Route::get('/check-availability', 'checkAvailability')->name('check.availability');
 });
 

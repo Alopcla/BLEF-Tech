@@ -4,78 +4,6 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-<style>
-    @font-face {
-        font-family: 'Park zoo';
-        src: url('../fonts/Parkzoo-Regular.woff2') format('woff2'),
-             url('../fonts/Parkzoo-Regular.woff') format('woff');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-    }
-
-    .fuenteZoo {
-        font-family: 'Park zoo';
-    }
-
-    /* * SOBRESCRIBIMOS EL VIDEO SOLO PARA ESTA VISTA 
-     * Lo hacemos absoluto, limitamos su altura y le damos un degradado 
-     * para que se fusione con el fondo oscuro de las cards.
-     */
-    .video-background {
-        position: absolute !important;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 80vh !important;
-        object-fit: cover;
-        z-index: -1 !important;
-        -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
-        mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
-    }
-
-    /* Fondo sólido para evitar el transparente global y dar soporte a las cards */
-    body {
-        background-color: #0a0a0a !important; 
-    }
-
-    .barra-tiempo {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        color: #D9C8A1;
-        font-family: 'Park zoo';
-        padding: 15px 25px;
-        border-radius: 20px;
-        background: rgba(0, 0, 0, 0.35);
-        backdrop-filter: blur(4px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        align-items: center;
-        display: flex;
-        z-index: 50;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar { display: none; }
-    .custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-    @media screen and (max-width: 900px) {
-        .barra-tiempo {
-            position: static;
-            backdrop-filter: none;
-            box-shadow: none;
-            background: none;
-            display: flex;
-            justify-content: flex-start;
-            padding: 0;
-            font-size: 20px;
-        }
-    }
-</style>
 @endpush
 
 @section('content')
@@ -361,4 +289,5 @@
 @push('scripts')
 @viteReactRefresh
 @vite(['resources/js/app.jsx'])
+
 @endpush

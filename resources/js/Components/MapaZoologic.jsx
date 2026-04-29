@@ -80,7 +80,7 @@ const MapaZoologic = () => {
                     key={zona.id}
                     className="absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer group z-10"
                     style={{ top: zona.top, left: zona.left }}
-                    // En escritorio sigue funcionando el hover
+                    // En escritorio funciona en hover
                     onMouseEnter={() => window.innerWidth > 768 && manejarHover(zona.id)}
                     onMouseLeave={() => window.innerWidth > 768 && setInfoZona(null)}
                     // En móvil y escritorio, el click manda (abre o redirige)

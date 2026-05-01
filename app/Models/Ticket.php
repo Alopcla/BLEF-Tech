@@ -20,6 +20,8 @@ class Ticket extends Model
         'status',
     ];
 
+    public const MAX_TICKETS_PER_DAY = 50;
+
     protected $casts = [
         'visit_day' => 'date',
     ];
@@ -35,7 +37,7 @@ class Ticket extends Model
             ->where('status', 'paid')
             ->count();
 
-        return max(0, 10 - $vendidos);
+        return max(0, self::MAX_TICKETS_PER_DAY - $vendidos);
     }
 
     /**
@@ -52,4 +54,6 @@ class Ticket extends Model
                 ->where('visit_day', '>=', now()->format('Y-m-d'))
                 ->exists();
     }
+
+    
 }

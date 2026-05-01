@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TicketMail;
+use App\Models\Ticket;
 use App\Services\StripeService;
 use Stripe\Stripe;
 use Stripe\Refund;
@@ -38,7 +39,7 @@ class PaymentController extends Controller
                 ->where('status', 'paid')
                 ->count();
 
-            $disponibles = max(0, 100 - $vendidos);
+            $disponibles = max(0, Ticket::MAX_TICKETS_PER_DAY - $vendidos);
 
             if ($cantidad > $disponibles) {
                 return back()->with('error', 'No hay entradas suficientes para esta fecha.');
@@ -155,7 +156,7 @@ class PaymentController extends Controller
                     if (!$yaProcesadoExp) {
                         DB::table('reserve_experiences')->insert([
                             'experience_id'    => $meta['experiencia_id'],
-                            'ticket_id'        => $meta['ticket_id'] ?? null, // GUARDAMOS EL ID DEL TICKET SELECCIONADO
+                            'ticket_id'        => $meta['ticket_id'], // GUARDAMOS EL ID DEL TICKET SELECCIONADO
                             'email'            => $email,
                             'reservation_date' => $meta['fecha'] ?? now(),
                             'price'            => $amount,

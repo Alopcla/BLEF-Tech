@@ -1,4 +1,6 @@
 import "./bootstrap";
+import "./main.js";
+
 import React from "react";
 import { createRoot } from "react-dom/client";
 
@@ -11,6 +13,7 @@ import GuideDashboard from './Components/GuideDashboard';
 import ExperienciasPage from './Components/Experience';
 import ExperienceInfo from "./Components/ExperienceInfo";
 import MyOrders from "./Components/MyOrders";
+
 
 const mount = (id, component) => {
     const el = document.getElementById(id);

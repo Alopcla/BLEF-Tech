@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ExperienceApiController;
+use App\Http\Controllers\Api\OrderVerificationController;
+use App\Http\Controllers\Api\OrdersApiController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -51,3 +53,10 @@ Route::get('/tickets-by-email', function (Request $request) {
 use App\Http\Controllers\Api\ZoneController;
 
 Route::get('/zones/tipo/{type}', [ZoneController::class, 'getZoneInfo']);
+
+// Ruta API de compras
+Route::get('/compras', [OrdersApiController::class, 'index']);
+
+// Verificación de identidad para página de compras (sin auth)
+Route::post('/compras/send-code',   [OrderVerificationController::class, 'sendCode']);
+Route::post('/compras/verify-code', [OrderVerificationController::class, 'verifyCode']);

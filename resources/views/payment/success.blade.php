@@ -225,7 +225,7 @@
                 $explorarRuta  = match($tipo) {
                     'shop'        => route('tienda'),
                     'experiencia' => route('VistaExperiencias'),
-                    default       => route('tickets.show'),
+                    default       => route('payment.show'),
                 };
                 $explorarIcono = match($tipo) {
                     'shop'        => 'fa-bag-shopping',
@@ -247,7 +247,7 @@
 
         <div class="mt-12 text-center">
             <p class="text-white/20 text-[10px] uppercase font-black tracking-[6px]">
-                Park Zoo Luxury Experiences • 2026
+                BLEF-TECH • <span id="year"></span>
             </p>
         </div>
     </div>
@@ -264,5 +264,7 @@
         });
         document.getElementById('btn-ver-mas').style.display = 'none';
     }
+
+    document.getElementById("year").textContent = new Date().getFullYear();
 </script>
 @endsection

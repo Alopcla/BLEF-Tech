@@ -440,7 +440,7 @@ export default function ExperienciasPage({ isAuth, userEmail }) {
 
     useEffect(() => {
         if (isAuth && userEmail) {
-            setTicketsLoading(true); // 👈 empieza carga
+            setTicketsLoading(true);
 
             fetch(`/api/tickets-by-email?email=${encodeURIComponent(userEmail)}`)
                 .then(r => r.json())
@@ -451,10 +451,10 @@ export default function ExperienciasPage({ isAuth, userEmail }) {
                     setUserTickets([]);
                 })
                 .finally(() => {
-                    setTicketsLoading(false); // 👈 TERMINA carga (esto te faltaba)
+                    setTicketsLoading(false);
                 });
         } else {
-            setTicketsLoading(false); // 👈 importante si no está logeado
+            setTicketsLoading(false);
         }
     }, [isAuth, userEmail]);
 

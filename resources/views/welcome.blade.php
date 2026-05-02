@@ -286,6 +286,6 @@
 
 @push('scripts')
 @viteReactRefresh
-@vite(['resources/js/app.jsx'])
+@vite(['resources/js/main.js'])
 
 @endpush

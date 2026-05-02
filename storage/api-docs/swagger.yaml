@@ -1,0 +1,966 @@
+openapi: 3.0.3
+info:
+  title: BLR-Zoo API
+  description: |
+    API REST de la aplicación web BLR-Zoo. Desarrollada con Laravel 12 (PHP 8.3.29).
+    Base URL en desarrollo: http://127.0.0.1:8000/api
+  version: 1.0.0
+  contact:
+    name: Equipo BLR-Zoo (DAW)
+
+servers:
+  - url: http://127.0.0.1:8000/api
+    description: Servidor de desarrollo local
+
+tags:
+  - name: Animales
+  - name: Experiencias
+  - name: Tienda
+  - name: Tickets y Pagos
+  - name: Historial de Compras
+  - name: Mapa y Zonas
+  - name: Alertas
+  - name: Empleados
+  - name: Dashboard Médico
+  - name: Dashboard Cuidador
+  - name: Dashboard Guía
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: laravel_session
+      description: Sesión Laravel gestionada por Breeze. Requiere cookie CSRF (X-XSRF-TOKEN).
+
+  schemas:
+    Animal:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        name: { type: string, example: "León africano" }
+        species: { type: string, example: "Panthera leo" }
+        diet: { type: string, enum: [Carnívoro, Herbívoro, Omnívoro], example: "Carnívoro" }
+        ecosystem: { type: string, example: "Sabana" }
+        zone_id: { type: integer, example: 2 }
+        birth_date: { type: string, format: date, example: "2018-04-12" }
+        daily_food: { type: string, example: "8 kg carne" }
+
+    Experience:
+      type: object
+      properties:
+        id: { type: integer, example: 3 }
+        title: { type: string, example: "Visita guiada sabana" }
+        description: { type: string, example: "Recorrido de 45 minutos por la sabana" }
+        price: { type: string, example: "15.00" }
+        max_capacity: { type: integer, example: 20 }
+        plazas_disponibles: { type: integer, example: 13 }
+        guide_id: { type: integer, example: 4 }
+
+    Product:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        name: { type: string, example: "Peluche León" }
+        description: { type: string, example: "Peluche oficial del zoo" }
+        price: { type: string, example: "12.99" }
+        stock: { type: integer, example: 45 }
+        category: { type: string, example: "Peluches" }
+        image_url: { type: string, example: "https://..." }
+        spline_url: { type: string, nullable: true, example: "https://spline.design/..." }
+        sizes: { type: array, items: { type: string }, example: ["S", "M", "L"] }
+
+    Employee:
+      type: object
+      properties:
+        id: { type: integer, example: 7 }
+        name: { type: string, example: "María García" }
+        dni: { type: string, example: "12345678A" }
+        email: { type: string, example: "maria@blrzoo.com" }
+        position:
+          type: string
+          enum: [Médico, Cuidador, Guía, Administrador]
+          example: "Cuidador"
+        zone_id: { type: integer, example: 2 }
+
+    Zone:
+      type: object
+      properties:
+        id: { type: integer, example: 2 }
+        name: { type: string, example: "Sabana" }
+        description: { type: string, example: "Zona de animales africanos" }
+        position_x: { type: number, example: 42.5 }
+        position_y: { type: number, example: 31.0 }
+        animals: { type: array, items: { $ref: '#/components/schemas/Animal' } }
+        experiences: { type: array, items: { $ref: '#/components/schemas/Experience' } }
+        zone_events: { type: array, items: { $ref: '#/components/schemas/Alert' } }
+
+    Alert:
+      type: object
+      properties:
+        id: { type: integer, example: 5 }
+        zone_id: { type: integer, example: 2 }
+        title: { type: string, example: "Recinto en mantenimiento" }
+        type:
+          type: string
+          enum: [aviso, alerta, peligro]
+          example: "aviso"
+        description: { type: string, nullable: true, example: "Cerrará a las 14:00" }
+
+    VetRecord:
+      type: object
+      properties:
+        id: { type: integer, example: 12 }
+        animal_id: { type: integer, example: 1 }
+        diagnosis: { type: string, example: "Revisión rutinaria anual" }
+        treatment: { type: string, nullable: true, example: "Vitaminas A y D" }
+        notes: { type: string, nullable: true, example: "Estado excelente" }
+        created_at: { type: string, format: date-time }
+
+    StripeCheckoutResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          example: "https://checkout.stripe.com/pay/cs_test_a1xhRa2s4ouTGgos..."
+
+    ValidationError:
+      type: object
+      properties:
+        message: { type: string, example: "The given data was invalid." }
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items: { type: string }
+          example:
+            email: ["El email ya está en uso"]
+            dni: ["El DNI ya está registrado"]
+
+    OrdersResponse:
+      type: object
+      properties:
+        tickets:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: integer }
+              email: { type: string }
+              visit_date: { type: string, format: date }
+              price: { type: string }
+              status: { type: string, enum: [paid, cancelled] }
+              code: { type: string, description: "UUID del ticket (usado para QR)" }
+        experiences:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: integer }
+              experience: { $ref: '#/components/schemas/Experience' }
+              ticket_id: { type: integer }
+              status: { type: string }
+        orders:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: integer }
+              total: { type: string }
+              status: { type: string }
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    product: { $ref: '#/components/schemas/Product' }
+                    quantity: { type: integer }
+                    price: { type: string }
+
+paths:
+
+  # ── ANIMALES ─────────────────────────────────────────────────────────────────
+  /animals:
+    get:
+      tags: [Animales]
+      summary: Lista todos los animales
+      description: Devuelve el catálogo completo de animales del zoológico. Endpoint público.
+      operationId: getAnimals
+      responses:
+        '200':
+          description: Array de animales
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Animal' }
+
+  /animals/{id}:
+    get:
+      tags: [Animales]
+      summary: Detalle de un animal
+      operationId: getAnimal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+          description: ID del animal
+      responses:
+        '200':
+          description: Datos del animal
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Animal' }
+        '404':
+          description: Animal no encontrado
+
+  # ── EXPERIENCIAS ──────────────────────────────────────────────────────────────
+  /experiences:
+    get:
+      tags: [Experiencias]
+      summary: Lista experiencias con plazas disponibles
+      description: Devuelve experiencias ordenadas por popularidad (nº de reservas). Calcula plazas_disponibles dinámicamente.
+      operationId: getExperiences
+      responses:
+        '200':
+          description: Array de experiencias
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Experience' }
+
+    post:
+      tags: [Experiencias]
+      summary: Crea una experiencia
+      operationId: createExperience
+      security:
+        - sessionCookie: []
+      description: Requiere rol Guía o Administrador (middleware position).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, description, price, max_capacity]
+              properties:
+                title: { type: string, example: "Visita guiada sabana" }
+                description: { type: string, example: "Recorrido de 45 minutos" }
+                price: { type: number, format: float, example: 15.00 }
+                max_capacity: { type: integer, example: 20 }
+      responses:
+        '201':
+          description: Experiencia creada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Experience' }
+        '403':
+          description: Rol no autorizado
+        '422':
+          description: Error de validación
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ValidationError' }
+
+  /experiences/checkout:
+    post:
+      tags: [Experiencias]
+      summary: Crea sesión Stripe para reservar una experiencia
+      operationId: checkoutExperience
+      description: Valida que el ticket exista y que queden plazas antes de generar el pago.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [experience_id, ticket_id]
+              properties:
+                experience_id: { type: integer, example: 3 }
+                ticket_id: { type: integer, example: 12 }
+      responses:
+        '200':
+          description: URL de checkout Stripe
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StripeCheckoutResponse' }
+        '422':
+          description: Sin plazas o ticket inválido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string, example: "No quedan plazas disponibles" }
+        '500':
+          description: Error al crear sesión en Stripe
+
+  /experiences/{id}:
+    put:
+      tags: [Experiencias]
+      summary: Actualiza una experiencia
+      operationId: updateExperience
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                description: { type: string }
+                price: { type: number, format: float }
+                max_capacity: { type: integer }
+      responses:
+        '200':
+          description: Experiencia actualizada
+        '403':
+          description: Rol no autorizado
+        '422':
+          description: Error de validación
+
+    delete:
+      tags: [Experiencias]
+      summary: Elimina una experiencia
+      operationId: deleteExperience
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Eliminada correctamente
+        '403':
+          description: Rol no autorizado
+        '404':
+          description: No encontrada
+
+  # ── TIENDA ────────────────────────────────────────────────────────────────────
+  /products:
+    get:
+      tags: [Tienda]
+      summary: Catálogo de productos
+      operationId: getProducts
+      responses:
+        '200':
+          description: Array de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Product' }
+
+  /products/{id}:
+    get:
+      tags: [Tienda]
+      summary: Detalle de un producto
+      operationId: getProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Producto con campo sizes[]
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Product' }
+        '404':
+          description: Producto no encontrado
+
+  /shop/checkout:
+    post:
+      tags: [Tienda]
+      summary: Checkout de la tienda
+      operationId: checkoutShop
+      description: El precio se calcula siempre en el backend desde la BD, nunca desde el cliente.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, items]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "cliente@ejemplo.com"
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [product_id, quantity]
+                    properties:
+                      product_id: { type: integer, example: 1 }
+                      quantity: { type: integer, example: 2 }
+      responses:
+        '200':
+          description: URL de checkout Stripe
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StripeCheckoutResponse' }
+        '422':
+          description: Email inválido o stock insuficiente
+
+  # ── TICKETS Y PAGOS ───────────────────────────────────────────────────────────
+  /payment:
+    post:
+      tags: [Tickets y Pagos]
+      summary: Compra de tickets de entrada
+      operationId: buyTickets
+      description: Verifica aforo disponible para la fecha antes de crear la sesión Stripe.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, visit_date, quantity, tipo]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "cliente@ejemplo.com"
+                  description: "Si el usuario está autenticado, se usa su email de sesión"
+                visit_date:
+                  type: string
+                  format: date
+                  example: "2024-07-15"
+                quantity:
+                  type: integer
+                  minimum: 1
+                  example: 3
+                tipo:
+                  type: string
+                  enum: [ticket]
+                  example: "ticket"
+      responses:
+        '200':
+          description: URL de checkout Stripe
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StripeCheckoutResponse' }
+        '422':
+          description: Sin aforo disponible para esa fecha
+
+  /payment/success:
+    get:
+      tags: [Tickets y Pagos]
+      summary: Callback de Stripe tras pago exitoso
+      operationId: paymentSuccess
+      description: |
+        Registra los tickets en la BD y envía email con PDF adjunto (Mailable + DomPDF).
+        Incluye control anti-duplicado: si el stripe_session_id ya existe no se vuelve a insertar.
+      parameters:
+        - name: session_id
+          in: query
+          required: true
+          schema: { type: string }
+          description: ID de sesión Stripe
+          example: "cs_test_a1xhRa2s4ouTGgosWFriV1exmOZQaWbRmIw3p9jhqR9pst..."
+      responses:
+        '200':
+          description: Tickets registrados y email enviado
+        '400':
+          description: Sesión inválida o ya procesada
+
+  /tickets/buscar:
+    post:
+      tags: [Tickets y Pagos]
+      summary: Busca tickets por email y fecha (reclamaciones)
+      operationId: buscarTickets
+      security:
+        - sessionCookie: []
+      description: Panel de reclamaciones. Requiere rol Administrador.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, fecha]
+              properties:
+                email: { type: string, format: email, example: "cliente@ejemplo.com" }
+                fecha: { type: string, format: date, example: "2024-07-15" }
+      responses:
+        '200':
+          description: Array de tickets agrupados por stripe_session_id
+        '403':
+          description: Rol no autorizado
+
+  /tickets/cancelar:
+    post:
+      tags: [Tickets y Pagos]
+      summary: Cancela y reembolsa un pedido
+      operationId: cancelarPedido
+      security:
+        - sessionCookie: []
+      description: Procesa el reembolso en Stripe y actualiza el estado de los tickets a 'cancelled'.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [session_id]
+              properties:
+                session_id:
+                  type: string
+                  example: "cs_test_a1xhRa2s4ouTGgos..."
+      responses:
+        '200':
+          description: Reembolso procesado correctamente
+        '403':
+          description: Rol no autorizado
+        '500':
+          description: Error comunicación con Stripe
+
+  /tickets/reenviar:
+    post:
+      tags: [Tickets y Pagos]
+      summary: Reenvía tickets al email del comprador
+      operationId: reenviarTickets
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [session_id]
+              properties:
+                session_id: { type: string, example: "cs_test_a1xhRa2s4ouTGgos..." }
+      responses:
+        '200':
+          description: Email reenviado correctamente
+        '403':
+          description: Rol no autorizado
+
+  # ── HISTORIAL DE COMPRAS ──────────────────────────────────────────────────────
+  /orders/send-code:
+    post:
+      tags: [Historial de Compras]
+      summary: Envía OTP de 6 dígitos al email
+      operationId: sendOTP
+      description: Para usuarios sin cuenta. El código se almacena en verification_codes con expires_at.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email, example: "cliente@ejemplo.com" }
+      responses:
+        '200':
+          description: Código enviado por email
+        '422':
+          description: Email inválido
+
+  /orders/verify-code:
+    post:
+      tags: [Historial de Compras]
+      summary: Verifica el OTP y devuelve access_token temporal
+      operationId: verifyOTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, code]
+              properties:
+                email: { type: string, format: email }
+                code: { type: string, minLength: 6, maxLength: 6, example: "483921" }
+      responses:
+        '200':
+          description: Token de acceso temporal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string, example: "abc123xyz456" }
+                  expires_at: { type: string, format: date-time }
+        '422':
+          description: Código incorrecto o expirado
+
+  /orders:
+    get:
+      tags: [Historial de Compras]
+      summary: Historial unificado de compras
+      operationId: getOrders
+      description: |
+        Devuelve tickets, experiencias y pedidos de tienda en un único objeto.
+        Acepta autenticación por sesión Laravel O por access_token temporal (usuarios sin cuenta).
+      parameters:
+        - name: access_token
+          in: query
+          required: false
+          schema: { type: string }
+          description: Token temporal generado por /orders/verify-code (solo usuarios no registrados)
+      responses:
+        '200':
+          description: Historial completo del usuario
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrdersResponse' }
+        '401':
+          description: Sin autenticación válida (ni sesión ni access_token)
+
+  # ── MAPA Y ZONAS ──────────────────────────────────────────────────────────────
+  /zones/{id}:
+    get:
+      tags: [Mapa y Zonas]
+      summary: Datos de una zona para el popup del mapa
+      operationId: getZone
+      description: |
+        Usa with() de Eloquent para cargar animals, experiences y zone_events en una única consulta.
+        Los nombres de columna se remapean en ZoneController para desacoplar el frontend del esquema.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+          description: ID de la zona
+      responses:
+        '200':
+          description: Zona con relaciones cargadas
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Zone' }
+        '404':
+          description: Zona no encontrada
+
+  /zones/{id}/events:
+    get:
+      tags: [Mapa y Zonas]
+      summary: Alertas activas de una zona
+      operationId: getZoneEvents
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Array de alertas con type aviso|alerta|peligro
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Alert' }
+
+  # ── ALERTAS ───────────────────────────────────────────────────────────────────
+  /alerts:
+    post:
+      tags: [Alertas]
+      summary: Crea una alerta sobre el mapa
+      operationId: createAlert
+      security:
+        - sessionCookie: []
+      description: Solo acepta type en [aviso, alerta, peligro]. Validación estricta en el backend.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [zone_id, title, type]
+              properties:
+                zone_id: { type: integer, example: 2 }
+                title: { type: string, example: "Recinto en mantenimiento" }
+                type:
+                  type: string
+                  enum: [aviso, alerta, peligro]
+                  example: "aviso"
+                description: { type: string, nullable: true, example: "Cerrará a las 14:00" }
+      responses:
+        '201':
+          description: Alerta creada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Alert' }
+        '403':
+          description: Rol no autorizado
+        '422':
+          description: Type inválido (no es aviso/alerta/peligro)
+
+  /alerts/{id}:
+    delete:
+      tags: [Alertas]
+      summary: Elimina una alerta
+      operationId: deleteAlert
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Alerta eliminada
+        '403':
+          description: Rol no autorizado
+        '404':
+          description: No encontrada
+
+  # ── EMPLEADOS ─────────────────────────────────────────────────────────────────
+  /employees:
+    get:
+      tags: [Empleados]
+      summary: Lista todos los empleados
+      operationId: getEmployees
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Array de empleados con zona relacionada
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Employee' }
+        '403':
+          description: Rol no autorizado (solo Administrador)
+
+    post:
+      tags: [Empleados]
+      summary: Registra un nuevo empleado
+      operationId: createEmployee
+      security:
+        - sessionCookie: []
+      description: Valida unicidad de DNI y email. Devuelve error 422 con el campo específico.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, dni, email, position, zone_id]
+              properties:
+                name: { type: string, example: "María García" }
+                dni: { type: string, example: "12345678A" }
+                email: { type: string, format: email, example: "maria@blrzoo.com" }
+                position:
+                  type: string
+                  enum: [Médico, Cuidador, Guía, Administrador]
+                  example: "Cuidador"
+                zone_id: { type: integer, example: 2 }
+      responses:
+        '201':
+          description: Empleado creado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Employee' }
+        '403':
+          description: Rol no autorizado
+        '422':
+          description: DNI o email ya en uso
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ValidationError' }
+
+  /employees/{id}:
+    put:
+      tags: [Empleados]
+      summary: Actualiza un empleado
+      operationId: updateEmployee
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                position:
+                  type: string
+                  enum: [Médico, Cuidador, Guía, Administrador]
+                zone_id: { type: integer }
+      responses:
+        '200':
+          description: Empleado actualizado
+        '403':
+          description: Rol no autorizado
+        '422':
+          description: Error de validación
+
+    delete:
+      tags: [Empleados]
+      summary: Elimina un empleado
+      operationId: deleteEmployee
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Empleado eliminado
+        '403':
+          description: Rol no autorizado
+        '404':
+          description: No encontrado
+
+  # ── DASHBOARD MÉDICO ──────────────────────────────────────────────────────────
+  /medical/data:
+    get:
+      tags: [Dashboard Médico]
+      summary: Animales de la zona del médico autenticado
+      operationId: getMedicalData
+      security:
+        - sessionCookie: []
+      description: Filtra por la zona asignada al médico. Requiere rol Médico o Administrador.
+      responses:
+        '200':
+          description: Animales y zonas del médico
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  animals:
+                    type: array
+                    items: { $ref: '#/components/schemas/Animal' }
+                  zones:
+                    type: array
+                    items: { $ref: '#/components/schemas/Zone' }
+        '403':
+          description: Rol no autorizado
+
+  /medical/records:
+    post:
+      tags: [Dashboard Médico]
+      summary: Añade entrada al historial clínico
+      operationId: createVetRecord
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [animal_id, diagnosis]
+              properties:
+                animal_id: { type: integer, example: 1 }
+                diagnosis: { type: string, example: "Revisión rutinaria anual" }
+                treatment: { type: string, nullable: true, example: "Vitaminas A y D" }
+                notes: { type: string, nullable: true, example: "Estado excelente" }
+      responses:
+        '201':
+          description: Registro clínico guardado con created_at
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VetRecord' }
+        '403':
+          description: Rol no autorizado
+        '422':
+          description: Error de validación
+
+  # ── DASHBOARD CUIDADOR ────────────────────────────────────────────────────────
+  /keeper/data:
+    get:
+      tags: [Dashboard Cuidador]
+      summary: Animales de la zona del cuidador con estado de alimentación
+      operationId: getKeeperData
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Animales con campo fed_at (null si aún no alimentados hoy)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  animals:
+                    type: array
+                    items:
+                      allOf:
+                        - { $ref: '#/components/schemas/Animal' }
+                        - type: object
+                          properties:
+                            fed_at:
+                              type: string
+                              format: date-time
+                              nullable: true
+                              example: "2024-07-15T09:30:00Z"
+        '403':
+          description: Rol no autorizado
+
+  /keeper/feed/{id}:
+    post:
+      tags: [Dashboard Cuidador]
+      summary: Registra alimentación de un animal
+      operationId: feedAnimal
+      security:
+        - sessionCookie: []
+      description: Inserta registro de alimentación con timestamp now(). Actualiza fed_at del animal.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+          description: ID del animal a alimentar
+      responses:
+        '200':
+          description: Alimentación registrada con timestamp
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string, example: "Animal alimentado correctamente" }
+                  fed_at: { type: string, format: date-time }
+        '403':
+          description: Rol no autorizado
+        '404':
+          description: Animal no encontrado
+
+  # ── DASHBOARD GUÍA ────────────────────────────────────────────────────────────
+  /guide/data:
+    get:
+      tags: [Dashboard Guía]
+      summary: Experiencias asignadas al guía autenticado
+      operationId: getGuideData
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Experiencias del guía
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  experiences:
+                    type: array
+                    items: { $ref: '#/components/schemas/Experience' }
+        '403':
+          description: Rol no autorizado

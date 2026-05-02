@@ -59,16 +59,14 @@ const AnimalCard = ({ animal }) => {
                     {animal.species}
                 </p>
 
-                {/* ETIQUETAS CON COLORES DINÁMICOS */}
+                {/* ETIQUETAS CON COLORES DINÁMICOS (DIETAS) */}
                 <div className="inline-flex flex-wrap justify-center items-center gap-2 text-[10px] font-bold uppercase tracking-wider mb-4">
-                    {/* Llamamos a nuestra función para el color de la Dieta */}
                     <span
                         className={`px-3 py-1.5 rounded-full border ${obtenerColorDieta(animal.diet)}`}
                     >
                         {animal.diet}
                     </span>
 
-                    {/* El ecosistema sigue azul por defecto */}
                     <span className="bg-blue-900/40 text-blue-400 px-3 py-1.5 rounded-full border border-blue-800/50">
                         {animal.zone?.ecosystem?.name || "Sin ecosistema"}
                     </span>
@@ -83,7 +81,7 @@ const AnimalCard = ({ animal }) => {
                         <span>{fechaNacimiento}</span>
                     </div>
                 </div>
-                
+
                 {/* Curiosidad */}
                 <p className="text-sm text-neutral-300 line-clamp-3 my-4 flex-grow italic">
                     "

@@ -42,7 +42,7 @@ class EmployeeController extends Controller
         // Calculamos la fecha exacta de hace 18 años
         $fechaLimite = now()->subYears(18)->toDateString();
 
-        // 1. Validación estricta con mensajes personalizados
+        // Validación estricta
         $validated = $request->validate([
             'dni' => [
                 'required',
@@ -53,7 +53,6 @@ class EmployeeController extends Controller
             'surname' => 'required',
             'email' => 'required|email|unique:employees,email|unique:users,email',
 
-            // CANDADO AL CREAR
             'birth_date' => 'required|date|before_or_equal:' . $fechaLimite,
 
             'address' => 'required|string|max:255',
@@ -74,13 +73,13 @@ class EmployeeController extends Controller
 
         try {
             return DB::transaction(function () use ($request) {
-                // 1. Creamos al empleado directamente (La contraseña será su DNI)
+                // Creamos al empleado directamente (La contraseña será su DNI)
                 $employeeData = $request->except('telephone');
                 $employeeData['password'] = Hash::make($request->dni); // <--- CONTRASEÑA
 
                 $employee = Employee::create($employeeData);
 
-                // 2. Creamos su teléfono
+                // Creamos su teléfono
                 $employee->telephones()->create([
                     'telephone' => $request->telephone
                 ]);
@@ -154,7 +153,7 @@ class EmployeeController extends Controller
 
         try {
             DB::transaction(function () use ($request, $employee) {
-                // Actualizamos sus datos (Sin tocar la tabla users porque ya no hace falta)
+                // Actualizamos sus datos
                 $employee->update($request->only(['name', 'surname', 'birth_date', 'address', 'province', 'position', 'zone_id']));
 
                 // Actualizamos teléfonos

@@ -21,7 +21,6 @@ class MedicalRecordController extends Controller
             return response()->json(['doctor' => null, 'animals' => []]);
         }
 
-        // LA LLAVE MAESTRA: Comprobamos si es Administrador
         if ($doctor->position === 'Administrador') {
             // El Admin ve TODOS los animales de TODAS las zonas
             $animals = Animal::with([

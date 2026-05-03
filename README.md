@@ -31,9 +31,28 @@ Para poder desplegar y ejecutar el proyecto en tu máquina local, es necesario c
 
 ## 💻 Documentación Técnica: Instalación y Puesta en Marcha
 
-A continuación, se detallan los comandos necesarios para preparar el entorno de desarrollo:
+A continuación, se detallan los comandos necesarios para preparar el entorno de desarrollo. Asegúrate de tener Composer descargado (desde getcomposer.org) si no lo tienes instalado globalmente.
 
-### 1. Clonar el repositorio
+Ejecuta los siguientes comandos en tu terminal para clonar el repositorio, instalar todas las dependencias, configurar las variables de entorno y levantar los servidores:
+
 ```bash
+# Clonar el repositorio y entrar en la carpeta
 git clone <URL_DEL_REPOSITORIO>
 cd BLR-Zoo
+
+# Instalación de dependencias de Backend y Frontend
+composer install
+npm install
+
+# Configurar las variables de entorno y generar la clave de Laravel
+cp .env.example .env
+php artisan key:generate
+
+# NOTA: Antes de continuar, abre el archivo .env y rellena tus credenciales de Supabase, Stripe y correo.
+
+# Iniciar los servidores de desarrollo (abre dos terminales)
+# Terminal 1:
+php artisan serve
+
+# Terminal 2:
+npm run dev

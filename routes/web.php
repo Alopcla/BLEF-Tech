@@ -13,6 +13,7 @@ use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\VerifyCodeController;
+use App\Http\Controllers\Api\OrdersApiController;
 
 use Illuminate\Http\Request;
 
@@ -59,7 +60,7 @@ Route::get('/compras', function () {
     return view('myorders');
 })->name('compras');
 
-
+Route::get('/api/compras', [OrdersApiController::class, 'index']);
 
 require __DIR__ . '/auth.php';
 

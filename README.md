@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="LOGO.jpg" alt="Logo de BLR-Zoo" width="350">
+  <img src="https://github.com/Alopcla/BLEF-Tech/blob/main/public/LOGO.PNG" alt="Logo de BLR-Zoo" width="350">
 </div>
 
 # BLR-Zoo

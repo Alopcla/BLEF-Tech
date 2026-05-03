@@ -97,7 +97,7 @@ class ExperienceSeeder extends Seeder
                 'duration_min' => 45,
                 'price' => 22.00,
                 'capacity' => 15,
-                'image' => 'https://images.unsplash.com/photo-1549480662-8e10080644dd?w=500'
+                'image' => 'https://images.unsplash.com/photo-1605828125143-4773129f5c84?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
             ],
 
             // ==========================================
@@ -112,7 +112,7 @@ class ExperienceSeeder extends Seeder
                 'duration_min' => 50,
                 'price' => 24.00,
                 'capacity' => 20,
-                'image' => 'https://images.unsplash.com/photo-1563234979-58ec78995a97?w=500'
+                'image' => 'https://images.unsplash.com/photo-1590418270220-243198c900cc?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
             ],
             [
                 'zone_id' => 5,
@@ -123,7 +123,7 @@ class ExperienceSeeder extends Seeder
                 'duration_min' => 35,
                 'price' => 18.50,
                 'capacity' => 25,
-                'image' => 'https://images.unsplash.com/photo-1579895240409-f1fb525f0a71?w=500'
+                'image' => 'https://images.unsplash.com/photo-1644362128341-454d136d5a28?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
             ]
         ];
 

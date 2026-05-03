@@ -1,58 +1,105 @@
-# 🦁 BLR-Zoo
+<div align="center">
+  <img src="LOGO.jpg" alt="Logo de BLR-Zoo" width="350">
+</div>
 
-Este repositorio contiene el código fuente de la aplicación integral para la gestión y experiencia del zoológico **BLR-Zoo**.
+# BLR-Zoo
 
-## 📋 Descripción del Proyecto
+Este repositorio contiene la aplicación integral desarrollada para la gestión operativa y la mejora de la experiencia de usuario del zoológico **BLR-Zoo**.
 
-El objetivo principal de nuestro equipo es desarrollar **BLR-Zoo**, una aplicación web completa que sirva tanto para que los visitantes disfruten más del parque, como para facilitar el trabajo diario de los empleados.
+## Descripción del Proyecto
 
-Para conseguirlo, nos hemos marcado los siguientes objetivos como alumnos:
-* **Crear un sistema "Todo en uno":** Centralizar las herramientas necesarias en una única plataforma.
-* **Hacer una web más atractiva e interactiva:** Ofrecer una interfaz moderna y fluida para el usuario.
-* **Mejorar la venta online:** Optimizar el proceso de compra de entradas y servicios.
-* **Facilitar el trabajo a los empleados:** Digitalizar y agilizar las tareas operativas diarias.
-* **Aplicar de forma práctica lo aprendido:** Demostrar de forma tangible los conocimientos adquiridos en el grado.
+El objetivo principal de nuestro equipo es desarrollar **BLR-Zoo**, una aplicación web completa y profesional que sirva tanto para que los visitantes disfruten más de su estancia en el parque, como para facilitar y optimizar el flujo de trabajo diario de todos los empleados.
 
-## ⚙️ Stack Tecnológico
+Para alcanzar este estándar de calidad, el proyecto se ha diseñado bajo los siguientes objetivos estratégicos:
 
-* **Backend:** **Laravel 12** con **PHP 8.3+** (la última versión LTS compatible con Windows 10). Empleamos *Facades* para tareas ligeras que solo requieren de objetos genéricos, y *Eloquent* para tareas más pesadas que requieren instancias de clase.
-* **Frontend:** Interfaz construida con **React 19.2+**, **Blade** y **Tailwindcss 3.4+**. Para las peticiones HTTP utilizamos **Axios**, todo empaquetado con **Vite 7.3** funcionando sobre **NODE-v24.14**.
-* **Servicios Integrados:** Integración de **Stripe** para la pasarela de pagos y **Mailable / DomPDF** para el envío de entradas en PDF vía Gmail.
-* **Base de Datos:** Alojamiento en la nube usando **Supabase** en **Postgres 17.6+**.
+* **Crear un sistema "Todo en uno":** Centralizar todas las funciones administrativas, de venta y de gestión en una sola plataforma, evitando el uso de herramientas fragmentadas.
+* **Hacer una web más atractiva e interactiva:** Implementar una interfaz moderna y dinámica que mejore el engagement del visitante.
+* **Mejorar la venta online:** Optimizar la pasarela de pagos y la distribución de entradas para agilizar el acceso al recinto.
+* **Facilitar el trabajo a los empleados:** Desarrollar herramientas digitales que simplifiquen tareas complejas y mejoren la comunicación interna.
+* **Aplicar de forma práctica lo aprendido en el grado:** Consolidar y demostrar los conocimientos técnicos en arquitectura de software, bases de datos y desarrollo Full-Stack.
 
-## 📝 Configuración Requerida (Local)
+## Stack Tecnológico
 
-Para poder desplegar y ejecutar el proyecto en tu máquina local, es necesario contar con lo siguiente:
-* PHP 8.3 o superior.
-* Composer (Gestor de dependencias de PHP).
-* Node.js v24.14 o superior (incluye npm).
-* Git (para clonar el repositorio).
-* Una cuenta en Supabase y claves de prueba de Stripe.
+El proyecto utiliza un stack de última generación para garantizar rendimiento y escalabilidad:
 
-## 💻 Documentación Técnica: Instalación y Puesta en Marcha
+* **Backend:** **Laravel 12** sobre **PHP 8.3+** (LTS compatible con Windows 10). Se utilizan *Facades* para tareas ligeras que requieren objetos genéricos y *Eloquent ORM* para la lógica de negocio pesada, relaciones complejas y persistencia de datos.
+* **Frontend:** Desarrollo reactivo con **React 19.2+** integrado en vistas **Blade**, utilizando **Tailwindcss 3.4+** para el diseño visual. La comunicación asíncrona se gestiona mediante **Axios** y el empaquetado de activos con **Vite 7.3** ejecutándose sobre **NODE-v24.14**.
+* **Servicios e Integraciones:** Pasarela de pagos con **Stripe**, sistema de mensajería **Mailable** y generación de entradas en PDF mediante **DomPDF**, con envío automatizado a través de Gmail.
+* **Base de Datos:** Infraestructura relacional en la nube con **Supabase** (Postgres 17.6+).
 
-A continuación, se detallan los comandos necesarios para preparar el entorno de desarrollo. Asegúrate de tener Composer descargado (desde getcomposer.org) si no lo tienes instalado globalmente.
+## Configuración Requerida
 
-Ejecuta los siguientes comandos en tu terminal para clonar el repositorio, instalar todas las dependencias, configurar las variables de entorno y levantar los servidores:
+Antes de comenzar la instalación, asegúrate de cumplir con los siguientes requisitos en tu entorno local:
 
-```bash
-# Clonar el repositorio y entrar en la carpeta
+* Windows 10 o superior.
+* PHP 8.3 o superior añadido al PATH.
+* Node.js v24.14 o superior.
+* Git instalado.
+* Una cuenta activa en Supabase y Stripe para obtener las claves de API necesarias.
+
+## Documentación Técnica: Instalación y Despliegue Local
+
+Sigue paso a paso estas instrucciones para configurar el entorno de desarrollo y poner la aplicación en funcionamiento:
+
+### 1. Instalación de Composer y Laravel Installer
+Si no cuentas con las herramientas globales, ejecuta los siguientes comandos en tu terminal de PowerShell:
+
+```powershell
+# Instalar Composer (si no se tiene el instalador global de getcomposer.org)
+# Verificar instalación
+composer -V
+
+# Instalar el instalador de Laravel de forma global
+composer global require laravel/installer
+
+# Verificar que el PATH incluya el directorio bin de Composer
+# (Ejemplo: C:\Users\NombreUsuario\AppData\Roaming\Composer\vendor\bin)
+```
+
+### 2. Clonación y Preparación de Dependencias
+Descarga el proyecto e instala todos los paquetes necesarios para el funcionamiento de React y Laravel:
+
+```powershell
+# Clonar el repositorio
 git clone <URL_DEL_REPOSITORIO>
 cd BLR-Zoo
 
-# Instalación de dependencias de Backend y Frontend
+# Instalar dependencias de PHP (Laravel, DomPDF, Stripe SDK)
 composer install
-npm install
 
-# Configurar las variables de entorno y generar la clave de Laravel
+# Instalar dependencias de Frontend (React, Tailwind, Axios, Vite)
+npm install
+```
+
+### 3. Configuración del Entorno
+Configura las claves de acceso para la base de datos y los servicios externos:
+
+```powershell
+# Crear el archivo .env a partir del ejemplo
 cp .env.example .env
+
+# Generar la clave secreta de la aplicación
 php artisan key:generate
 
-# NOTA: Antes de continuar, abre el archivo .env y rellena tus credenciales de Supabase, Stripe y correo.
+# NOTA CRÍTICA: Edita el archivo .env e introduce tus credenciales:
+# - Datos de conexión de Supabase (Host, Database, User, Password)
+# - Stripe API Keys
+# - Gmail App Password para el sistema Mailable
+```
 
-# Iniciar los servidores de desarrollo (abre dos terminales)
-# Terminal 1:
+### 4. Ejecución del Proyecto
+Para que la aplicación funcione correctamente, debes mantener activos dos procesos simultáneos. Abre dos terminales diferentes:
+
+**Terminal 1 (Backend):**
+```powershell
 php artisan serve
+```
 
-# Terminal 2:
+**Terminal 2 (Frontend - Compilación en tiempo real):**
+```powershell
 npm run dev
+```
+
+## Notas de Desarrollo
+
+* **Paso de Datos Dinámicos:** Se ha establecido como norma de desarrollo que, en cualquier formulario HTML o vista Blade, la información debe ser enviada mediante una lista dinámica (como la variable `$zones`) desde el controlador. Se prohíbe introducir opciones de forma manual en el HTML para garantizar la integridad y sincronización con la base de datos.

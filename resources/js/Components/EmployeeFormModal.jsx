@@ -8,8 +8,8 @@ export default function EmployeeFormModal({ isOpen, onClose, zones, onSave, onSh
     };
 
     const [formData, setFormData] = useState(initialState);
-    const [fieldErrors, setFieldErrors] = useState({}); // <--- Errores debajo de los inputs
-    const [generalError, setGeneralError] = useState(null); // <--- Banderín rojo
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [generalError, setGeneralError] = useState(null);
 
     if (!isOpen) return null;
 
@@ -23,39 +23,36 @@ export default function EmployeeFormModal({ isOpen, onClose, zones, onSave, onSh
         setGeneralError(null);
 
         try {
-            const csrfToken = document.head.querySelector('meta[name="csrf-token"]')?.content;
-
-            // Asegúrate de que la ruta "/registrar-nuevo-empleado" coincide con tu web.php
             const response = await fetch("/registrar-nuevo-empleado", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
-                    "X-CSRF-TOKEN": csrfToken
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content
                 },
                 body: JSON.stringify(formData),
             });
 
             const data = await response.json().catch(() => null);
 
+            // CASO DE ÉXITO
             if (response.ok) {
-                // Notificamos al Dashboard
-                if (onShowToast) onShowToast("Empleado registrado correctamente.", "success");
-
-                // Recargamos o actualizamos la lista
-                if (typeof onSave === 'function') onSave(data);
-
+                onShowToast?.("Empleado registrado correctamente.", "success");
+                onSave?.(data);
                 onClose();
-                setFormData(initialState);
-            } else {
-                // Si Laravel devuelve error de validación
-                if (response.status === 422 && data && data.errors) {
-                    setFieldErrors(data.errors);
-                } else {
-                    setGeneralError(data?.message || "Error interno del servidor.");
-                }
+                return setFormData(initialState);
             }
-        } catch (error) {
+
+            // ERRORES DE VALIDACIÓN (422)
+            if (response.status === 422 && data?.errors) {
+                return setFieldErrors(data.errors);
+            }
+
+            // OTROS ERRORES DEL SERVIDOR
+            setGeneralError(data?.message || "Error interno del servidor.");
+
+        } catch {
+            // ERROR DE RED / CONEXIÓN
             setGeneralError("No se pudo conectar con el servidor.");
         }
     };

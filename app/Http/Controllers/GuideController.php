@@ -15,17 +15,17 @@ class GuideController extends Controller
         $user = Auth::user();
         $employee = Employee::where('email', $user->email)->first();
 
-        // 1. NUEVA SEGURIDAD: Dejamos pasar tanto a Guías como a Administradores
+        // Solo entraran guias como adiministradores
         if (!$employee || !in_array($employee->position, ['Guía', 'Administrador'])) {
             return response()->json(['guide' => null, 'experiencias' => []]);
         }
 
-        // 2. LA LÓGICA DE ROLES
+        // Logica de roles
         if ($employee->position === 'Administrador') {
             // Si es Admin, le devolvemos el catálogo completo del Zoo
             $experiencias = Experience::with('zone')->get();
         } else {
-            // Si es Guía, seguimos filtrando solo por su zona asignada
+            // Si es guia, filtramos mediante su zona asignada
             $experiencias = Experience::with('zone')->where('zone_id', $employee->zone_id)->get();
         }
 

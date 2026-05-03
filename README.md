@@ -18,13 +18,13 @@ Para alcanzar este estándar de calidad, el proyecto se ha diseñado bajo los si
 * **Facilitar el trabajo a los empleados:** Desarrollar herramientas digitales que simplifiquen tareas complejas y mejoren la comunicación interna.
 * **Aplicar de forma práctica lo aprendido en el grado:** Consolidar y demostrar los conocimientos técnicos en arquitectura de software, bases de datos y desarrollo Full-Stack.
 
-## Stack Tecnológico
+## Stack tecnológico
 
 El proyecto utiliza un stack de última generación para garantizar rendimiento y escalabilidad:
 
 * **Backend:** **Laravel 12** sobre **PHP 8.3+** (LTS compatible con Windows 10). Se utilizan *Facades* para tareas ligeras que requieren objetos genéricos y *Eloquent ORM* para la lógica de negocio pesada, relaciones complejas y persistencia de datos.
 * **Frontend:** Desarrollo reactivo con **React 19.2+** integrado en vistas **Blade**, utilizando **Tailwindcss 3.4+** para el diseño visual. La comunicación asíncrona se gestiona mediante **Axios** y el empaquetado de activos con **Vite 7.3** ejecutándose sobre **NODE-v24.14**.
-* **Servicios e Integraciones:** Pasarela de pagos con **Stripe**, sistema de mensajería **Mailable** y generación de entradas en PDF mediante **DomPDF**, con envío automatizado a través de Gmail.
+* **Servicios e integraciones:** Pasarela de pagos con **Stripe**, sistema de mensajería **Mailable** y generación de entradas en PDF mediante **DomPDF**, con envío automatizado a través de Gmail.
 * **Base de Datos:** Infraestructura relacional en la nube con **Supabase** (Postgres 17.6+).
 
 ## Configuración Requerida
@@ -37,7 +37,7 @@ Antes de comenzar la instalación, asegúrate de cumplir con los siguientes requ
 * Git instalado.
 * Una cuenta activa en Supabase y Stripe para obtener las claves de API necesarias.
 
-## Documentación Técnica: Instalación y Despliegue Local
+## Documentación técnica: Instalación y despliegue Local
 
 Sigue paso a paso estas instrucciones para configurar el entorno de desarrollo y poner la aplicación en funcionamiento:
 
@@ -56,7 +56,7 @@ composer global require laravel/installer
 # (Ejemplo: C:\Users\NombreUsuario\AppData\Roaming\Composer\vendor\bin)
 ```
 
-### 2. Clonación y Preparación de Dependencias
+### 2. Clonación y preparación de dependencias
 Descarga el proyecto e instala todos los paquetes necesarios para el funcionamiento de React y Laravel:
 
 ```powershell
@@ -71,7 +71,7 @@ composer install
 npm install
 ```
 
-### 3. Configuración del Entorno
+### 3. Configuración del entorno
 Configura las claves de acceso para la base de datos y los servicios externos:
 
 ```powershell
@@ -87,7 +87,7 @@ php artisan key:generate
 # - Gmail App Password para el sistema Mailable
 ```
 
-### 4. Ejecución del Proyecto
+### 4. Ejecución del proyecto
 Para que la aplicación funcione correctamente, debes mantener activos dos procesos simultáneos. Abre dos terminales diferentes:
 
 **Terminal 1 (Backend):**

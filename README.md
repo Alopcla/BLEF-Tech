@@ -32,7 +32,7 @@ El proyecto utiliza un stack de última generación para garantizar rendimiento 
 Antes de comenzar la instalación, asegúrate de cumplir con los siguientes requisitos en tu entorno local:
 
 * Windows 10 o superior.
-* PHP 8.3 o superior añadido al PATH.
+* PHP 8.3 o superior añadido al PATH (salvo que se utilice Windows 10).
 * Node.js v24.14 o superior.
 * Git instalado.
 * Una cuenta activa en Supabase y Stripe para obtener las claves de API necesarias.
@@ -99,3 +99,10 @@ php artisan serve
 ```powershell
 npm run dev
 ```
+## Equipo BLEF-Tech
+
+Este proyecto ha sido desarrollado por:
+* Gonzalo Falcón Bascón
+* Othmane Rasfi el Qabiti
+* Alejandro López Claro
+* Alejandro Beiroa Pérez

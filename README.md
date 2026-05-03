@@ -99,7 +99,3 @@ php artisan serve
 ```powershell
 npm run dev
 ```
-
-## Notas de Desarrollo
-
-* **Paso de Datos Dinámicos:** Se ha establecido como norma de desarrollo que, en cualquier formulario HTML o vista Blade, la información debe ser enviada mediante una lista dinámica (como la variable `$zones`) desde el controlador. Se prohíbe introducir opciones de forma manual en el HTML para garantizar la integridad y sincronización con la base de datos.

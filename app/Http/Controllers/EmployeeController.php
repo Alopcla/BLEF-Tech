@@ -67,6 +67,7 @@ class EmployeeController extends Controller
         ], [
             // MENSAJE DE ERROR QUE VERÁ REACT
             'dni.regex' => 'El formato del DNI es incorrecto (ej: 12345678A)',
+            'telephone.regex' => 'El formato del teléfono es inválido (debe empezar por 6, 7, 8 o 9 y tener 9 dígitos).',
             'birth_date.before_or_equal' => 'El empleado debe tener al menos 18 años para poder ser registrado.',
             'birth_date.required' => 'La fecha de nacimiento es obligatoria.'
         ]);

@@ -26,7 +26,7 @@ class AuthController extends Controller
 
         $remember = $request->boolean('remember');
 
-        // 1. ¿Es empleado?
+        // Es empleado?
         if (Auth::guard('employee')->attempt($credentials, $remember)) {
             $request->session()->regenerate();
             $user = Auth::guard('employee')->user();
@@ -34,7 +34,7 @@ class AuthController extends Controller
             return redirect()->route('verification.notice');
         }
 
-        // 2. ¿Es cliente?
+        // Es cliente?
         if (Auth::guard('web')->attempt($credentials, $remember)) {
             $request->session()->regenerate();
             $user = Auth::guard('web')->user();
@@ -67,7 +67,7 @@ class AuthController extends Controller
         ]);
 
         Auth::guard('web')->login($user);
-        $request->session()->regenerate(); // ← esto faltaba
+        $request->session()->regenerate();
         Mail::to($user->email)->send(new VerificationCodeMail($code));
 
         return redirect()->route('verification.notice');

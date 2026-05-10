@@ -30,7 +30,7 @@ class CheckPosition
         // Obtenemos el empleado que ha iniciacio sesion
         $employee = Auth::user();
 
-        // En caso de que el usuario sea Administrador, darle carta libre a todas las rutas
+        // En caso de que el usuario sea Administrador, obtendra acceso a todas las rutas
         if ($employee->position === 'Administrador') {
             return $next($request);
         }

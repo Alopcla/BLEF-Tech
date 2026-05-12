@@ -262,7 +262,8 @@
 
 {{-- Toast Notificación --}}
 @if (session('success'))
-    <div id="toast-success" class="fixed top-6 right-6 z-50 flex items-center gap-3 bg-neutral-900 border border-green-700 text-white px-5 py-4 rounded-2xl shadow-2xl animate-fade-in">
+    {{-- CAMBIO AQUÍ: Cambiamos z-50 por z-[9999] para forzar que esté por encima de todo --}}
+    <div id="toast-success" class="fixed top-6 right-6 z-[9999] flex items-center gap-3 bg-neutral-900 border border-green-700 text-white px-5 py-4 rounded-2xl shadow-2xl animate-fade-in">
         <div class="bg-green-700 rounded-full p-1.5">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -275,7 +276,7 @@
         setTimeout(() => {
             const t = document.getElementById('toast-success');
             if (t) t.remove();
-        }, 4000);
+        }, 4000); // Esto ya hace que desaparezca automáticamente a los 4 segundos
     </script>
 @endif
 

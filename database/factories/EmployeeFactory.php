@@ -60,7 +60,7 @@ class EmployeeFactory extends Factory
     {
         return $this->afterCreating(function (Employee $employee) {
             $employee->telephones()->create([
-                'telephone' => $this->faker->unique()->numerify('+34#########'),
+                'telephone' => $this->faker->unique()->numerify('#########'),
                 'order' => 1,
             ]);
         });

@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        {{-- LÍNEA SEPARADORA Y ENLACES LEGALES (Sub-footer más fino) --}}
+        {{-- Linea separadora y enlaces legales --}}
         <div class="border-t border-[#D9C8A1]/10 pt-4 flex flex-col md:flex-row justify-between items-center gap-3">
             <div style="font-family: 'Outfit', sans-serif;" class="flex gap-4 text-[10px] uppercase tracking-widest text-[#D9C8A1]/40">
                 <a href="{{ route('privacy') }}" class="hover:text-white transition-colors">Privacidad</a>

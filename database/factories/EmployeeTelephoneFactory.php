@@ -28,7 +28,9 @@ class EmployeeTelephoneFactory extends Factory
             /** Aqui le decimos que utilice el Factory de Employee para rellenar el ID */
             'employee_dni' => Employee::factory(),
             /** Le asignamos el numero de telefono (unico) con 9 digitos aleatorios */
-            'telephone' => $this->faker->unique()->numerify('+34#########'),
+            'telephone' => $this->faker->unique()->numerify('#########'),
+            /** Por defecto asignamos 1, aunque el AppServiceProvider lo recalculará */
+            'order' => 1,
         ];
     }
 }

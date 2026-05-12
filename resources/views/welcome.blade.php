@@ -14,7 +14,7 @@
 {{-- ESCUDO ANTI-MENÚ: Empuja todo hacia abajo --}}
 <div class="h-32 md:h-40 w-full shrink-0"></div>
 
-{{-- 1. SECCIÓN HERO (Sobre el video) --}}
+{{-- SECCIÓN HERO (Sobre el video) --}}
 <div class="px-4 sm:px-6 max-w-7xl mx-auto pt-10 pb-20 lg:h-[55vh] flex flex-col justify-center relative z-10">
     <div class="max-w-3xl">
         <h1 style="font-family: 'Bebas Neue', sans-serif;"
@@ -31,7 +31,7 @@
     </div>
 </div>
 
-{{-- 2. SECCIÓN DE CONTENIDO (Fondo oscuro que solapa el final del video) --}}
+{{-- SECCIÓN DE CONTENIDO --}}
 <div class="relative bg-[#0a0a0a] z-20 border-t border-white/5 pt-16 pb-24 shadow-[0_-20px_50px_rgba(0,0,0,0.8)]">
 
     <div class="px-4 sm:px-6 max-w-7xl mx-auto space-y-16">
@@ -132,7 +132,7 @@
             </div>
         </div>
 
-        {{-- El Equipo --}}
+        {{-- El equipo --}}
         <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-[2rem] p-8 md:p-12 lg:p-16 shadow-xl">
             <h2 style="font-family: 'Bebas Neue', sans-serif;" class="text-4xl md:text-5xl text-amber-400 tracking-wide mb-8 drop-shadow-md">
                 El Equipo BLR-Zoo
@@ -205,13 +205,10 @@
     </div>
 </div>
 
-
-{{-- ========================================== --}}
-{{-- 3. WIDGETS FLOTANTES (LATERALES)           --}}
-{{-- ========================================== --}}
+{{-- WIDGETS FLOTANTES (LATERALES) --}}
 <div class="fixed bottom-24 right-0 flex flex-col items-end gap-3 z-50">
 
-    {{-- Botón Mapa (Nuevo) --}}
+    {{-- Botón Mapa --}}
     <a href="{{ route('mapa.index') }}"
        class="group relative flex items-center bg-gradient-to-r from-[#3b82f6] to-[#1d4ed8] text-white
               rounded-l-2xl shadow-[-5px_5px_15px_rgba(0,0,0,0.3)]

@@ -14,11 +14,7 @@
 </head>
 <body class="bg-slate-50">
 
-    <div id="guide-dashboard-root">
-        <h1 style="text-align:center; padding: 50px; font-family: sans-serif; color: #64748b;">
-            <i class="fa-solid fa-spinner fa-spin"></i> Cargando Panel del Guía...
-        </h1>
-    </div>
+    <div id="guide-dashboard-root"></div>
 
 </body>
 </html>

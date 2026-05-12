@@ -155,9 +155,9 @@ function StepCode({ email, onVerified, onBack }) {
 
 // ─── Componente principal ───────────────────────────────────────────────────
 export default function MyOrders({ auth, initialEmail }) {
-    // "idle" | "code" | "verified"
-    console.log("auth prop:", auth, typeof auth); // ← añade esto temporalmente
-    const [step, setStep]               = useState(auth ? "verified" : "idle");
+    const isAuth = auth === true || auth === "true";
+
+    const [step, setStep]               = useState(isAuth ? "verified" : "idle");
     const [verifiedEmail, setVerifiedEmail] = useState(initialEmail || "");
     const [accessToken, setAccessToken] = useState(null);
 
@@ -169,18 +169,22 @@ export default function MyOrders({ auth, initialEmail }) {
     const fetchData = async (token, email) => {
         setLoading(true);
         try {
-            const url = auth
+            const url = isAuth
                 ? `/api/compras?email=${email}`
                 : `/api/compras?email=${email}&access_token=${encodeURIComponent(token)}`;
-            const res  = await fetch(url);
+
+            const res = await fetch(url, {
+                credentials: "include", // ← esto envía la cookie de sesión Laravel
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                },
+            });
             const json = await res.json();
-            
-            // Si el servidor devuelve error, no machacamos el estado
+
             if (json.error) {
                 console.error("Error del servidor:", json.error);
                 return;
             }
-            
             setData(json);
         } catch (e) {
             console.error("Error cargando compras:", e);
@@ -188,9 +192,8 @@ export default function MyOrders({ auth, initialEmail }) {
         setLoading(false);
     };
 
-    // Si el usuario está logueado, cargamos directamente
     useEffect(() => {
-        if (auth) fetchData(null, initialEmail);
+        if (isAuth) fetchData(null, initialEmail);
     }, []);
 
     const handleCodeSent  = (email) => { setVerifiedEmail(email); setStep("code"); };
@@ -411,7 +414,7 @@ export default function MyOrders({ auth, initialEmail }) {
                 </div>
             )}
 
-            <style jsx>{`
+            <style>{`
                 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(217,200,161,0.2); border-radius: 10px; }

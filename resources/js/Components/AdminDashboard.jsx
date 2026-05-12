@@ -75,8 +75,7 @@ export default function AdminDashboard() {
     // --- LÓGICA DE FILTRADO ---
     const filteredEmployees = useMemo(() => {
         return rawEmployees.filter((emp) => {
-            const matchesRole =
-                selectedRole === "Todos" || emp.position === selectedRole;
+            const matchesRole = selectedRole === "Todos" || emp.position === selectedRole;
             const matchesSearch =
                 searchTerm === "" ||
                 `${emp.name} ${emp.surname}`
@@ -118,7 +117,7 @@ export default function AdminDashboard() {
                 showToast("Empleado eliminado correctamente.", "success");
             })
             .catch(() =>
-                wwToast("Error al intentar eliminar el empleado.", "error"),
+                showToast("Error al intentar eliminar el empleado.", "error"),
             )
             .finally(() => setShowDeleteConfirm(false));
     };

@@ -5,21 +5,21 @@
 @section('video', 'false')
 
 @push('styles')
-    {{-- 1. El Pase VIP para cargar la fuente de inmediato --}}
+    {{-- Fuente de letras --}}
     <link rel="preload" href="{{ asset('fonts/Parkzoo-Regular.woff2') }}" as="font" type="font/woff2" crossorigin>
 
-    {{-- 2. El CSS global --}}
+    {{-- CSS global --}}
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
     <style>
-    /* 1. Fondo de imagen */
+    /* Fondo de imagen */
     body {
         background: #141A14 url("/img/zoo_fondo.png") no-repeat fixed center !important;
         background-size: cover !important;
         position: relative;
     }
 
-    /* 2. CREAMOS EL FILTRO OSCURO (Copia exacta de lo que hace tu amigo) */
+    /* FILTRO OSCURO DE FONDO */
     body::before {
         content: "";
         position: fixed;
@@ -32,7 +32,7 @@
         pointer-events: none;
     }
 
-    /* 3. Transparencia para los contenedores */
+    /* Transparencia para los contenedores */
     #app, main, .main-content {
         background: transparent !important;
     }

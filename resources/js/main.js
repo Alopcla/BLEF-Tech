@@ -48,11 +48,9 @@ function Temperatura(){
 
     function ajustarTemperatura() {
         const tempDiv = document.getElementById("temperatura");
-        const navFlex = document.querySelector(".navegacion-flex");
         const header = document.querySelector("header");
 
         if (window.innerWidth <= 900) {
-            navFlex.prepend(tempDiv);
             tempDiv.style.marginBottom = "10px"; 
         } else {
             header.prepend(tempDiv);
